@@ -154,8 +154,9 @@ async function super_login(req, res) {
 
 
 async function verify_email(req, res) {
+  
   const token = req.params.token;
-
+  
   try {
     // Find the user by the verification token
     const user = await SuperUser.findOne({ emailVerificationToken: token });
@@ -204,7 +205,7 @@ const transporter = nodemailer.createTransport({
     from: 'techarc@gmail.com',
     to: email,
     subject: 'Email Verification',
-    text: `Thank you for registering with us. Please click on the following link to verify your email address: http://localhost:3000/api/auth/verify/${token}`,
+    text: `Thank you for registering with us. Please click on the following link to verify your email address: http://localhost:3000/api/auth/superverify/${token}`,
   };
 
   await transporter.sendMail(mailOptions);

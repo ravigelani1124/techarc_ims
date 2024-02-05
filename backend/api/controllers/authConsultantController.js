@@ -12,7 +12,7 @@ const generateVerificationToken = () => {
 async function consultant_signup(req, res) {
 
     try{   
-      const { consultantName, email, consultancyName,licenseNumber, contactNumber,superuserId } = req.body;
+      const { consultantName, email, consultancyName,cosultancyId, licenseNumber, contactNumber,superuserId } = req.body;
   
       if(!consultantName){
         return res.status(400).json({
@@ -53,6 +53,14 @@ async function consultant_signup(req, res) {
         })
       }
 
+      if(!cosultancyId){
+        return res.status(400).json({
+            status: "failed",   
+            data:{},
+            message: "Consultancy Id is required",
+        })
+      }
+
       const existingUser = await ConsultantUser.findOne({ email });
 
       if (existingUser) {
@@ -72,7 +80,8 @@ async function consultant_signup(req, res) {
         licenseNumber,
         contactNumber,
         emailVerificationToken,
-        superuserId
+        superuserId, 
+        cosultancyId
       });
 
       const savedUser = await newUser.save();

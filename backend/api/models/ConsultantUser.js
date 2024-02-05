@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const consultantUserSchema = new mongoose.Schema({
     superuserId: { type: mongoose.Schema.Types.ObjectId, ref: 'SuperUser', required: true },
@@ -12,6 +13,7 @@ const consultantUserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     isVerified: { type: Boolean, default: false },
     emailVerificationToken: { type: String },
+    cosultancyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Consultancy', required: true }
   });
   
   consultantUserSchema.pre('save', async function (next) {
