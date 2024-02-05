@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const consultantUserSchema = new mongoose.Schema({
+    name: { type: String, required: true},
     superuserId: { type: mongoose.Schema.Types.ObjectId, ref: 'SuperUser', required: true },
     consultancyName: { type: String, required: true},
     email: { type: String,  unique: true },

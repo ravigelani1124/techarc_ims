@@ -12,9 +12,9 @@ const generateVerificationToken = () => {
 async function consultant_signup(req, res) {
 
     try{   
-      const { consultantName, email, consultancyName,cosultancyId, licenseNumber, contactNumber,superuserId } = req.body;
+      const { name, email, consultancyName,cosultancyId, licenseNumber, contactNumber,superuserId } = req.body;
   
-      if(!consultantName){
+      if(!name){
         return res.status(400).json({
           status: "failed",
           data:{},
@@ -74,7 +74,7 @@ async function consultant_signup(req, res) {
       const emailVerificationToken = generateVerificationToken();
 
       const newUser = new ConsultantUser({
-        consultantName,
+        name,
         consultancyName,
         email,
         licenseNumber,
@@ -174,6 +174,7 @@ async function consultant_login(req, res) {
       console.log(err);
     }
 }
+
 
 async function verify_email(req, res) {
   const token = req.params.token;
