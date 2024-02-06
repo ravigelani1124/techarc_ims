@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('../utils/jwt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-
+const User = require('../models/User');
 
 const generateVerificationToken = () => {
     return crypto.randomBytes(20).toString('hex');
@@ -267,7 +267,7 @@ async function sendVerificationEmail(email, token) {
               message: "Id is required",
           });
           }
-          await ConsultantUser.findByIdAndDelete(id);
+          await User.findByIdAndDelete(id);
           return res.status(200).json({
             status: "success",
             data: {},

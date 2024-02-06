@@ -237,6 +237,11 @@ async function delete_consultant_by_admin(req, res) {
   }
 }
 
+async function changePassword(req, res) {
+  const { email, password } = req.body;
+  
+}
+
 module.exports = {
   super_signup,
   super_login,

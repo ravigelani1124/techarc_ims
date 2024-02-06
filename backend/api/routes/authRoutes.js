@@ -1,10 +1,9 @@
 const express = require('express');
 
 const authMiddleware = require('../middleware/authMiddleware');
-const authSuperController = require('../controllers/authSuperController');
+const authSuperController = require('../controllers/authAdminController');
 const authConsultantController = require('../controllers/authConsultantController');
 const authUserController = require('../controllers/authUserController');
-
 
 const router = express.Router();
 
@@ -26,6 +25,7 @@ router.post('/userSignup', authUserController.user_signup);
 router.post('/userLogin', authUserController.user_login);
 router.get('/userVerify/:token', authUserController.verify_user_email);
 router.post('/userCreatepassword', authUserController.create_password_user);
+
 
 
 module.exports = router;
