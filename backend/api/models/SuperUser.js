@@ -11,6 +11,7 @@ const superUserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   isVerified: { type: Boolean, default: false },
   emailVerificationToken: { type: String },
+  role: { type: String, default: 'admin' }
 });
 
 superUserSchema.pre('save', async function (next) {
