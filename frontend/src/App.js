@@ -16,7 +16,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 const FormControl = React.lazy(() => import('./views/forms/form-control/FormControl'));
 const ConsultancyInfo = React.lazy(() => import('./views/consultancyInfo/ConsultancyInfo'));
 const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
-const AdminLauncher = React.lazy(() => import('./views/admin/AdminLauncher'));
+const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
 
 const App = () => {
 
@@ -40,12 +40,12 @@ const App = () => {
         <UserProvider>
           <Routes>
             <Route exact path="/" element={<Launcher />} />
-            <Route exact path="/adminLauncher" name="Admin Launcher" element={<AdminLauncher />} />            
+            <Route exact path="/adminauth" name="Admin Authentication" element={<AdminAuthPage />} />            
             <Route exact path="/dashboard" name="Dashboard" element={<Dashboard/>} />            
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />        
             <Route exact path="/forms/form-control" name="Forms" element={<FormControl />} />
-            <Route exact path="/consultancyInfo" name="Consultancy Info" element={<ConsultancyInfo />} />            
+            <Route exact path="/consultancy" name="Consultancy Info" element={<ConsultancyInfo />} />            
           </Routes>  
         </UserProvider>
       </Suspense>

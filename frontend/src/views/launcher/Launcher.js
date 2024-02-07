@@ -112,7 +112,7 @@ const Launcher = () => {
               </CCard>
             </CCardGroup>
             <br/>
-              <Link to="/adminLauncher">
+              <Link to="/adminauth">
                 <CButton color="primary" className="px-4">
                   Admin Login
                 </CButton>
