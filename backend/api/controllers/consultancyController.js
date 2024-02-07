@@ -35,7 +35,7 @@ async function addConsultancy(req, res) {
         console.error(err);
         return res.status(500).json({
             status: "error",
-            message: "Internal Server Error",
+            message: err.message,
         });
     }
 }

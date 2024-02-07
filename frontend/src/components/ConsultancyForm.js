@@ -1,29 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import UserContext from 'src/utils/UserContext';
+import axios from 'axios';
 
-const ConsultancyForm = ({ onClose }) => {
+const ConsultancyForm = ({ onClose, updateConsultancies }) => {
+  const { user } = useContext(UserContext);
   const [consultancyName, setConsultancyName] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'consultancyName') {
-      setConsultancyName(value);
-    } 
-    else if (name === 'licenseNumber') {
-      setLicenseNumber(value);
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await callAddConsultancyAPI();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const callAddConsultancyAPI = async () => {
+    try {
+      const jwtToken = user.jwtToken;
+      const response = await axios.post(
+        'http://localhost:3000/api/consultancy/addConsultancy',
+        {
+          consultancyName: consultancyName,
+          licenseNumber: licenseNumber,
+          superuserId: user._id
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`
+          }
+        }
+      );
 
-    console.log(`Submitted consultancy: ${consultancyName} with license number: ${licenseNumber}`);
-
-    // Reset form fields
-    setConsultancyName('');
-    setLicenseNumber('');
-    
-    onClose();
+      const successMessage = response.data.message;
+      alert("Success: " + successMessage);
+      onClose(); // Close the form
+      updateConsultancies(); // Update consultancies list in the parent component
+    } catch (error) {
+      console.error(error);
+      if (error.response) {
+        alert(error.response.data.message);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        alert(error.request);
+      } else {
+        alert(error.request);
+      }
+    }
   };
 
   return (
@@ -40,7 +61,7 @@ const ConsultancyForm = ({ onClose }) => {
             name="consultancyName"
             placeholder='Prime Time Consultancy'
             value={consultancyName}
-            onChange={handleInputChange}
+            onChange={(e) => setConsultancyName(e.target.value)}
             required
             autoFocus
           />
@@ -56,7 +77,7 @@ const ConsultancyForm = ({ onClose }) => {
             name="licenseNumber"
             placeholder='11220054'
             value={licenseNumber}
-            onChange={handleInputChange}
+            onChange={(e) => setLicenseNumber(e.target.value)}
             required
             autoFocus
           />

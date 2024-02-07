@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import {
   CButton,
@@ -15,8 +15,18 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
+import { useNavigate } from 'react-router-dom';
 
 const Launcher = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const userLoggedIn = localStorage.getItem('user'); 
+    console.log("Launcher----------: ",userLoggedIn);
+    if (userLoggedIn) {    
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

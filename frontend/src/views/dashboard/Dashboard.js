@@ -1,27 +1,20 @@
 import React, {useContext, useEffect} from 'react';
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
-import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
 
 
 const Dashboard = () => {
-
+  
   const { user } = useContext(UserContext);
-
+  // If user is not authenticated, redirect to the launcher page
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   console.log("User: ", user)
-  // // tableData
-  // const tableData = [
-  //   {
-  //     email: { name: "Dhjg5@example.com" },
-  //     consultantName: { name: "John" },
-  //     consultancyName: { name: 'Prime Time Consultancy' },
-  //     licenseNumber: { value: '123456789' },
-  //     isverified: { value: 'pending' },
-  //   },
-  // ];
-
+  
   return (
     <div>
       <AppSidebar />
@@ -35,43 +28,7 @@ const Dashboard = () => {
             <h6>
               <center>{"Hello, " + (user?.name || 'Guest') + "!"}</center>
             </h6>
-          </div>
-          {/* <CTable align="middle" className="mb-0 border" hover responsive>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>#</CTableHeaderCell>
-                <CTableHeaderCell>Email</CTableHeaderCell>
-                <CTableHeaderCell>Consultant Name</CTableHeaderCell>
-                <CTableHeaderCell>Consultancy Group</CTableHeaderCell>
-                <CTableHeaderCell>License No.</CTableHeaderCell>
-                <CTableHeaderCell>isverified</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {tableData.map((item, index) => (
-                <CTableRow v-for="item in tableItems" key={index}>
-                  <CTableDataCell>
-                    <div>{index + 1}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.email.name}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.consultantName.name}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.consultancyName.name}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.licenseNumber.value}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.isverified.value}</div>
-                  </CTableDataCell>
-                </CTableRow>
-              ))}
-            </CTableBody>
-          </CTable> */}
+          </div>        
         </div>
         <AppFooter />
       </div>
