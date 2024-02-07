@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import UserContext from 'src/utils/UserContext';
 import axios from 'axios';
+import { DEFAULT_URL } from 'src/utils/Constant';
 
 const ConsultancyForm = ({ onClose, updateConsultancies }) => {
   const { user } = useContext(UserContext);
@@ -16,7 +17,7 @@ const ConsultancyForm = ({ onClose, updateConsultancies }) => {
     try {
       const jwtToken = user.jwtToken;
       const response = await axios.post(
-        'http://localhost:3000/api/consultancy/addConsultancy',
+        DEFAULT_URL+'consultancy/addConsultancy',
         {
           consultancyName: consultancyName,
           licenseNumber: licenseNumber,

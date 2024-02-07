@@ -83,7 +83,7 @@ const Login = () => {
       setAlertVisible(true);
     } catch (error) {
       setIsLoading(false);
-      
+      clearSignUp();
       if (error.response) {
         setAlertVisible(true);
         setErrorMessage(error.response.data.message);

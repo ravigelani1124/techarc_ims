@@ -21,6 +21,8 @@ import { AppSidebar, AppFooter, AppHeader } from '../../components/index'
 import CIcon from '@coreui/icons-react'
 import { cilDelete } from '@coreui/icons'
 
+import { DEFAULT_URL } from 'src/utils/Constant'
+
 const ConsultancyInfo = () => {
   const [showForm, setShowForm] = useState(false)
   const [consultancies, setConsultancies] = useState([])
@@ -41,8 +43,7 @@ const ConsultancyInfo = () => {
         if (!token) {
           throw new Error('Login Required')
         }
-        const response = await axios.get(
-          'http://localhost:3000/api/consultancy/getConsultancyList',
+        const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList',
           {
             headers: {
               'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ const ConsultancyInfo = () => {
       if (!token) {
         throw new Error('Login Required')
       }
-      const response = await axios.get('http://localhost:3000/api/consultancy/getConsultancyList', {
+      const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList', {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
