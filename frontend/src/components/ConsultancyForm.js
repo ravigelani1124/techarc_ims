@@ -48,7 +48,7 @@ const ConsultancyForm = ({ onClose, updateConsultancies }) => {
   };
 
   return (
-    <div>
+    <div  style={{ padding: '0 20px' }}>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="consultancyName" className="form-label">
@@ -82,9 +82,11 @@ const ConsultancyForm = ({ onClose, updateConsultancies }) => {
             autoFocus
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <div className="mb-3 d-flex justify-content-end">
+        <button type="submit" className="btn btn-primary px-4">
           Submit
         </button>
+        </div>
       </form>
     </div>
   );
