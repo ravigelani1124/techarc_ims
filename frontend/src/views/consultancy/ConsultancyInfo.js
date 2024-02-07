@@ -73,9 +73,7 @@ const ConsultancyInfo = () => {
   const updateConsultancies = async () => {
     try {
       const token = user.jwtToken
-      if (!token) {
-        throw new Error('Login Required')
-      }
+      
       const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList', {
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +94,9 @@ const ConsultancyInfo = () => {
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        {isLoading && <CSpinner size="sm" style={{ width: '3rem', height: '3rem' }} />}
+        {isLoading &&<div className="d-flex justify-content-center">
+            <CSpinner />
+          </div>}
         {alertVisible && (
           <CToast
             autohide={false}

@@ -1,18 +1,21 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect,} from 'react';
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
-import { Navigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom'
 
 
 const Dashboard = () => {
-  
+  const navigate = useNavigate()
   const { user } = useContext(UserContext);
+  
+  useEffect(() => {
+    if (!user) {
+      navigate('/')
+    }    
+  },[user])
+  
   // If user is not authenticated, redirect to the launcher page
-  if (!user) {
-    return <Navigate to="/" />;
-  }
-
+  
   console.log("User: ", user)
   
   return (
