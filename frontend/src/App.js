@@ -13,8 +13,8 @@ const loading = (
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
-const FormControl = React.lazy(() => import('./views/forms/form-control/FormControl'));
 const ConsultancyInfo = React.lazy(() => import('./views/consultancy/ConsultancyInfo'));
+const ConsultantInfo = React.lazy(() => import('./views/consultant/ConsultantInfo'));
 const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
 const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
 
@@ -57,7 +57,7 @@ const App = () => {
         <Routes>
         <Route element={<PrivateRoutes />}>                     
            <Route exact path="/dashboard" name="Dashboard" element={<Dashboard/>} />            
-             <Route exact path="/forms/form-control" name="Forms" element={<FormControl />} />
+            <Route exact path="/consultant" name="Consultant Info" element={<ConsultantInfo />} />
             <Route exact path="/consultancy" name="Consultancy Info" element={<ConsultancyInfo />} />            
         </Route>
 
