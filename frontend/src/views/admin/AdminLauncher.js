@@ -1,152 +1,177 @@
-import React, { useState, useContext } from 'react';
-import { CButton, CCard, CCardBody, CCardGroup, CCol, CContainer, CForm, CFormInput, CInputGroup, CInputGroupText, CRow, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cil3d, cilLockLocked, cilTerminal, cilUser } from '@coreui/icons';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import UserContext from 'src/utils/UserContext';
-import { DEFAULT_URL } from 'src/utils/Constant';
+import React, { useState, useContext } from 'react'
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardGroup,
+  CCol,
+  CContainer,
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+  CSpinner,
+  CToast,
+  CToastBody,
+  CToastClose,
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cil3d, cilLockLocked, cilTerminal, cilUser } from '@coreui/icons'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import UserContext from 'src/utils/UserContext'
+import { DEFAULT_URL } from 'src/utils/Constant'
 
 const Login = () => {
-  const { loginUser } = useContext(UserContext); // Access loginUser from UserContext
+  const { loginUser } = useContext(UserContext) // Access loginUser from UserContext
 
   // Login
-  const [emailLogin, setEmailLogin] = useState('');
-  const [passwordLogin, setPasswordLogin] = useState('');
+  const [emailLogin, setEmailLogin] = useState('')
+  const [passwordLogin, setPasswordLogin] = useState('')
 
   // SignUp
-  const [emailSignUp, setEmailSignUp] = useState('');
-  const [passwordSignUp, setPasswordSignUp] = useState('');
-  const [nameSignUp, setNameSignUp] = useState('');
-  const [privateKey, setPrivateKey] = useState('');
+  const [emailSignUp, setEmailSignUp] = useState('')
+  const [passwordSignUp, setPasswordSignUp] = useState('')
+  const [nameSignUp, setNameSignUp] = useState('')
+  const [privateKey, setPrivateKey] = useState('')
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false)
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const navigate = useNavigate()
 
   const clearLoginField = () => {
-    setEmailLogin('');
-    setPasswordLogin('');
-  };
+    setEmailLogin('')
+    setPasswordLogin('')
+  }
 
   const clearSignUp = () => {
-    setEmailSignUp('');
-    setPasswordSignUp('');
-    setNameSignUp('');
-    setPrivateKey('');
-  };
+    setEmailSignUp('')
+    setPasswordSignUp('')
+    setNameSignUp('')
+    setPrivateKey('')
+  }
 
   const fetchDataLogin = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await axios.post(DEFAULT_URL + 'auth/superlogin', {
         email: emailLogin,
         password: passwordLogin,
-      });
-      const successMessage = response.data.data.message;
-      setIsLoading(false);
-      setErrorMessage(successMessage);
-      setAlertVisible(true);
-      clearLoginField();
+      })
+      const successMessage = response.data.data.message
+      setIsLoading(false)
+      setErrorMessage(successMessage)
+      setAlertVisible(true)
+      clearLoginField()
       // Save data to local storage
-      loginUser(response.data.data);
-      navigate('/dashboard');
+      loginUser(response.data.data)
+      navigate('/dashboard')
     } catch (error) {
-      setIsLoading(false);
-      setAlertVisible(true);
+      setIsLoading(false)
+      setAlertVisible(true)
       if (error.response) {
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data.message)
       } else if (error.request) {
-        console.log('No response received:', error.request);
-        setErrorMessage(error.request);
+        console.log('No response received:', error.request)
+        setErrorMessage(error.request)
       } else {
-        console.log('Error during request setup:', error.message);
-        setErrorMessage(error.request);
+        console.log('Error during request setup:', error.message)
+        setErrorMessage(error.request)
       }
     }
-  };
+  }
 
   const fetchDataSignUp = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await axios.post(DEFAULT_URL + 'auth/supersignup', {
         email: emailSignUp,
         password: passwordSignUp,
         name: nameSignUp,
         privateKey: privateKey,
-      });
-      const successMessage = response.data.message;
-      setIsLoading(false);
-      clearSignUp();
-      setErrorMessage(successMessage);
-      setAlertVisible(true);
+      })
+      const successMessage = response.data.message
+      setIsLoading(false)
+      clearSignUp()
+      setErrorMessage(successMessage)
+      setAlertVisible(true)
     } catch (error) {
-      setIsLoading(false);
-      
+      setIsLoading(false)
+
       if (error.response) {
-        setAlertVisible(true);
-        setErrorMessage(error.response.data.message);
+        setAlertVisible(true)
+        setErrorMessage(error.response.data.message)
       } else if (error.request) {
-        console.log('No response received:', error.request);
-        setAlertVisible(true);
-        setErrorMessage(error.request);
+        console.log('No response received:', error.request)
+        setAlertVisible(true)
+        setErrorMessage(error.request)
       } else {
-        console.log('Error during request setup:', error.message);
-        setAlertVisible(true);
-        setErrorMessage(error.request);
+        console.log('Error during request setup:', error.message)
+        setAlertVisible(true)
+        setErrorMessage(error.request)
       }
     }
-  };
+  }
 
   const handleLoginClick = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (emailLogin.length === 0 || passwordLogin.length === 0) {
-      setErrorMessage('All Fields Required*');
-      setAlertVisible(true);
+      setErrorMessage('All Fields Required*')
+      setAlertVisible(true)
     } else {
-      setAlertVisible(false);
-      handleSubmitLogin();
+      setAlertVisible(false)
+      handleSubmitLogin()
     }
-  };
+  }
 
   const handleSubmitLogin = () => {
-    fetchDataLogin();
-  };
+    fetchDataLogin()
+  }
 
   const handleSignUpClick = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (
       emailSignUp.length === 0 ||
       passwordSignUp.length === 0 ||
       nameSignUp.length === 0 ||
       privateKey.length === 0
     ) {
-      setErrorMessage('All Fields Required*');
-      setAlertVisible(true);
+      setErrorMessage('All Fields Required*')
+      setAlertVisible(true)
     } else {
-      setAlertVisible(false);
-      handleSubmitSignUp();
+      setAlertVisible(false)
+      handleSubmitSignUp()
     }
-  };
+  }
 
   const handleSubmitSignUp = () => {
-    fetchDataSignUp();
-  };
+    fetchDataSignUp()
+  }
 
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         {isLoading && (
-          <CSpinner size="sm" variant="grow" style={{ width: '3rem', height: '3rem' }} />
+          <div className="d-flex justify-content-center">
+            <CSpinner />
+          </div>
         )}
         {alertVisible && (
-          <CToast autohide={false} visible={true} color="primary" className="text-white align-items-center">
-            <div className="d-flex">
-              <CToastBody>{errorMessage}</CToastBody>
-              <CToastClose className="me-2 m-auto" white />
-            </div>
-          </CToast>
+          <div className="mb-3 d-flex justify-content-end">
+            <CToast
+              autohide={false}
+              visible={true}
+              color="primary"
+              className="text-white align-items-center"
+            >
+              <div className="d-flex">
+                <CToastBody>{errorMessage}</CToastBody>
+                <CToastClose className="me-2 m-auto" white />
+              </div>
+            </CToast>
+          </div>
         )}
         <CRow className="justify-content-center">
           <CCol md={8}>
@@ -154,7 +179,7 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Admin Login</h1>
+                    <h2>Admin Login</h2>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -184,12 +209,20 @@ const Login = () => {
                         onChange={(e) => setPasswordLogin(e.target.value)}
                       />
                     </CInputGroup>
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleLoginClick}>Login</CButton>
+
+                    <CRow className="justify-content-center">
+                      <CCol xs={6} className="text-center">
+                        <CButton color="primary" className="px-4" onClick={handleLoginClick}>
+                          Login
+                        </CButton>
                       </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
+                    </CRow>
+
+                    <CRow className="justify-content-center">
+                      <CCol xs={6} className="text-center">
+                        <CButton color="link" className="px-0">
+                          Forgot password?
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
@@ -200,7 +233,7 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Admin Sign up</h1>
+                    <h2>Admin Sign up</h2>
                     <p className="text-medium-emphasis">Sign up to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -230,7 +263,7 @@ const Login = () => {
                         required
                       />
                     </CInputGroup>
-                    <CInputGroup className="mb-4">
+                    <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
@@ -257,9 +290,12 @@ const Login = () => {
                         required
                       />
                     </CInputGroup>
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleSignUpClick}>SignUp</CButton>
+
+                    <CRow className="justify-content-center">
+                      <CCol xs={6} className="text-center">
+                        <CButton color="primary" className="px-4" onClick={handleSignUpClick}>
+                          SignUp
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
@@ -270,7 +306,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

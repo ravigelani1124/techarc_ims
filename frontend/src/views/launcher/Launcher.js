@@ -36,7 +36,7 @@ const Launcher = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>User Login</h1>
+                    <h2>User Login</h2>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
@@ -75,7 +75,7 @@ const Launcher = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Consultant Login</h1>
+                    <h2>Consultant Login</h2>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
