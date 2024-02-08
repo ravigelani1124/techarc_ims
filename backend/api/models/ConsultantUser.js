@@ -7,7 +7,7 @@ const consultantUserSchema = new mongoose.Schema({
     consultancyName: { type: String, required: true},
     email: { type: String,  unique: true },
     licenseNumber: { type: String, required: true, unique: true },
-    contactNumber: { type: Number, required: true, unique: true },
+    contactNumber: { type: Number, required: true},
     role: { type: String,  default: "consultant" },
     password: { type: String, default: null },
     jwtToken: { type: String ,default: null},

@@ -13,12 +13,13 @@ router.post('/superLogin', authSuperController.super_login);
 router.get('/superVerify/:token', authSuperController.verify_email);
 
 //consultant
-router.post('/consultantSignup', authConsultantController.consultant_signup);
+router.post('/consultantSignup',  authConsultantController.consultant_signup);
 router.post('/consultantLogin', authConsultantController.consultant_login);
 router.post('/consultantCreatepassword', authConsultantController.create_password_consultant);
 router.get('/consultantVerify/:token', authConsultantController.verify_email);
 router.delete('/deleteConsultant',authMiddleware.authenticateToken, authSuperController.delete_consultant_by_admin);
 router.delete('/deleteUser',authMiddleware.authenticateToken, authConsultantController.delete_user_by_consultant);
+router.get('/getConsultantList', authMiddleware.authenticateToken, authConsultantController.getConsultantList);
 
 //user
 router.post('/userSignup', authUserController.user_signup);

@@ -35,10 +35,7 @@ const ConsultancyInfo = () => {
   useEffect(() => {
     const fetchDataForConsultancy = async () => {
       setIsLoading(true)
-      try {
-        if (user === null) {
-          throw new Error('Login Required')
-        }
+      try {        
         const token = user.jwtToken
         if (!token) {
           throw new Error('Login Required')

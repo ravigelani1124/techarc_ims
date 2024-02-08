@@ -174,8 +174,6 @@ async function consultant_login(req, res) {
       console.log(err);
     }
 }
-
-
 async function verify_email(req, res) {
   const token = req.params.token;
 
@@ -281,13 +279,35 @@ async function sendVerificationEmail(email, token) {
           });
         }
       }
+
+
+async function getConsultantList(req,res){
+
+  try {
+      const consultancy = await ConsultantUser.find();
+      return res.status(200).json({
+          status: "success",
+          data: consultancy,
+          message: "Consultant fetched successfully",
+      });
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+          status: "error",
+          message: "Internal Server Error",
+      });
+  }
+}
+
+
     
     module.exports = {
         consultant_signup,
         consultant_login,
       verify_email,
       create_password_consultant,
-      delete_user_by_consultant
+      delete_user_by_consultant,
+      getConsultantList
     }
 
 

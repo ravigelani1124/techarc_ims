@@ -35,22 +35,7 @@ const App = () => {
 
 
   return (
-    // <Router>
-    //   <Suspense fallback={loading}>
-    //     <UserProvider>
-    //       <Routes>
-    //         <Route exact path="/" element={<Launcher />} />
-    //         <Route exact path="/adminauth" name="Admin Authentication" element={<AdminAuthPage />} />            
-    //         <Route exact path="/dashboard" name="Dashboard" element={<Dashboard/>} />            
-    //         <Route exact path="/404" name="Page 404" element={<Page404 />} />
-    //         <Route exact path="/500" name="Page 500" element={<Page500 />} />        
-    //         <Route exact path="/forms/form-control" name="Forms" element={<FormControl />} />
-    //         <Route exact path="/consultancy" name="Consultancy Info" element={<ConsultancyInfo />} />            
-    //       </Routes>  
-    //     </UserProvider>
-    //   </Suspense>
-    // </Router>
-
+  
     <Router>
       <Suspense fallback={loading}>
         <UserProvider>
