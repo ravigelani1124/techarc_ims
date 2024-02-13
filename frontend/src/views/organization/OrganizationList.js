@@ -134,6 +134,7 @@ const ConsultancyInfo = () => {
                 <CTableHeaderCell>Organization Name</CTableHeaderCell>
                 <CTableHeaderCell>Email</CTableHeaderCell>
                 <CTableHeaderCell>Phone</CTableHeaderCell>
+                <CTableHeaderCell>Status</CTableHeaderCell>                  
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -166,6 +167,15 @@ const ConsultancyInfo = () => {
                       <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
                     )}
                   </CTableDataCell>
+                  <CTableDataCell>
+                    {item.record_status ? (
+                      <div>
+                        {<CButton  style={{ width: '100px' }} color="success">Active</CButton>}                      
+                      </div>
+                    ) : (
+                      <div>{<CButton  style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
+                    )}
+                    </CTableDataCell>
                 </CTableRow>
               ))}
             </CTableBody>

@@ -8,12 +8,14 @@ import {
   CTableHeaderCell,
   CTableRow,
   CButton,
-  CFormInput,CSpinner
+  CFormInput,CSpinner,
 } from '@coreui/react';
+import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import { AppSidebar, AppHeader, AppFooter } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
 import axios from 'axios';
 import { DEFAULT_URL } from 'src/utils/Constant';
+import CIcon from '@coreui/icons-react'
 
 const ConsultantInfo = () => {
   const [showForm, setShowForm] = useState(false);
@@ -28,12 +30,12 @@ const ConsultantInfo = () => {
 
   useEffect(() => {
     chainAPIs();
-  }, [user]);
+  }, []);
 
   
 async function chainAPIs() {
   await fetchDataForConsultant();
-  await callConsultanyAPI();
+  //await callConsultanyAPI();
 }
   const callConsultanyAPI = async () => {
     try {
@@ -64,6 +66,7 @@ async function chainAPIs() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("Consultant----",response.data.data)
       setConsultant(response.data.data);
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'An error occurred');
@@ -77,33 +80,40 @@ async function chainAPIs() {
     setShowForm(!showForm);
   };
 
+
   const filteredConsultants = consultant.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  item.consultant_name_en.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
 
   return (
     <>
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        {isLoading &&<div className="d-flex justify-content-center">
+        {isLoading && (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
             <CSpinner />
-          </div>}
+          </div>
+        )}
         <div>
           <div className="mb-4">
-            <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
+            {/* <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
               <h4>
                 <CButton color="primary" onClick={handleAddConsultantClick}>
                   {showForm ? 'Close Form' : 'Add New Consultant'}
                 </CButton>
               </h4>
-            </div>
-            {showForm && (
+            </div> */}
+            {/* {showForm && (
               <div>
                 <ConsultantForm consultancies= {consultancies} onClose={() => setShowForm(false)} />
                 <br />
               </div>
-            )}
+            )} */}
             <div className="mb-3" style={{ padding: '0 20px' }}>
               <CFormInput
                 placeholder="Search Consultant Name..."
@@ -119,33 +129,55 @@ async function chainAPIs() {
               <CTableHead color="light">
                 <CTableRow>
                   <CTableHeaderCell>#</CTableHeaderCell>
-                  <CTableHeaderCell>Email</CTableHeaderCell>
+                  <CTableHeaderCell>Code</CTableHeaderCell>
                   <CTableHeaderCell>Consultant Name</CTableHeaderCell>
-                  <CTableHeaderCell>Consultancy Group</CTableHeaderCell>
-                  <CTableHeaderCell>License No.</CTableHeaderCell>
-                  <CTableHeaderCell>Verified</CTableHeaderCell>
+                  <CTableHeaderCell>Organization</CTableHeaderCell>                                    
+                  <CTableHeaderCell>Email</CTableHeaderCell>
+                  <CTableHeaderCell>Phone</CTableHeaderCell>
+                  <CTableHeaderCell>Status</CTableHeaderCell>                  
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {filteredConsultants.map((item, index) => (
                   <CTableRow key={index}>
-                    <CTableDataCell>
+                    <CTableDataCell >
                       <div>{index + 1}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <div>{item.email}</div>
+                      <div>{item.consultant_code}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <div>{item.name}</div>
+                    <div>{item.consultant_name_en}</div>                      
                     </CTableDataCell>
                     <CTableDataCell>
-                      <div>{item.consultancyName}</div>
+                      <div>{item.org_name_en}</div>
+                    </CTableDataCell>                    
+                    <CTableDataCell >                      
+                      {item.is_email_verified ? (
+                      <div>
+                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                      </div>
+                    ) : (
+                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                    )}
                     </CTableDataCell>
                     <CTableDataCell>
-                      <div>{item.licenseNumber}</div>
+                    {item.is_phone_verified ? (
+                      <div>
+                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                      </div>
+                    ) : (
+                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                    )}
                     </CTableDataCell>
                     <CTableDataCell>
-                      <div>{item.isVerified ? 'Yes' : 'No'}</div>
+                    {item.record_status ? (
+                      <div>
+                        {<CButton  style={{ width: '100px' }} color="success">Active</CButton>}
+                      </div>
+                    ) : (
+                      <div>{<CButton  style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
+                    )}
                     </CTableDataCell>
                   </CTableRow>
                 ))}
