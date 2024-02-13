@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import UserContext from 'src/utils/UserContext'
-import OrganizationForm from '../../components/OrganizationForm'
 import {
   CTable,
   CTableBody,
@@ -19,7 +18,7 @@ import {
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index'
 
 import CIcon from '@coreui/icons-react'
-import { cilCheckCircle,cilXCircle } from '@coreui/icons'
+import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { DEFAULT_URL } from 'src/utils/Constant'
 
@@ -33,53 +32,31 @@ const ConsultancyInfo = () => {
   const { user } = useContext(UserContext)
 
   useEffect(() => {
-    const fetchDataForConsultancy = async () => {
-      setIsLoading(true)
-      try {
-        const token = user.jwtToken
-        if (!token) {
-          throw new Error('Login Required')
-        }
-        const response = await axios.get(DEFAULT_URL + 'organization/getorganizations', {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        setConsultancies(response.data.data)
-      } catch (error) {
-        console.error(error)
-        setAlertVisible(true)
-        setErrorMessage(error.message)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchDataForConsultancy()
   }, [user])
 
-  // const handleAddConsultancyClick = () => {
-  //   if (!showForm) {
-  //     setShowForm(true)
-  //   } else setShowForm(false)
-  // }
-
-  // const updateConsultancies = async () => {
-  //   try {
-  //     const token = user.jwtToken
-
-  //     const response = await axios.get(DEFAULT_URL + 'organization/getorganizations', {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     setConsultancies(response.data.data)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  const fetchDataForConsultancy = async () => {
+    setIsLoading(true)
+    try {
+      const token = user.jwtToken
+      if (!token) {
+        throw new Error('Login Required')
+      }
+      const response = await axios.get(DEFAULT_URL + 'organization/getorganizations', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setConsultancies(response.data.data)
+    } catch (error) {
+      console.error(error)
+      setAlertVisible(true)
+      setErrorMessage(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const filteredConsultancies = consultancies.filter((item) =>
     item.org_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -90,22 +67,35 @@ const ConsultancyInfo = () => {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
         {isLoading && (
-          <div className="d-flex justify-content-center">
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
             <CSpinner />
           </div>
         )}
+
         {alertVisible && (
-          <CToast
-            autohide={false}
-            visible={true}
-            color="primary"
-            className="text-white align-items-center"
+          <div
+            style={{
+              position: 'fixed',
+              top: '20px',
+              right: '20px',
+              zIndex: '9999', // Ensure it's above other content
+            }}
           >
-            <div className="d-flex">
-              <CToastBody>{errorMessage}</CToastBody>
-              <CToastClose className="me-2 m-auto" white />
-            </div>
-          </CToast>
+            <CToast
+              autohide={false}
+              visible={true}
+              color="primary"
+              className="text-white align-items-center"
+            >
+              <div className="d-flex">
+                <CToastBody>{errorMessage}</CToastBody>
+                <CToastClose className="me-2 m-auto" white />
+              </div>
+            </CToast>
+          </div>
         )}
         <div className="mb-4">
           {/* <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
@@ -160,16 +150,20 @@ const ConsultancyInfo = () => {
                   </CTableDataCell>
                   <CTableDataCell>
                     {item.is_email_verified ? (
-                      <div>{<CIcon icon={cilCheckCircle} className="text-success" size="xl"/>}</div>
+                      <div>
+                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                      </div>
                     ) : (
-                      <div>{<CIcon icon={cilXCircle} className='text-danger' size="xl"/>}</div>
+                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
                     )}
                   </CTableDataCell>
                   <CTableDataCell>
                     {item.is_phone_verified ? (
-                      <div>{<CIcon icon={cilCheckCircle} className="text-success" size="xl"/>}</div>
+                      <div>
+                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                      </div>
                     ) : (
-                      <div>{<CIcon icon={cilXCircle} className='text-danger' size="xl"/>}</div>
+                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
                     )}
                   </CTableDataCell>
                 </CTableRow>

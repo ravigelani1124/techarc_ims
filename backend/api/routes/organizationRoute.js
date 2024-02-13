@@ -5,7 +5,7 @@ const organizationController = require('../controllers/organizationController');
 
 const router = express.Router();
 
-router.post('/addorganization', organizationController.addOrganization);
-router.get('/getorganizations', organizationController.getOrganizations);
+router.post('/addorganization', authMiddleware.authenticateToken, organizationController.addOrganization);
+router.get('/getorganizations', authMiddleware.authenticateToken,  organizationController.getOrganizations);
 router.get('/orgverify/:token', organizationController.verify_organization_email);
 module.exports = router;

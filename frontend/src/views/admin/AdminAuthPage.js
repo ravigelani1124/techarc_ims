@@ -168,26 +168,36 @@ const Login = () => {
       {/* Main content */}
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
         <CContainer>
-          {isLoading && (
-            <div className="d-flex justify-content-center">
-              <CSpinner />
-            </div>
-          )}
-          {alertVisible && (
-            <div className="mb-3 d-flex justify-content-end">
-              <CToast
-                autohide={false}
-                visible={true}
-                color="primary"
-                className="text-white align-items-center"
-              >
-                <div className="d-flex">
-                  <CToastBody>{errorMessage}</CToastBody>
-                  <CToastClose className="me-2 m-auto" white />
-                </div>
-              </CToast>
-            </div>
-          )}
+        {isLoading && (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
+            <CSpinner />
+          </div>
+        )}
+           {alertVisible && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '20px',
+              right: '20px',
+              zIndex: '9999', // Ensure it's above other content
+            }}
+          >
+            <CToast
+              autohide={false}
+              visible={true}
+              color="primary"
+              className="text-white align-items-center"
+            >
+              <div className="d-flex">
+                <CToastBody>{errorMessage}</CToastBody>
+                <CToastClose className="me-2 m-auto" white />
+              </div>
+            </CToast>
+          </div>
+        )}
           <CRow className="justify-content-center">
             <CCol md={8}>
               <CCardGroup>
