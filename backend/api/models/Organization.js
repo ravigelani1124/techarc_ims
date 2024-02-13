@@ -7,6 +7,7 @@ const organizationSchema = new mongoose.Schema(
       minlength: [3, "Organization code must be at least 3 characters long"],
       maxlength: [5, "Organization code cannot exceed 5 characters"],
       required: [true, "Organization code is required"],
+      unique: true,
     },
     street_no: { type: String, required: [true, "Street no is required"] },
     street_name: { type: String, required: [true, "Address is required"] },
@@ -33,6 +34,7 @@ const organizationSchema = new mongoose.Schema(
     },
     org_phone: {
       type: String,
+      required: [true, "Phone number is required"],
       unique: true,
       minlength: [10, "Phone number must be 10 digits long"],
       maxlength: [10, "Phone number must be 10 digits long"],

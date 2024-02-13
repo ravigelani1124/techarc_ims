@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import UserContext from 'src/utils/UserContext'
-import ConsultancyForm from '../../components/OrganizationForm'
+import OrganizationForm from '../../components/OrganizationForm'
 import {
   CTable,
   CTableBody,
@@ -117,7 +117,7 @@ const ConsultancyInfo = () => {
           </div>
           {showForm && (
             <div>
-              <ConsultancyForm
+              <OrganizationForm
                 onClose={() => setShowForm(false)}
                 updateConsultancies={updateConsultancies}
               />
