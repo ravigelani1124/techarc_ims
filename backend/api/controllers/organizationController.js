@@ -1,7 +1,15 @@
 const Organization = require("../models/Organization");
-const OrgAddress = require("../models/OrgAddress");
+const Address = require("../models/Address");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
 async function getOrganizations(req, res) {
   try {
@@ -59,7 +67,7 @@ async function addOrganization(req, res) {
 
     const savedOrganization = await organization.save();
 
-    await new OrgAddress({
+    await new Address({
       org_id: savedOrganization._id, // Associate address with organization
       street_no,
       street_name,
@@ -90,13 +98,6 @@ async function addOrganization(req, res) {
 }
 
 async function sendVerificationEmail(email, token) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "ravi.gelanee@gmail.com",
-      pass: "tvgp vcpt aimw njdf",
-    },
-  });
 
   const mailOptions = {
     from: "techarc@gmail.com",

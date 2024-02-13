@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const orgAddressSchema = new mongoose.Schema({
+const addressSchema = new mongoose.Schema({
     street_no: { type: String, required: [true, "Street no is required"] },
     street_name: { type: String, required: [true, "Address is required"] },
     city: { type: String, required: [true, "City is required"] },
@@ -21,6 +21,6 @@ const orgAddressSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-const OrgAddress = mongoose.model("Address", orgAddressSchema);
+const Address = mongoose.model("Address", addressSchema);
 
-module.exports = OrgAddress;
+module.exports = Address;

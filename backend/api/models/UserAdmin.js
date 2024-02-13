@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const superUserSchema = new mongoose.Schema({
+const userAdminSchema = new mongoose.Schema({
   name: { type: String, required: true},
   email: { type: String,  unique: true },
   privateKey: { type: String, default: null },
@@ -23,6 +23,6 @@ superUserSchema.pre('save', async function (next) {
   next();
 });
 
-const SuperUser = mongoose.model('SuperUser', superUserSchema);
+const UserAdmin = mongoose.model('UserAdmin', userAdminSchema);
 
-module.exports = SuperUser;
+module.exports = UserAdmin;
