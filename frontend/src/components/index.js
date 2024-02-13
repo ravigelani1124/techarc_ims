@@ -4,7 +4,7 @@ import AppHeader from './AppHeader'
 import AppHeaderDropdown from './header/AppHeaderDropdown'
 import AppSidebar from './AppSidebar'
 import DocsExample from './DocsExample'
-import ConsultancyForm from './ConsultancyForm'
+import OrganizationForm from './OrganizationForm'
 
 export {
   AppFooter,
@@ -12,5 +12,5 @@ export {
   AppHeaderDropdown,
   AppSidebar,
   DocsExample,
-  ConsultancyForm,
+  OrganizationForm,
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
 import UserContext from 'src/utils/UserContext'
-import ConsultancyForm from '../../components/ConsultancyForm'
+import ConsultancyForm from '../../components/OrganizationForm'
 import {
   CTable,
   CTableBody,
@@ -110,9 +110,9 @@ const ConsultancyInfo = () => {
         <div className="mb-4">
           <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
             <h4>
-              <CButton color="primary" onClick={handleAddConsultancyClick}>
+              {/* <CButton color="primary" onClick={handleAddConsultancyClick}>
                 Add New Consultancy Group
-              </CButton>
+              </CButton> */}
             </h4>
           </div>
           {showForm && (

@@ -7,6 +7,9 @@ import {
   cilNotes,
   cilSpeedometer,
   cilStar,
+  cilPuzzle,
+  cilCursor,
+  cilTablet
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
@@ -22,54 +25,60 @@ const _nav = [
     },
   },
 
+  // Consultant
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Consultant',
-    to: '/consultant',
-    icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-    },
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add New Consultant',
+        to: '/consultant',
+        icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'Consultant List',
+        to: '/consultant',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
   },
 
-
+  // Organization
   {
-    component: CNavItem,
-    name: 'Consultancy',
-    to: '/consultancy',
-    icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-    },
-  },
+    component: CNavGroup,
+    name: 'Organization',
+    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add New Organization',
+        to: '/addorg',
+        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
 
-  // {
-  //   component: CNavGroup,
-  //   name: 'Pages',
-  //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'Login',
-  //       to: '/login',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Register',
-  //       to: '/register',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Error 404',
-  //       to: '/404',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Error 500',
-  //       to: '/500',
-  //     },
-  //   ],
-  // },
+      {
+        component: CNavItem,
+        name: 'Organization List',
+        to: '/organization',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
+  },
 ]
 
 export default _nav
