@@ -69,6 +69,7 @@ async function addOrganization(req, res) {
       country,
       created_by,
       updated_by,
+      role:"organization"
     }).save();
 
     await sendVerificationEmail(org_email, org_email_token);
@@ -87,26 +88,6 @@ async function addOrganization(req, res) {
     });
   }
 }
-
-// async function sendVerificationEmail(email, token) {
-
-//     const transporter = nodemailer.createTransport({
-//       service: 'gmail',
-//       auth: {
-//         user: 'ravi.gelanee@gmail.com',
-//         pass: 'tvgp vcpt aimw njdf',
-//       },
-//     });
-
-//       const mailOptions = {
-//         from: 'techarc@gmail.com',
-//         to: email,
-//         subject: 'Email Verification',
-//         text: `Thank you for registering with us. Please click on the following link to verify your email address: http://localhost:3000/api/organization/orgverify/${token}`,
-//       };
-
-//       await transporter.sendMail(mailOptions);
-//     }
 
 async function sendVerificationEmail(email, token) {
   const transporter = nodemailer.createTransport({
