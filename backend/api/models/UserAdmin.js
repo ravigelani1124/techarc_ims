@@ -8,11 +8,10 @@ const userAdminSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isSuperUser: { type: Boolean, default: true },
   jwtToken: { type: String ,default: null},
-  createdAt: { type: Date, default: Date.now },
   isVerified: { type: Boolean, default: false },
   emailVerificationToken: { type: String },
   role: { type: String, default: 'admin' }
-});
+},{timestamps: true});
 
 userAdminSchema.pre('save', async function (next) {
   const user = this;

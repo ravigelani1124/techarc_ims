@@ -178,24 +178,22 @@ async function verify_email(req, res) {
     const user = await UserAdmin.findOne({ emailVerificationToken: token });
 
     if (!user) {
-      return res.status(400).json({
-        status: "failed",
-        data: {},
-        message: "Invalid verification token",
-      });
+      return res.render("404", { errorMessage: "User not found" });
     }
 
+    if(token !== user.emailVerificationToken) {
+      return res.render("404", { errorMessage: "invalid token" });
+    }
     // Update the user's isVerified status
     user.isVerified = true;
 
     // Save the updated user back to the database
     await user.save();
 
-    return res.status(200).json({
-      status: "success",
-      data: { user },
-      message: "Email verification successful",
-    });
+    const title = "Verification Successful";
+    const message = "Your email has been successfully verified.";
+
+    res.render("email-verification-success", { title, message });
 
   } catch (err) {
     console.error(err);

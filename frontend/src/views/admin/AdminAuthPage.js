@@ -52,7 +52,7 @@ const Login = () => {
   const fetchDataLogin = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(DEFAULT_URL + 'auth/superlogin', {
+      const response = await axios.post(DEFAULT_URL + 'auth/adminlogin', {
         email: emailLogin,
         password: passwordLogin,
       });
@@ -81,7 +81,7 @@ const Login = () => {
   const fetchDataSignUp = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(DEFAULT_URL + 'auth/supersignup', {
+      const response = await axios.post(DEFAULT_URL + 'auth/adminsignup', {
         email: emailSignUp,
         password: passwordSignUp,
         name: nameSignUp,
