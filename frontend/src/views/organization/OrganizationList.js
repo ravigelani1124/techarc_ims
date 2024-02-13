@@ -19,7 +19,7 @@ import {
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index'
 
 import CIcon from '@coreui/icons-react'
-import { cilDelete } from '@coreui/icons'
+import { cilCheckCircle,cilXCircle } from '@coreui/icons'
 
 import { DEFAULT_URL } from 'src/utils/Constant'
 
@@ -35,19 +35,17 @@ const ConsultancyInfo = () => {
   useEffect(() => {
     const fetchDataForConsultancy = async () => {
       setIsLoading(true)
-      try {        
+      try {
         const token = user.jwtToken
         if (!token) {
           throw new Error('Login Required')
         }
-        const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList',
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await axios.get(DEFAULT_URL + 'organization/getorganizations', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        )
+        })
         setConsultancies(response.data.data)
       } catch (error) {
         console.error(error)
@@ -61,39 +59,41 @@ const ConsultancyInfo = () => {
     fetchDataForConsultancy()
   }, [user])
 
-  const handleAddConsultancyClick = () => {
-    if (!showForm) {
-      setShowForm(true)
-    } else setShowForm(false)
-  }
+  // const handleAddConsultancyClick = () => {
+  //   if (!showForm) {
+  //     setShowForm(true)
+  //   } else setShowForm(false)
+  // }
 
-  const updateConsultancies = async () => {
-    try {
-      const token = user.jwtToken
-      
-      const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      setConsultancies(response.data.data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  // const updateConsultancies = async () => {
+  //   try {
+  //     const token = user.jwtToken
+
+  //     const response = await axios.get(DEFAULT_URL + 'organization/getorganizations', {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     setConsultancies(response.data.data)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
 
   const filteredConsultancies = consultancies.filter((item) =>
-    item.consultancyName.toLowerCase().includes(searchQuery.toLowerCase()),
+    item.org_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
   )
   return (
     <>
       <AppSidebar />
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        {isLoading &&<div className="d-flex justify-content-center">
+        {isLoading && (
+          <div className="d-flex justify-content-center">
             <CSpinner />
-          </div>}
+          </div>
+        )}
         {alertVisible && (
           <CToast
             autohide={false}
@@ -108,11 +108,11 @@ const ConsultancyInfo = () => {
           </CToast>
         )}
         <div className="mb-4">
-          <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
+          {/* <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
             <h4>
-              {/* <CButton color="primary" onClick={handleAddConsultancyClick}>
+              <CButton color="primary" onClick={handleAddConsultancyClick}>
                 Add New Consultancy Group
-              </CButton> */}
+              </CButton>
             </h4>
           </div>
           {showForm && (
@@ -123,11 +123,11 @@ const ConsultancyInfo = () => {
               />
               <br />
             </div>
-          )}
+          )} */}
 
           <div className="mb-3" style={{ padding: '0 20px' }}>
             <CFormInput
-              placeholder="Search Consultancy..."
+              placeholder="Search Organizations..."
               aria-label="Search input"
               type="text"
               value={searchQuery}
@@ -135,35 +135,47 @@ const ConsultancyInfo = () => {
             />
           </div>
         </div>
-        <div  style={{ padding: '0 20px' }}>
-        <CTable align="middle" className="mb-0 border" hover responsive >
-          <CTableHead color="light">
-            <CTableRow>
-              <CTableHeaderCell>#</CTableHeaderCell>
-              <CTableHeaderCell>Consultancy Name</CTableHeaderCell>
-              <CTableHeaderCell>License No.</CTableHeaderCell>
-              {/* <CTableHeaderCell>Delete</CTableHeaderCell> */}
-            </CTableRow>
-          </CTableHead>
-          <CTableBody>
-            {filteredConsultancies.map((item, index) => (
-              <CTableRow key={index}>
-                <CTableDataCell>
-                  <div>{index + 1}</div>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <div>{item.consultancyName}</div>
-                </CTableDataCell>
-                <CTableDataCell>
-                  <div>{item.licenseNumber}</div>
-                </CTableDataCell>
-                {/* <CTableDataCell>
-                  <div>{<CIcon icon={cilDelete} size="xl"/>}</div>
-                </CTableDataCell>                 */}
+        <div style={{ padding: '0 20px' }}>
+          <CTable align="middle" className="mb-0 border" hover responsive>
+            <CTableHead color="light">
+              <CTableRow>
+                <CTableHeaderCell>#</CTableHeaderCell>
+                <CTableHeaderCell>Org. Code</CTableHeaderCell>
+                <CTableHeaderCell>Organization Name</CTableHeaderCell>
+                <CTableHeaderCell>Email</CTableHeaderCell>
+                <CTableHeaderCell>Phone</CTableHeaderCell>
               </CTableRow>
-            ))}
-          </CTableBody>
-        </CTable>
+            </CTableHead>
+            <CTableBody>
+              {filteredConsultancies.map((item, index) => (
+                <CTableRow key={index}>
+                  <CTableDataCell>
+                    <div>{index + 1}</div>
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    <div>{item.org_code}</div>
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    <div>{item.org_name_en}</div>
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {item.is_email_verified ? (
+                      <div>{<CIcon icon={cilCheckCircle} className="text-success" size="xl"/>}</div>
+                    ) : (
+                      <div>{<CIcon icon={cilXCircle} className='text-danger' size="xl"/>}</div>
+                    )}
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {item.is_phone_verified ? (
+                      <div>{<CIcon icon={cilCheckCircle} className="text-success" size="xl"/>}</div>
+                    ) : (
+                      <div>{<CIcon icon={cilXCircle} className='text-danger' size="xl"/>}</div>
+                    )}
+                  </CTableDataCell>
+                </CTableRow>
+              ))}
+            </CTableBody>
+          </CTable>
         </div>
         <AppFooter />
       </div>

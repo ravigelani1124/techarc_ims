@@ -33,7 +33,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add New Consultant',
+        name: 'Add Consultant',
         to: '/consultant',
         icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
         badge: {
@@ -60,7 +60,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add New Organization',
+        name: 'Add Organization',
         to: '/addorg',
         icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
         badge: {
@@ -70,7 +70,7 @@ const _nav = [
 
       {
         component: CNavItem,
-        name: 'Organization List',
+        name: 'Organizations',
         to: '/organization',
         icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
         badge: {
