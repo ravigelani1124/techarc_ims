@@ -14,7 +14,7 @@ const userAdminSchema = new mongoose.Schema({
   role: { type: String, default: 'admin' }
 });
 
-superUserSchema.pre('save', async function (next) {
+userAdminSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     const salt = await bcrypt.genSalt(10);
