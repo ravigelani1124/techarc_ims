@@ -10,7 +10,8 @@ const PORT = process.env.PORT || 3000;
 const dbName = process.env.MONGO_DBNAME || 'techarc';
 
 const authRoutes = require('./api/routes/authRoutes');
-const consultancyRoute = require('./api/routes/consultancyRoute');
+const organizationRoute = require('./api/routes/organizationRoute');
+
 app.set('view engine', 'ejs'); 
 
 const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}${dbName}`;
@@ -23,7 +24,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/consultancy', consultancyRoute);
+app.use('/api/organization', organizationRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
