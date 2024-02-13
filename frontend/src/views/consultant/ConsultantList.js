@@ -17,7 +17,12 @@ import axios from 'axios';
 import { DEFAULT_URL } from 'src/utils/Constant';
 import CIcon from '@coreui/icons-react'
 
-const ConsultantInfo = () => {
+const ConsultantList = () => {
+
+  useEffect(() => {
+    document.title = 'Admin | Consultant';
+  }, []);
+
   const [showForm, setShowForm] = useState(false);
   const [consultant, setConsultant] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -191,4 +196,4 @@ async function chainAPIs() {
   );
 };
 
-export default ConsultantInfo;
+export default ConsultantList;

@@ -15,7 +15,8 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 const OrganizationList = React.lazy(() => import('./views/organization/OrganizationList'));
 const AddOrganization = React.lazy(() => import('./components/OrganizationForm'));
-const ConsultantInfo = React.lazy(() => import('./views/consultant/ConsultantInfo'));
+const ConsultantList = React.lazy(() => import('./views/consultant/ConsultantList'));
+const AddCounsultant = React.lazy(() => import('./components/ConsultantForm'));
 const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
 const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
 
@@ -43,9 +44,10 @@ const App = () => {
         <Routes>
         <Route element={<PrivateRoutes />}>                     
            <Route exact path="/dashboard" name="Dashboard" element={<Dashboard/>} />            
-            <Route exact path="/consultant" name="Consultant Info" element={<ConsultantInfo />} />
+            <Route exact path="/consultant" name="Consultant List" element={<ConsultantList />} />
             <Route exact path="/organization" name="Organization List" element={<OrganizationList />} />
-            <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />          
+            <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />  
+            <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />        
         </Route>
 
         <Route exact path="/" element={<Launcher/>} />

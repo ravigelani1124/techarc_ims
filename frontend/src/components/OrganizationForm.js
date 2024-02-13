@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AppSidebar, AppFooter, AppHeader } from './index';
 import UserContext from 'src/utils/UserContext';
 import axios from 'axios';
@@ -8,6 +8,11 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { CRow, CCol } from '@coreui/react';
 
 const OrganizationForm = () => {
+
+  useEffect(() => {
+    document.title = 'Admin | Add Organization';
+  }, []);
+
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false)
@@ -290,5 +295,5 @@ const OrganizationForm = () => {
     </>
   );
 };
-
+ 
 export default OrganizationForm;

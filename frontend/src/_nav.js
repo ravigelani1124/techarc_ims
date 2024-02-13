@@ -34,7 +34,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Add Consultant',
-        to: '/consultant',
+        to: '/addconsultant', 
         icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
         badge: {
           color: 'info',

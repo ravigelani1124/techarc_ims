@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom'
 
 
 const Dashboard = () => {
+
+  useEffect(() => {
+    document.title = 'Admin | Dashboard';
+  }, []);
+
   const navigate = useNavigate()
   const { user } = useContext(UserContext);
   

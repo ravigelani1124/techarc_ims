@@ -1,152 +1,321 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { CFormInput, CFormLabel, CFormSelect } from '@coreui/react'
+import { AppSidebar, AppFooter, AppHeader } from './index';
 import UserContext from 'src/utils/UserContext';
 import axios from 'axios';
-import { DEFAULT_URL } from 'src/utils/Constant';
-import { doc } from 'prettier';
+import {  CFormLabel,  CSpinner,CToast,CToastBody,CToastClose } from '@coreui/react';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CRow, CCol } from '@coreui/react';
 
 
-const ConsultancyForm = ({ onClose,updateConsultant,consultancies }) => {
-  
+const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
+
+  // render dynamic title
+  useEffect(() => {
+    document.title = 'Admin | Add Consultant';
+  }, []);
+
   const { user } = useContext(UserContext);
-  const [selectedConsultancy, setSelectedConsultancy] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [licenseNumber, setLicenseNumber] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
-  console.log("Consultancies----In form",consultancies)
+  const [formData, setFormData] = useState({
+    org_code: '',
+    org_name_en: '',
+    org_name_fr: '',
+    org_email: '',
+    org_phone: '',
+    street_no: '',
+    street_name: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleCountryChange = (val) => {
+    setFormData({ ...formData, country: val });
+  };
+
+  const handleRegionChange = (val) => {
+    setFormData({ ...formData, state: val });
+  };
+
   
   const handleSubmit = async(e) => {
     e.preventDefault()
-    await callAddConsultantAPI();
+    setLoading(true);
+    // await addConsultantAPIs();
   }
-  const handleConsultancyChange = (e) => {
-    setSelectedConsultancy(e.target.value);
-    console.log("selectedConsultancy",e.target.value)
-    // Any additional logic you want to execute when the consultancy selection changes
-  };
 
-  const callAddConsultantAPI = async () => {
-    try {
-      console.log("name", name);
-      console.log("email", email);
-      console.log("phone", phone);  
-      console.log("licenseNumber", licenseNumber);
-      console.log("selectedConsultancy", selectedConsultancy);
-      console.log("user.jwtToken", user.jwtToken);
+  // const addConsultantAPIs = async () => {
+  //   try {
+  //     const jwtToken = user.jwtToken;
+  //     const response = await axios.post(
+  //       `${DEFAULT_URL}organization/addorganization`,
+  //       {
+  //         ...formData,
+  //         created_by: user._id,
+  //         updated_by: user._id,
+  //       },
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${jwtToken}`,
+  //         },
+  //       }
+  //     );
+  //     setLoading(false);
+  //     const successMessage = response.data.message;        
+  //     setErrorMessage(successMessage);
+  //   setFormData({
+  //     org_code: '',
+  //     org_name_en: '',
+  //     org_name_fr: '',
+  //     org_email: '',
+  //     org_phone: '',
+  //     street_no: '',
+  //     street_name: '',
+  //     city: '',
+  //     state: '',
+  //     zip: '',
+  //     country: '',
+  //   })
+  //   } catch (error) {  
+  //     setLoading(false);
+  //     console.error('ErrorEmpty:', error);    
+  //     if (error.response) {
+  //       // The request was made and the server responded with a status code
+  //       // that falls out of the range of 2xx
+  //       console.error('Error:', error);
+  //       setErrorMessage(error.response.data.message + ' || ' + "Validation failed");
+  //     } else if (error.request) {
+  //       // The request was made but no response was received
+  //       console.error('No response received:', error.request);
+  //       setErrorMessage(error.request);
+  //     } else {
+  //       // Something happened in setting up the request that triggered an Error
+  //       console.error('Error:', error.message);
+  //       setErrorMessage(error.message);        
+  //     }
+  //   }
+  //   setAlertVisible(true)
+  // };
   
-      const jwtToken = user.jwtToken;
-      const response = await axios.post(
-        DEFAULT_URL+'auth/consultantSignup',
-        {
-          name: name, // Ensure that all required fields are included in the request payload
-          superuserId: user._id,
-          consultancyName: selectedConsultancy.consultancyName,
-          cosultancyId: selectedConsultancy._id,
-          email: email,
-          licenseNumber: licenseNumber,
-          contactNumber: phone,                    
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwtToken}`
-          }
-        }
-      );
-  
-      const successMessage = response.data.message;
-      alert("Success: " + successMessage);
-      onClose(); // Close the form
-      updateConsultant();
-    } catch (error) {
-      console.error(error);
-      if (error.response) {
-        alert(error.response.data.message);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-        alert(error.request);
-      } else {
-        alert(error.request);
-      }
-    }
-  }
   
 
 
   return (
-    <div style={{ padding: '0 20px' }}>
-      <form onSubmit={handleSubmit}>
-        
-      <div className="mb-3">
-          <CFormLabel htmlFor="consultantInput">Consultant Name</CFormLabel>
-          <CFormInput
-            type="text"
-            id="consultantInput"
-            placeholder="John Doe"
-            required
-            autoFocus
-            onChange={(e) => setName(e.target.value)}
-          />
+    <>
+      <AppSidebar />
+      <div className="position-fixed top-50 start-50 end-50 translate-middle" > {loading && <CSpinner/>}</div>
+      {alertVisible && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '20px',
+              right: '20px',
+              zIndex: '9999',
+            }}
+          >
+            <CToast
+              autohide={false}
+              visible={true}
+              color="primary"
+              className="text-white align-items-center"
+            >
+              <div className="d-flex">
+                <CToastBody>{errorMessage}</CToastBody>
+                <CToastClose className="me-2 m-auto" white />
+              </div>
+            </CToast>
+          </div>
+        )}
+      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+        <AppHeader />
+        <div style={{ padding: '0 20px' }}>                
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="consultantName" className="form-label">
+                Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="consultantName"
+                name="org_name_en"
+                placeholder="Consultant Name"
+                pattern="[A-Za-z\s\-]+"
+                required
+                autoFocus
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="code" className="form-label">
+                Code
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="code"
+                name="consultant_code"
+                placeholder="CON234"
+                pattern="[A-Za-z0-9]{1,6}"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="licenseNumber" className="form-label">
+                License Number
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="licenseNumber"
+                name="licenseNumber"
+                placeholder="lic2345680"
+                pattern="[A-Za-z0-9]{1,10}"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="code" className="form-label">
+                Select Organization
+              </label>
+              <select class="form-select form-select-md" aria-label=".form-select-sm example" required>
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                name="org_email"
+                placeholder="abc@example.com"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="phone" className="form-label">
+                Phone
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="phone"
+                name="consultant_phone"
+                placeholder="647-273-5676"
+                pattern="[0-9]{10}"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="streetNo" className="form-label">
+                Street No.
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="streetNo"
+                name="street_no"
+                placeholder="52"
+                pattern="[0-9]+"
+                required
+                onChange={handleChange}
+                value={formData.street_no}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="address" className="form-label">
+                Address
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="address"
+                name="street_name"
+                placeholder="Queen street"
+                pattern="[A-Za-z\s\-]+"
+                required
+                onChange={handleChange}
+                value={formData.street_name}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="city" className="form-label">
+                City
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="city"
+                name="city"
+                placeholder="Toronto"
+                pattern="[A-Za-z\s\-]+"
+                required
+                onChange={handleChange}
+                value={formData.city}
+              />
+            </div>
+            <div className="mb-3">
+              <CFormLabel htmlFor="country">Country & Region</CFormLabel>
+              <CRow>
+                <CCol xs="6">
+                  <CountryDropdown
+                    className="form-control"
+                    value={formData.country}
+                    onChange={handleCountryChange}
+                  />
+                </CCol>
+                <CCol xs="6">
+                  <RegionDropdown
+                    className="form-control"
+                    country={formData.country}
+                    value={formData.state}
+                    onChange={handleRegionChange}
+                  />
+                </CCol>
+              </CRow>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="zip" className="form-label">
+                Postal Code
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="zip"
+                name="zip"
+                placeholder="M3N 1L6"
+                pattern="[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d"
+                required
+                onChange={handleChange}
+                value={formData.zip}
+              />
+            </div>
+            <div className="mb-3 d-flex justify-content-end">
+              <button type="submit" className="btn btn-primary px-4">
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="mb-3">
-          <CFormLabel htmlFor="emailInput">Email address</CFormLabel>
-          <CFormInput
-            type="email"
-            id="emailInput"
-            placeholder="name@example.com"
-            required
-            autoFocus
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-        
-        <div className="mb-3">
-          <CFormLabel htmlFor="consultancyInput">Consultancy</CFormLabel>
-          <CFormSelect
-            aria-label="Default select example"
-            id="consultancyInput"
-            value={selectedConsultancy}
-            onChange={handleConsultancyChange}
-          >            
-            <option value="">Select</option>
-            {consultancies &&
-              consultancies.map((consultancy) => (
-                <option key={consultancy._id} value={consultancy.consultancyName}>
-                  {consultancy.consultancyName}
-                </option>
-              ))}
-          </CFormSelect>
-        </div>
-      
-        </div>
-        <div className="mb-3">
-          <CFormLabel htmlFor="licInput">License Number</CFormLabel>
-          <CFormInput type="tel" id="licInput" placeholder="11220054" required autoFocus onChange={(e) => setLicenseNumber(e.target.value)} />
-        </div>
-        <div className="mb-3">
-          <CFormLabel htmlFor="contactInput">Contact Number</CFormLabel>
-          <CFormInput
-            type="tel"
-            id="contactInput"
-            placeholder="123-456-7890"
-            pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
-            required
-            autoFocus
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-        
-        <div className="mb-3 d-flex justify-content-end">
-          <button type="submit" className="btn btn-primary px-4">
-            Create
-          </button>
-        </div>
-      </form>
-    </div>
-  )
+        <AppFooter />
+      </div>
+    </>
+  );
 }
 
-export default ConsultancyForm
+export default ConsultantForm

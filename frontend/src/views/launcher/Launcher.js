@@ -18,6 +18,11 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate } from 'react-router-dom'
 
 const Launcher = () => {
+
+  useEffect(() => {
+    document.title = 'User | Consultant';
+  }, []);
+
   const navigate = useNavigate()
   useEffect(() => {
     const userLoggedIn = localStorage.getItem('user')

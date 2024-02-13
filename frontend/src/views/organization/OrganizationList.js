@@ -22,7 +22,12 @@ import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { DEFAULT_URL } from 'src/utils/Constant'
 
-const ConsultancyInfo = () => {
+const OrganizationList = () => {
+
+  useEffect(() => {
+    document.title = 'Admin | Organization';
+  }, []);
+
   const [showForm, setShowForm] = useState(false)
   const [consultancies, setConsultancies] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -187,4 +192,4 @@ const ConsultancyInfo = () => {
   )
 }
 
-export default ConsultancyInfo
+export default OrganizationList

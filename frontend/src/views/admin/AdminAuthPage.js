@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   CButton,
@@ -24,6 +24,11 @@ import { DEFAULT_URL } from 'src/utils/Constant';
 import axios from 'axios';
 
 const Login = () => {
+
+  useEffect(() => {
+    document.title = 'Admin';
+  }, []);
+
   const { loginUser } = useContext(UserContext);
 
   const [emailLogin, setEmailLogin] = useState('');
