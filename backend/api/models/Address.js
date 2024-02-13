@@ -7,7 +7,7 @@ const addressSchema = new mongoose.Schema({
     state: { type: String, required: [true, "State is required"] },
     zip: { type: String, required: [true, "Zip is required"] },
     country: { type: String, required: [true, "Country is required"] },
-    org_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true },    
+    cleint_id: { type: mongoose.Schema.Types.ObjectId, required: true },    
     role: {type:String,require:true},
     created_by: {
         type: mongoose.Schema.Types.ObjectId,

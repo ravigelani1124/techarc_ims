@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('../utils/jwt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const ConsultantUser = require('../models/ConsultantUser');
+const UserConsultant = require('../models/UserConsultant');
 
 
 
@@ -294,7 +294,7 @@ async function delete_consultant_by_admin(req, res) {
         message: "Id is required",
     });
     }
-    await ConsultantUser.findByIdAndDelete(id);
+    await UserConsultant.findByIdAndDelete(id);
     return res.status(200).json({
       status: "success",
       data: {},

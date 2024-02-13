@@ -68,7 +68,7 @@ async function addOrganization(req, res) {
     const savedOrganization = await organization.save();
 
     await new Address({
-      org_id: savedOrganization._id, // Associate address with organization
+      cleint_id: savedOrganization._id, // Associate address with organization
       street_no,
       street_name,
       city,
