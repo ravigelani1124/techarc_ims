@@ -13,7 +13,7 @@ router.post('/adminLogin', authAdminController.super_login);
 router.get('/adminverify/:token', authAdminController.verify_email);
 
 //consultant
-router.post('/consultantSignup',  authConsultantController.consultant_signup);
+router.post('/consultantSignup', authMiddleware.authenticateToken, authConsultantController.consultant_signup);
 router.post('/consultantLogin', authConsultantController.consultant_login);
 router.post('/consultantCreatepassword', authConsultantController.create_password_consultant);
 router.get('/consultantVerify/:token', authConsultantController.verify_email);

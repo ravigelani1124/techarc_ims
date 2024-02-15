@@ -169,6 +169,13 @@ async function consultant_login(req, res) {
         });
       }
 
+      if(user.record_status === false) {
+        return res.status(400).json({
+          status: "failed",
+          data: {},
+          message: "Your account has been deactivated. Please contact admin",
+        });
+      }
       const token = jwt.generateToken(user);
       console.log("token---------", token);
       user.jwtToken = token;

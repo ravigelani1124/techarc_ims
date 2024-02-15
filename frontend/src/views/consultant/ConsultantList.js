@@ -56,15 +56,14 @@ async function chainAPIs() {
       setConsultancies(response.data.data)
     } catch (error) {
       console.error(error)
+      setAlertVisible(true)
+      setErrorMessage(error.message)
     }
   }
   const fetchDataForConsultant = async () => {
     setIsLoading(true);
     try {
-      const token = user?.jwtToken;
-      if (!token) {
-        throw new Error('Login Required');
-      }
+      const token = user?.jwtToken;    
       const response = await axios.get(`${DEFAULT_URL}auth/getConsultantList`, {
         headers: {
           'Content-Type': 'application/json',
