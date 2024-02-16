@@ -18,6 +18,8 @@ const generateVerificationToken = () => {
 };
 
 const user_signup = async (req, res) => {
+
+  console.log('req.body', req.body)
   try {
     const {
       user_name_en,
@@ -219,7 +221,7 @@ const user_login = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ user_email });
 
     if (!user) {
       return res.status(400).json({
