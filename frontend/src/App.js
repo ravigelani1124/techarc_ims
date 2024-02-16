@@ -4,6 +4,8 @@ import './scss/style.scss';
 import { UserProvider } from './utils/UserContext';
 import PrivateRoutes from './components/PrivateRoutes';
 import DashboardConsultant from './views/dashboard/DashBoardConsultant';
+import AddUserForm from './components/AddUserForm';
+import UserList from './views/consultant/UserList';
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -20,6 +22,7 @@ const ConsultantList = React.lazy(() => import('./views/consultant/ConsultantLis
 const AddCounsultant = React.lazy(() => import('./components/ConsultantForm'));
 const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
 const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
+const AddUserPage = React.lazy(() => import('./components/AddUserForm'));
 
 const App = () => {
 
@@ -54,6 +57,8 @@ const App = () => {
 
             {/* Consultant Route */}
             <Route exact path="/consultant/dashboard" name="Dashboard" element={<DashboardConsultant/>} />     
+            <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
+            <Route exact path="/consultant/users" name="Users" element={<UserList/>} />     
 
         </Route>
 

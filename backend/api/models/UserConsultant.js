@@ -38,20 +38,6 @@ const userConsultantSchema = new mongoose.Schema(
     state: { type: String, required: true },
     zip: { type: String, required: true },
     country: { type: String, required: true },
-
-    // name: { type: String, required: true},
-    //   superuserId: { type: mongoose.Schema.Types.ObjectId, ref: 'SuperUser', required: true },
-    //   consultancyName: { type: String, required: true},
-    //   email: { type: String,  unique: true },
-    //   licenseNumber: { type: String, required: true, unique: true },
-    //   contactNumber: { type: Number, required: true},
-    //   role: { type: String,  default: "consultant" },
-    //   password: { type: String, default: null },
-    //   jwtToken: { type: String ,default: null},
-    //   createdAt: { type: Date, default: Date.now },
-    //   isVerified: { type: Boolean, default: false },
-    //   emailVerificationToken: { type: String },
-    //   cosultancyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Consultancy', required: true }
   },
   { timestamps: true }
 );
