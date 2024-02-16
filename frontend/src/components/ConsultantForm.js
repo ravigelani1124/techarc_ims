@@ -1,37 +1,60 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react';
 import { AppSidebar, AppFooter, AppHeader } from './index';
 import UserContext from 'src/utils/UserContext';
 import axios from 'axios';
-import {  CFormLabel,  CSpinner,CToast,CToastBody,CToastClose } from '@coreui/react';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react';
 import { CRow, CCol } from '@coreui/react';
+import { DEFAULT_URL } from 'src/utils/Constant';
 
-
-const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
-
-  // render dynamic title
-  useEffect(() => {
-    document.title = 'Admin | Add Consultant';
-  }, []);
-
+const ConsultantForm = () => {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [orgs, setOrgs] = useState([]);
+  const [selectedOrg, setSelectedOrg] = useState('');
   const [formData, setFormData] = useState({
-    org_code: '',
+    consultant_code: '',
+    consultant_name_en: '',
+    consultant_license_number: '',
+    consultant_phone: '',
+    consultant_email: '',
     org_name_en: '',
-    org_name_fr: '',
-    org_email: '',
-    org_phone: '',
+    org_id: '',
     street_no: '',
     street_name: '',
     city: '',
     state: '',
     zip: '',
     country: '',
+    created_by: '',
+    updated_by: '',
   });
+
+  useEffect(() => {
+    document.title = 'Admin | Add Consultant';
+    getOrganizations();
+  }, []);
+
+  
+  const getOrganizations = async () => {
+    setLoading(true);
+    try {
+      const jwtToken = user.jwtToken;
+      const res = await axios.get(`${DEFAULT_URL}organization/getOrganizations`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      setLoading(false);
+      setOrgs(res.data.data);
+    } catch (err) {
+      setLoading(false);
+      setErrorMessage(err);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,99 +69,93 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
     setFormData({ ...formData, state: val });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
-  const handleSubmit = async(e) => {
-    e.preventDefault()
     setLoading(true);
-    // await addConsultantAPIs();
-  }
+    console.log("consultant form---",formData);
+    await addConsultantAPIs();
+  };
 
-  // const addConsultantAPIs = async () => {
-  //   try {
-  //     const jwtToken = user.jwtToken;
-  //     const response = await axios.post(
-  //       `${DEFAULT_URL}organization/addorganization`,
-  //       {
-  //         ...formData,
-  //         created_by: user._id,
-  //         updated_by: user._id,
-  //       },
-  //       {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           Authorization: `Bearer ${jwtToken}`,
-  //         },
-  //       }
-  //     );
-  //     setLoading(false);
-  //     const successMessage = response.data.message;        
-  //     setErrorMessage(successMessage);
-  //   setFormData({
-  //     org_code: '',
-  //     org_name_en: '',
-  //     org_name_fr: '',
-  //     org_email: '',
-  //     org_phone: '',
-  //     street_no: '',
-  //     street_name: '',
-  //     city: '',
-  //     state: '',
-  //     zip: '',
-  //     country: '',
-  //   })
-  //   } catch (error) {  
-  //     setLoading(false);
-  //     console.error('ErrorEmpty:', error);    
-  //     if (error.response) {
-  //       // The request was made and the server responded with a status code
-  //       // that falls out of the range of 2xx
-  //       console.error('Error:', error);
-  //       setErrorMessage(error.response.data.message + ' || ' + "Validation failed");
-  //     } else if (error.request) {
-  //       // The request was made but no response was received
-  //       console.error('No response received:', error.request);
-  //       setErrorMessage(error.request);
-  //     } else {
-  //       // Something happened in setting up the request that triggered an Error
-  //       console.error('Error:', error.message);
-  //       setErrorMessage(error.message);        
-  //     }
-  //   }
-  //   setAlertVisible(true)
-  // };
-  
-  
+  const addConsultantAPIs = async () => {
+    try {
+      const jwtToken = user.jwtToken;
+      const response = await axios.post(
+        `${DEFAULT_URL}auth/consultantSignup`,
+        {
+          ...formData,
+          org_id: selectedOrg,
+          created_by: user._id,
+          updated_by: user._id,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      setLoading(false);
+      const successMessage = response.data.message;
+      setErrorMessage(successMessage);
+      resetForm();
+    } catch (error) {
+      setLoading(false);
+      if (error.response) {
+        setErrorMessage(error.response.data.message + ' || ' + 'Validation failed');
+      } else if (error.request) {
+        setErrorMessage(error.request);
+      } else {
+        setErrorMessage(error.message);
+      }
+    }
+    setAlertVisible(true);
+  };
 
+  const resetForm = () => {
+    setFormData({
+      consultant_code: '',
+      consultant_name_en: '',
+      consultant_license_number: '',
+      consultant_phone: '',
+      consultant_email: '',
+      org_name_en: '',
+      org_id: '',
+      street_no: '',
+      street_name: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: '',
+      created_by: '',
+      updated_by: '',
+    });
+  };
+
+  const handleOrgChange = (e) => {  
+    setSelectedOrg(e.target.value);  
+    
+    const orgName = orgs.find(org => org._id === e.target.value)?.org_name_en || '';
+    setFormData({ ...formData, org_name_en: orgName });
+  };
 
   return (
     <>
       <AppSidebar />
-      <div className="position-fixed top-50 start-50 end-50 translate-middle" > {loading && <CSpinner/>}</div>
+      <div className="position-fixed top-50 start-50 end-50 translate-middle">{loading && <CSpinner />}</div>
       {alertVisible && (
-          <div
-            style={{
-              position: 'fixed',
-              top: '20px',
-              right: '20px',
-              zIndex: '9999',
-            }}
-          >
-            <CToast
-              autohide={false}
-              visible={true}
-              color="primary"
-              className="text-white align-items-center"
-            >
-              <div className="d-flex">
-                <CToastBody>{errorMessage}</CToastBody>
-                <CToastClose className="me-2 m-auto" white />
-              </div>
-            </CToast>
-          </div>
-        )}
+        <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
+          <CToast autohide={false} visible={true} color="primary" className="text-white align-items-center">
+            <div className="d-flex">
+              <CToastBody>{errorMessage}</CToastBody>
+              <CToastClose className="me-2 m-auto" white />
+            </div>
+          </CToast>
+        </div>
+      )}
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        <div style={{ padding: '0 20px' }}>                
+        <div style={{ padding: '0 20px' }}>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="consultantName" className="form-label">
@@ -148,11 +165,13 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 type="text"
                 className="form-control"
                 id="consultantName"
-                name="org_name_en"
+                name="consultant_name_en"
                 placeholder="Consultant Name"
                 pattern="[A-Za-z\s\-]+"
                 required
                 autoFocus
+                value={formData.consultant_name_en}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -160,13 +179,15 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 Code
               </label>
               <input
-                type="tel"
+                type="text"
                 className="form-control"
                 id="code"
                 name="consultant_code"
                 placeholder="CON234"
                 pattern="[A-Za-z0-9]{1,6}"
                 required
+                value={formData.consultant_code}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -177,21 +198,34 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 type="tel"
                 className="form-control"
                 id="licenseNumber"
-                name="licenseNumber"
+                name="consultant_license_number"
                 placeholder="lic2345680"
                 pattern="[A-Za-z0-9]{1,10}"
                 required
+                value={formData.consultant_license_number}
+                onChange={handleChange}
               />
             </div>
+
             <div className="mb-3">
               <label htmlFor="code" className="form-label">
                 Select Organization
               </label>
-              <select class="form-select form-select-md" aria-label=".form-select-sm example" required>
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+              <select
+                className="form-select form-select-md"
+                aria-label=".form-select-sm example"
+                required
+                value={selectedOrg}
+                onChange={handleOrgChange}
+              >
+                <option value="" disabled selected>
+                  Select orgs..
+                </option>
+                {orgs.map((org) => (
+                  <option key={org._id} value={org._id}>
+                    {org.org_name_en}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-3">
@@ -202,9 +236,11 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 type="email"
                 className="form-control"
                 id="email"
-                name="org_email"
+                name="consultant_email"
                 placeholder="abc@example.com"
                 required
+                value={formData.consultant_email}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -219,6 +255,8 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 placeholder="647-273-5676"
                 pattern="[0-9]{10}"
                 required
+                value={formData.consultant_phone}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -233,8 +271,8 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 placeholder="52"
                 pattern="[0-9]+"
                 required
-                onChange={handleChange}
                 value={formData.street_no}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -249,8 +287,8 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 placeholder="Queen street"
                 pattern="[A-Za-z\s\-]+"
                 required
-                onChange={handleChange}
                 value={formData.street_name}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -265,8 +303,8 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 placeholder="Toronto"
                 pattern="[A-Za-z\s\-]+"
                 required
-                onChange={handleChange}
                 value={formData.city}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3">
@@ -301,8 +339,8 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
                 placeholder="M3N 1L6"
                 pattern="[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d"
                 required
-                onChange={handleChange}
                 value={formData.zip}
+                onChange={handleChange}
               />
             </div>
             <div className="mb-3 d-flex justify-content-end">
@@ -316,6 +354,6 @@ const ConsultantForm = ({ onClose, updateConsultant, organizations}) => {
       </div>
     </>
   );
-}
+};
 
-export default ConsultantForm
+export default ConsultantForm;
