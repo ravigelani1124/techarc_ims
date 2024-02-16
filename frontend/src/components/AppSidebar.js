@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -14,12 +14,30 @@ import 'simplebar/dist/simplebar.min.css'
 import { logo } from 'src/assets/brand/logo'
 
 // sidebar nav config
-import navigation from '../_nav'
+import _nav_admin from '../_nav_admin'
+import UserContext from 'src/utils/UserContext'
+import _nav_consultant from '../_nav_consultant'
+import _nav_user from '../_nav_user'
 
 const AppSidebar = () => {
+
+  const { user } = useContext(UserContext);
+
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+
+const getSidebarNavItems = () => {
+  if (user && user.role === 'admin') {
+    return _nav_admin;
+  } else if (user && user.role === 'consultant') {
+    return _nav_consultant;
+  }
+  // Return default navigation items or handle other roles as needed
+  return _nav_user;
+};
+
 
   return (
     <CSidebar
@@ -36,7 +54,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={getSidebarNavItems()} />
         </SimpleBar>
       </CSidebarNav>
     </CSidebar>

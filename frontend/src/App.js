@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-route
 import './scss/style.scss';
 import { UserProvider } from './utils/UserContext';
 import PrivateRoutes from './components/PrivateRoutes';
+import DashboardConsultant from './views/dashboard/DashBoardConsultant';
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -12,7 +13,7 @@ const loading = (
 // Pages
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
+const Dashboard = React.lazy(() => import('./views/dashboard/DashboardAdmin'));
 const OrganizationList = React.lazy(() => import('./views/organization/OrganizationList'));
 const AddOrganization = React.lazy(() => import('./components/OrganizationForm'));
 const ConsultantList = React.lazy(() => import('./views/consultant/ConsultantList'));
@@ -43,11 +44,17 @@ const App = () => {
         <UserProvider>
         <Routes>
         <Route element={<PrivateRoutes />}>                     
-           <Route exact path="/dashboard" name="Dashboard" element={<Dashboard/>} />            
+           
+           {/* Admin Route */}
+           <Route exact path="/admin/dashboard" name="Dashboard" element={<Dashboard/>} />                
             <Route exact path="/consultant" name="Consultant List" element={<ConsultantList />} />
             <Route exact path="/organization" name="Organization List" element={<OrganizationList />} />
             <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />  
             <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />        
+
+            {/* Consultant Route */}
+            <Route exact path="/consultant/dashboard" name="Dashboard" element={<DashboardConsultant/>} />     
+
         </Route>
 
         <Route exact path="/" element={<Launcher/>} />

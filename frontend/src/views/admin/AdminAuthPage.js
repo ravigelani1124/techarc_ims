@@ -67,7 +67,7 @@ const Login = () => {
       setAlertVisible(true);
       clearLoginField();
       loginUser(response.data.data);
-      navigate('/dashboard');
+      navigate('/admin/dashboard');
     } catch (error) {
       setIsLoading(false);
       setAlertVisible(true);

@@ -34,10 +34,17 @@ const Launcher = () => {
     document.title = 'User | Consultant';
     const userLoggedIn = localStorage.getItem('user')
     console.log('Launcher----------: ', userLoggedIn)
-    if (userLoggedIn) {
-      navigate('/dashboard')
+
+    if (userLoggedIn && userLoggedIn.role === 'admin') {
+      navigate('/admin/dashboard');
+    } else if (userLoggedIn && userLoggedIn.role === 'consultant') {
+      navigate('/consultant/dashboard');
+    } else if(userLoggedIn && userLoggedIn.role === 'user') {
+      // Handle other roles or unexpected cases
+      navigate('/');
     }
-  }, [navigate])
+  }
+  , [navigate])
 
 
   const clearConsultantLoginField = () => {
@@ -70,7 +77,7 @@ const Launcher = () => {
       setAlertVisible(true);
       loginUser(response.data.data);
       clearConsultantLoginField();
-      navigate('/dashboard');
+      navigate('/consultant/dashboard');
     } catch (error) {
       setIsLoading(false);
       setAlertVisible(true);
