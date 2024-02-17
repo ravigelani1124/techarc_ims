@@ -41,7 +41,7 @@ const _nav_consultant = [
       },
       {
         component: CNavItem,
-        name: 'User List',
+        name: 'Users',
         to: '/consultant/users',
         icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
         badge: {

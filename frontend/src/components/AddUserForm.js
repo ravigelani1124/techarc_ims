@@ -70,7 +70,6 @@ const AddUserForm = () => {
           updated_by: user._id,
       },
       {
-        
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
