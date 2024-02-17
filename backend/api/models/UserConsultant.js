@@ -44,9 +44,9 @@ const userConsultantSchema = new mongoose.Schema(
 
 userConsultantSchema.pre("save", async function (next) {
   const user = this;
-  if (user.isModified("password")) {
+  if (user.isModified("consultant_password")) {
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
+    user.consultant_password = await bcrypt.hash(user.consultant_password, salt);
   }
   next();
 });

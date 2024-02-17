@@ -51,7 +51,6 @@ const AddUserForm = () => {
     e.preventDefault()
     setLoading(true)
     await addUserAPIs()
-    //console.log('Add User---', formData)
   }
 
   const addUserAPIs = async () => {
@@ -60,7 +59,7 @@ const AddUserForm = () => {
       if (!token) {
         throw new Error('Login Required')
       }
-      console.log('Add User---', formData)
+
       const response = await axios.post(DEFAULT_URL + 'auth/usersignup', 
       {
         ...formData,

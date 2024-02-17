@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
-import ConsultantForm from 'src/components/ConsultantForm';
+import React, { useEffect, useState, useContext } from 'react'
+import ConsultantForm from 'src/components/ConsultantForm'
 import {
   CTable,
   CTableBody,
@@ -8,51 +8,49 @@ import {
   CTableHeaderCell,
   CTableRow,
   CButton,
-  CFormInput,CSpinner,
-} from '@coreui/react';
+  CFormInput,
+  CSpinner,
+} from '@coreui/react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
-import { AppSidebar, AppHeader, AppFooter } from '../../components/index';
-import UserContext from 'src/utils/UserContext';
-import axios from 'axios';
-import { DEFAULT_URL } from 'src/utils/Constant';
+import { AppSidebar, AppHeader, AppFooter } from '../../components/index'
+import UserContext from 'src/utils/UserContext'
+import axios from 'axios'
+import { DEFAULT_URL } from 'src/utils/Constant'
 import CIcon from '@coreui/icons-react'
 
 const ConsultantList = () => {
+  useEffect(() => {
+    document.title = 'Admin | Consultant'
+  }, [])
+
+  const [showForm, setShowForm] = useState(false)
+  const [consultant, setConsultant] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const { user } = useContext(UserContext)
+  const [consultancies, setConsultancies] = useState([])
 
   useEffect(() => {
-    document.title = 'Admin | Consultant';
-  }, []);
+    chainAPIs()
+  }, [])
 
-  const [showForm, setShowForm] = useState(false);
-  const [consultant, setConsultant] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const { user } = useContext(UserContext);
-  const [consultancies, setConsultancies] = useState([]);
-
-
-  useEffect(() => {
-    chainAPIs();
-  }, []);
-
-  
-async function chainAPIs() {
-  await fetchDataForConsultant();
-  //await callConsultanyAPI();
-}
+  async function chainAPIs() {
+    await fetchDataForConsultant()
+    //await callConsultanyAPI();
+  }
   const callConsultanyAPI = async () => {
     try {
       const token = user.jwtToken
-      
-      const response = await axios.get(DEFAULT_URL+'consultancy/getConsultancyList', {
+
+      const response = await axios.get(DEFAULT_URL + 'consultancy/getConsultancyList', {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log("Consultancy----",response.data.data)
+      console.log('Consultancy----', response.data.data)
       setConsultancies(response.data.data)
     } catch (error) {
       console.error(error)
@@ -61,34 +59,32 @@ async function chainAPIs() {
     }
   }
   const fetchDataForConsultant = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const token = user?.jwtToken;    
+      const token = user?.jwtToken
       const response = await axios.get(`${DEFAULT_URL}auth/getConsultantList`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
-      console.log("Consultant----",response.data.data)
-      setConsultant(response.data.data);
+      })
+      console.log('Consultant----', response.data.data)
+      setConsultant(response.data.data)
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'An error occurred');
-      setAlertVisible(true);
+      setErrorMessage(error.response?.data?.message || 'An error occurred')
+      setAlertVisible(true)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleAddConsultantClick = () => {
-    setShowForm(!showForm);
-  };
-
+    setShowForm(!showForm)
+  }
 
   const filteredConsultants = consultant.filter((item) =>
-  item.consultant_name_en.toLowerCase().includes(searchQuery.toLowerCase())
-);
-
+    item.consultant_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <>
@@ -135,53 +131,63 @@ async function chainAPIs() {
                   <CTableHeaderCell>#</CTableHeaderCell>
                   <CTableHeaderCell>Code</CTableHeaderCell>
                   <CTableHeaderCell>Consultant Name</CTableHeaderCell>
-                  <CTableHeaderCell>Organization</CTableHeaderCell>                                    
+                  <CTableHeaderCell>Organization</CTableHeaderCell>
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Phone</CTableHeaderCell>
-                  <CTableHeaderCell>Status</CTableHeaderCell>                  
+                  <CTableHeaderCell>Status</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {filteredConsultants.map((item, index) => (
                   <CTableRow key={index}>
-                    <CTableDataCell >
+                    <CTableDataCell>
                       <div>{index + 1}</div>
                     </CTableDataCell>
                     <CTableDataCell>
                       <div>{item.consultant_code}</div>
                     </CTableDataCell>
                     <CTableDataCell>
-                    <div>{item.consultant_name_en}</div>                      
+                      <div>{item.consultant_name_en}</div>
                     </CTableDataCell>
                     <CTableDataCell>
                       <div>{item.org_name_en}</div>
-                    </CTableDataCell>                    
-                    <CTableDataCell >                      
+                    </CTableDataCell>
+                    <CTableDataCell>
                       {item.is_email_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
+                        <div>
+                          {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                        </div>
+                      ) : (
+                        <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                      )}
                     </CTableDataCell>
                     <CTableDataCell>
-                    {item.is_phone_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
+                      {item.is_phone_verified ? (
+                        <div>
+                          {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                        </div>
+                      ) : (
+                        <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                      )}
                     </CTableDataCell>
                     <CTableDataCell>
-                    {item.record_status ? (
-                      <div>
-                        {<CButton  style={{ width: '100px' }} color="success">Active</CButton>}
-                      </div>
-                    ) : (
-                      <div>{<CButton  style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
-                    )}
+                      {item.record_status ? (
+                        <div>
+                          {
+                            <CButton style={{ width: '100px' }} color="success">
+                              Active
+                            </CButton>
+                          }
+                        </div>
+                      ) : (
+                        <div>
+                          {
+                            <CButton style={{ width: '100px' }} color="danger">
+                              In Active
+                            </CButton>
+                          }
+                        </div>
+                      )}
                     </CTableDataCell>
                   </CTableRow>
                 ))}
@@ -192,7 +198,7 @@ async function chainAPIs() {
         <AppFooter />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ConsultantList;
+export default ConsultantList

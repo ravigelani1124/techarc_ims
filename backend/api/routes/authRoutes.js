@@ -23,11 +23,11 @@ router.delete('/deleteUser',authMiddleware.authenticateToken, authConsultantCont
 router.get('/getConsultantList', authMiddleware.authenticateToken, authConsultantController.getConsultantList);
 
 //user
-router.post('/userSignup', authUserController.user_signup);
-router.post('/userLogin', authUserController.user_login);
-router.get('/userVerify/:token', authUserController.verify_user_email);
-router.post('/userCreatepassword', authUserController.create_password_user);
-
+router.post('/userSignup',authMiddleware.authenticateToken, authUserController.userSignup);
+router.post('/userLogin', authUserController.userLogin);
+router.get('/userVerify/:token', authUserController.verifyUserEmail);
+router.post('/userCreatepassword', authUserController.createPasswordUser);
+router.get('/users', authMiddleware.authenticateToken, authUserController.getUserBasedOnConsultant);
 
 
 module.exports = router;
