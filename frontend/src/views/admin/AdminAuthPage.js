@@ -195,6 +195,7 @@ const Login = () => {
               visible={true}
               color="primary"
               className="text-white align-items-center"
+              onClose={() => setAlertVisible(false)}
             >
               <div className="d-flex">
                 <CToastBody>{errorMessage}</CToastBody>

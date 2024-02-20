@@ -145,7 +145,7 @@ const ConsultantForm = () => {
       <div className="position-fixed top-50 start-50 end-50 translate-middle">{loading && <CSpinner />}</div>
       {alertVisible && (
         <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
-          <CToast autohide={false} visible={true} color="primary" className="text-white align-items-center">
+          <CToast autohide={false} visible={true} color="primary" onClose={() => setAlertVisible(false)} className="text-white align-items-center">
             <div className="d-flex">
               <CToastBody>{errorMessage}</CToastBody>
               <CToastClose className="me-2 m-auto" white />

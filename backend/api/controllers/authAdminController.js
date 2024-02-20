@@ -305,7 +305,7 @@ async function setUserActiveOrInactive(req, res) {
     const { id, isActive, role } = req.body;
 
     console.log(id, isActive, role)
-    if (!id || !isActive || !role) {
+    if (!id  || !role) {
       return res.status(400).json({
         status: "failed",
         data: {},
@@ -333,6 +333,7 @@ async function setUserActiveOrInactive(req, res) {
     }
 
     const user = await model.findById(id);
+    console.log(user)
     if (!user) {
       return res.status(404).json({
         status: "failed",

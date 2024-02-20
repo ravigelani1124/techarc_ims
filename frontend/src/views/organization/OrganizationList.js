@@ -100,19 +100,6 @@ const OrganizationList = () => {
       setAlertVisible(true)
       console.error(error.message)
     }
-
-    // updateUserStatus(id, isActive, role)
-    //   .then((data) => {
-    //     console.log(data) // Log the response data if needed
-    //     setIsLoading(false)
-    //     fetchDataForConsultancy()
-    //   })
-    //   .catch((error) => {
-    //     setIsLoading(false)
-    //     setErrorMessage(error.message)
-    //     setAlertVisible(true)
-    //     console.error(error.message) // Log any errors
-    //   })
   }
   const filteredConsultancies = consultancies.filter((item) =>
     item.org_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -145,6 +132,7 @@ const OrganizationList = () => {
               visible={true}
               color="primary"
               className="text-white align-items-center"
+              onClose={() => setAlertVisible(false)}
             >
               <div className="d-flex">
                 <CToastBody>{errorMessage}</CToastBody>
@@ -239,7 +227,7 @@ const OrganizationList = () => {
                     ) : (
                       <div>
                         {
-                          <CButton style={{ width: '100px' }} color="danger">
+                          <CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="danger">
                             In Active
                           </CButton>
                         }
