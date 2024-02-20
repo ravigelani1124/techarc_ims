@@ -48,8 +48,15 @@ const ConsultantForm = () => {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
+
+      const organization = res.data.data
+      const activeOrganizations = organization.filter(
+        (org) => org.record_status === true
+      )
       setLoading(false);
-      setOrgs(res.data.data);
+      setErrorMessage(res.data.message);
+      setAlertVisible(true);
+      setOrgs(activeOrganizations);
     } catch (err) {
       setLoading(false);
       setErrorMessage(err);

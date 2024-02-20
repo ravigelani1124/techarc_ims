@@ -21,14 +21,12 @@ import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { DEFAULT_URL } from 'src/utils/Constant'
+import NoDataView from 'src/components/NoDataView'
 
-import updateUserStatus from 'src/utils/userUtils'
-
-const OrganizationList = () => {    
-  
+const OrganizationList = () => {
   useEffect(() => {
-      document.title = 'Admin | Organization'
-    }, [])
+    document.title = 'Admin | Organization'
+  }, [])
 
   const [showForm, setShowForm] = useState(false)
   const [consultancies, setConsultancies] = useState([])
@@ -66,35 +64,32 @@ const OrganizationList = () => {
   }
 
   const handleUpdateStatus = async (item) => {
-    
     setIsLoading(true)
 
-    try{
-
+    try {
       const id = item._id
       const isActive = !item.record_status
       const role = item.role
-  
+
       console.log(id, isActive, role)
-      const response  = await axios.post(DEFAULT_URL + 'auth/updateuserstatus', {
+      const response = await axios.post(DEFAULT_URL + 'auth/updateuserstatus', {
         id: id,
         isActive: isActive,
-        role: role
+        role: role,
       })
-  
+
       if (response.status === 200) {
-            setIsLoading(false)      
-            setErrorMessage(response.data.message)
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
         setAlertVisible(true)
         fetchDataForConsultancy()
-      }
-      else {
+      } else {
         setIsLoading(false)
         setErrorMessage(response.data.message)
         setAlertVisible(true)
         console.error(response.data.message)
       }
-    }catch(error){
+    } catch (error) {
       setIsLoading(false)
       setErrorMessage(error.message)
       setAlertVisible(true)
@@ -141,104 +136,106 @@ const OrganizationList = () => {
             </CToast>
           </div>
         )}
-        <div className="mb-4">
-          {/* <div className="mb-3 d-flex justify-content-end" style={{ padding: '0 20px' }}>
-            <h4>
-              <CButton color="primary" onClick={handleAddConsultancyClick}>
-                Add New Consultancy Group
-              </CButton>
-            </h4>
-          </div>
-          {showForm && (
-            <div>
-              <OrganizationForm
-                onClose={() => setShowForm(false)}
-                updateConsultancies={updateConsultancies}
-              />
-              <br />
-            </div>
-          )} */}
 
-          <div className="mb-3" style={{ padding: '0 20px' }}>
-            <CFormInput
-              placeholder="Search Organizations..."
-              aria-label="Search input"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
-            />
+        {consultancies.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '80vh', // Adjust as needed
+            }}
+          >
+            <NoDataView message="Organization data not available" />
           </div>
-        </div>
-        <div style={{ padding: '0 20px' }}>
-          <CTable align="middle" className="mb-0 border" hover responsive>
-            <CTableHead color="light">
-              <CTableRow>
-                <CTableHeaderCell>#</CTableHeaderCell>
-                <CTableHeaderCell>Org. Code</CTableHeaderCell>
-                <CTableHeaderCell>Organization Name</CTableHeaderCell>
-                <CTableHeaderCell>Email</CTableHeaderCell>
-                <CTableHeaderCell>Phone</CTableHeaderCell>
-                <CTableHeaderCell>Status</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {filteredConsultancies.map((item, index) => (
-                <CTableRow key={index}>
-                  <CTableDataCell>
-                    <div>{index + 1}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.org_code}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>{item.org_name_en}</div>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {item.is_email_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {item.is_phone_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    {item.record_status ? (
-                      <div>
-                        {
-                          <CButton
-                            onClick={() => handleUpdateStatus(item)}
-                            style={{ width: '100px' }}
-                            color="success"
-                          >
-                            Active
-                          </CButton>
-                        }
-                      </div>
-                    ) : (
-                      <div>
-                        {
-                          <CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="danger">
-                            In Active
-                          </CButton>
-                        }
-                      </div>
-                    )}
-                  </CTableDataCell>
-                </CTableRow>
-              ))}
-            </CTableBody>
-          </CTable>
-        </div>
+        ) : (
+          <div>
+            <div className="mb-3" style={{ padding: '0 20px' }}>
+              <CFormInput
+                placeholder="Search Organizations..."
+                aria-label="Search input"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
+              />
+            </div>
+            <div style={{ padding: '0 20px' }}>
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead color="light">
+                  <CTableRow>
+                    <CTableHeaderCell>#</CTableHeaderCell>
+                    <CTableHeaderCell>Org. Code</CTableHeaderCell>
+                    <CTableHeaderCell>Organization Name</CTableHeaderCell>
+                    <CTableHeaderCell>Email</CTableHeaderCell>
+                    <CTableHeaderCell>Phone</CTableHeaderCell>
+                    <CTableHeaderCell>Status</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {filteredConsultancies.map((item, index) => (
+                    <CTableRow key={index}>
+                      <CTableDataCell>
+                        <div>{index + 1}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.org_code}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.org_name_en}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.is_email_verified ? (
+                          <div>
+                            {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                          </div>
+                        ) : (
+                          <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.is_phone_verified ? (
+                          <div>
+                            {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                          </div>
+                        ) : (
+                          <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.record_status ? (
+                          <div>
+                            {
+                              <CButton
+                                onClick={() => handleUpdateStatus(item)}
+                                style={{ width: '100px' }}
+                                color="success"
+                              >
+                                Active
+                              </CButton>
+                            }
+                          </div>
+                        ) : (
+                          <div>
+                            {
+                              <CButton
+                                onClick={() => handleUpdateStatus(item)}
+                                style={{ width: '100px' }}
+                                color="danger"
+                              >
+                                In Active
+                              </CButton>
+                            }
+                          </div>
+                        )}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
+          </div>
+        )}
+
         <AppFooter />
       </div>
     </>

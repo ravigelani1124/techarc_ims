@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
-import ConsultantForm from 'src/components/ConsultantForm';
+import React, { useEffect, useState, useContext } from 'react'
+import ConsultantForm from 'src/components/ConsultantForm'
 import {
   CTable,
   CTableBody,
@@ -8,32 +8,32 @@ import {
   CTableHeaderCell,
   CTableRow,
   CButton,
-  CFormInput,CSpinner,
-} from '@coreui/react';
+  CFormInput,
+  CSpinner,
+} from '@coreui/react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
-import { AppSidebar, AppHeader, AppFooter } from '../../components/index';
-import UserContext from 'src/utils/UserContext';
-import axios from 'axios';
-import { DEFAULT_URL } from 'src/utils/Constant';
+import { AppSidebar, AppHeader, AppFooter } from '../../components/index'
+import UserContext from 'src/utils/UserContext'
+import axios from 'axios'
+import { DEFAULT_URL } from 'src/utils/Constant'
 import CIcon from '@coreui/icons-react'
+import NoDataView from 'src/components/NoDataView'
 
 const UserList = () => {
+  useEffect(() => {
+    document.title = 'Users'
+  }, [])
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { user } = useContext(UserContext)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [users, setUsers] = useState([])
 
   useEffect(() => {
-    document.title = 'Users';
-  }, []);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const { user } = useContext(UserContext);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    fetchUsers();
-  }, [user]);
-
+    fetchUsers()
+  }, [user])
 
   const handleUpdateStatus = async (item) => {
     setIsLoading(true)
@@ -54,7 +54,7 @@ const UserList = () => {
         setIsLoading(false)
         setErrorMessage(response.data.message)
         setAlertVisible(true)
-        fetchUsers();
+        fetchUsers()
       } else {
         setIsLoading(false)
         setErrorMessage(response.data.message)
@@ -69,10 +69,8 @@ const UserList = () => {
     }
   }
 
-
   const fetchUsers = async () => {
-
-    if(!user) {
+    if (!user) {
       setIsLoading(false)
       setErrorMessage('Login Required')
       setAlertVisible(true)
@@ -92,9 +90,9 @@ const UserList = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log("Users----",response.data.data)
+      console.log('Users----', response.data.data)
       setUsers(response.data.data)
-    }catch (error) {
+    } catch (error) {
       console.error(error)
       setAlertVisible(true)
       setErrorMessage(error.message.message)
@@ -103,13 +101,12 @@ const UserList = () => {
     }
   }
 
-let filtersUsers = []
-if (users && Array.isArray(users)) {
-  filtersUsers = users.filter((item) =>
-    item.user_name_en.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-} 
-
+  let filtersUsers = []
+  if (users && Array.isArray(users)) {
+    filtersUsers = users.filter((item) =>
+      item.user_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+  }
 
   return (
     <>
@@ -124,7 +121,20 @@ if (users && Array.isArray(users)) {
             <CSpinner />
           </div>
         )}
-         <div className="mb-3" style={{ padding: '0 20px' }}>
+        {users.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '80vh', // Adjust as needed
+            }}
+          >
+            <NoDataView message="User data not available" />
+          </div>
+        ) : (
+          <div>
+            <div className="mb-3" style={{ padding: '0 20px' }}>
               <CFormInput
                 placeholder="Search users by name.."
                 aria-label="Search input"
@@ -132,68 +142,88 @@ if (users && Array.isArray(users)) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>        
-       <div style={{ padding: '0 20px' }}>
-            <CTable align="middle" className="mb-0 border" hover responsive>
-              <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell>#</CTableHeaderCell>
-                  <CTableHeaderCell>Code</CTableHeaderCell>
-                  <CTableHeaderCell>Name</CTableHeaderCell>                
-                  <CTableHeaderCell>Email</CTableHeaderCell>
-                  <CTableHeaderCell>Phone</CTableHeaderCell>
-                  <CTableHeaderCell>Status</CTableHeaderCell>                  
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {filtersUsers.map((item, index) => (
-                  <CTableRow key={index}>
-                    <CTableDataCell >
-                      <div>{index + 1}</div>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <div>{item.user_code}</div>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                    <div>{item.user_name_en}</div>                      
-                    </CTableDataCell>                    
-                    <CTableDataCell >                      
-                      {item.is_email_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                    {item.is_phone_verified ? (
-                      <div>
-                        {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
-                      </div>
-                    ) : (
-                      <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
-                    )}
-                    </CTableDataCell>
-                    <CTableDataCell>
-                    {item.record_status ? (
-                      <div>
-                        {<CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="success">Active</CButton>}
-                      </div>
-                    ) : (
-                      <div>{<CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
-                    )}
-                    </CTableDataCell>
+            </div>
+            <div style={{ padding: '0 20px' }}>
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead color="light">
+                  <CTableRow>
+                    <CTableHeaderCell>#</CTableHeaderCell>
+                    <CTableHeaderCell>Code</CTableHeaderCell>
+                    <CTableHeaderCell>Name</CTableHeaderCell>
+                    <CTableHeaderCell>Email</CTableHeaderCell>
+                    <CTableHeaderCell>Phone</CTableHeaderCell>
+                    <CTableHeaderCell>Status</CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {filtersUsers.map((item, index) => (
+                    <CTableRow key={index}>
+                      <CTableDataCell>
+                        <div>{index + 1}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.user_code}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <div>{item.user_name_en}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.is_email_verified ? (
+                          <div>
+                            {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                          </div>
+                        ) : (
+                          <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.is_phone_verified ? (
+                          <div>
+                            {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                          </div>
+                        ) : (
+                          <div>{<CIcon icon={cilXCircle} className="text-danger" size="xl" />}</div>
+                        )}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.record_status ? (
+                          <div>
+                            {
+                              <CButton
+                                onClick={() => handleUpdateStatus(item)}
+                                style={{ width: '100px' }}
+                                color="success"
+                              >
+                                Active
+                              </CButton>
+                            }
+                          </div>
+                        ) : (
+                          <div>
+                            {
+                              <CButton
+                                onClick={() => handleUpdateStatus(item)}
+                                style={{ width: '100px' }}
+                                color="danger"
+                              >
+                                In Active
+                              </CButton>
+                            }
+                          </div>
+                        )}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
           </div>
+        )}
 
         <AppFooter />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList
