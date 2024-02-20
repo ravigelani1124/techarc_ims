@@ -6,7 +6,7 @@ const userConsultantSchema = new mongoose.Schema(
     consultant_code: { type: String, required: true, unique: true },
     consultant_name_en: { type: String, required: true },
     consultant_name_fr: { type: String, required: false },
-    consultant_license_number: { type: String, required: true, unique: true },
+    consultant_license_number: { type: String, required: true },
     consultant_phone: { type: String, required: true },
     consultant_email: { type: String, required: true, unique: true },
     org_name_en: { type: String, required: true },

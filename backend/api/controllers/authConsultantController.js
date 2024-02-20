@@ -152,6 +152,14 @@ async function consultant_login(req, res) {
           message: "Please verify your email first",
         });
       }
+      if (!user.record_status) {
+        return res.status(400).json({
+          status: "failed",
+          data: {},
+          message: "Your account has been deactivated. Please contact Admin",
+        });
+      }
+
       if (!user.consultant_password) {
         return res.status(401).json({
           status: "failed",
@@ -161,21 +169,14 @@ async function consultant_login(req, res) {
       }
       const isPasswordValid = await bcrypt.compare(consultant_password, user.consultant_password);
 
-      // if (!isPasswordValid) {
-      //   return res.status(400).json({
-      //     status: "failed",
-      //     data: {},
-      //     message: "Invalid credentials",
-      //   });
-      // }
-
-      if(user.record_status === false) {
+      if (!isPasswordValid) {
         return res.status(400).json({
           status: "failed",
           data: {},
-          message: "Your account has been deactivated. Please contact admin",
+          message: "Invalid credentials",
         });
       }
+
       const token = jwt.generateToken(user);
       console.log("token---------", token);
       user.jwtToken = token;
@@ -228,7 +229,7 @@ async function create_password_consultant(req, res) {
 
   const consultant_email = email;
   const consultant_password = password;
-  const user = await UserConsultant.findOne({ consultant_email });
+  const user = await UserConsultant.findOne({ consultant_email: consultant_email });
   if (!user) {
     return res.render("404", { errorMessage: "It seems you haven't have an account, please register instead." });    
   }
