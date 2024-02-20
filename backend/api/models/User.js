@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     is_email_verified: { type: Boolean, default: false },
     is_phone_verified: { type: Boolean, default: false },
     user_email_token: { type: String, default: null },
-    record_status:{ type:String,default:true},
+    record_status:{ type:Boolean,default:true},
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "consultant",

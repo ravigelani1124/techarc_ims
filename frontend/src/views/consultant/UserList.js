@@ -32,7 +32,43 @@ const UserList = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [user]);
+
+
+  const handleUpdateStatus = async (item) => {
+    setIsLoading(true)
+
+    try {
+      const id = item._id
+      const isActive = !item.record_status
+      const role = item.role
+
+      console.log(id, isActive, role)
+      const response = await axios.post(DEFAULT_URL + 'auth/updateuserstatus', {
+        id: id,
+        isActive: isActive,
+        role: role,
+      })
+
+      if (response.status === 200) {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        fetchUsers();
+      } else {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        console.error(response.data.message)
+      }
+    } catch (error) {
+      setIsLoading(false)
+      setErrorMessage(error.message)
+      setAlertVisible(true)
+      console.error(error.message)
+    }
+  }
+
 
   const fetchUsers = async () => {
 
@@ -142,10 +178,10 @@ if (users && Array.isArray(users)) {
                     <CTableDataCell>
                     {item.record_status ? (
                       <div>
-                        {<CButton  style={{ width: '100px' }} color="success">Active</CButton>}
+                        {<CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="success">Active</CButton>}
                       </div>
                     ) : (
-                      <div>{<CButton  style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
+                      <div>{<CButton  onClick={() => handleUpdateStatus(item)} style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
                     )}
                     </CTableDataCell>
                   </CTableRow>

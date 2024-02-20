@@ -161,13 +161,13 @@ async function consultant_login(req, res) {
       }
       const isPasswordValid = await bcrypt.compare(consultant_password, user.consultant_password);
 
-      if (!isPasswordValid) {
-        return res.status(400).json({
-          status: "failed",
-          data: {},
-          message: "Invalid credentials",
-        });
-      }
+      // if (!isPasswordValid) {
+      //   return res.status(400).json({
+      //     status: "failed",
+      //     data: {},
+      //     message: "Invalid credentials",
+      //   });
+      // }
 
       if(user.record_status === false) {
         return res.status(400).json({
