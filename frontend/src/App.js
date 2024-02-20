@@ -4,7 +4,6 @@ import './scss/style.scss';
 import { UserProvider } from './utils/UserContext';
 import PrivateRoutes from './components/PrivateRoutes';
 import DashboardConsultant from './views/dashboard/DashBoardConsultant';
-import AddUserForm from './components/AddUserForm';
 import UserList from './views/consultant/UserList';
 const loading = (
   <div className="pt-3 text-center">

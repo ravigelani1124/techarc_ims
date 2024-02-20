@@ -2,6 +2,7 @@ import React, {useContext, useEffect,} from 'react';
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
 import { useNavigate } from 'react-router-dom'
+import AppointmentBooking from 'src/components/AppointmentBooking';
 
 
 const AddApplicationUser = () => {
@@ -13,11 +14,6 @@ const AddApplicationUser = () => {
   const navigate = useNavigate()
   const { user } = useContext(UserContext);
   
-  
-  // If user is not authenticated, redirect to the launcher page
-  
-  console.log("User: ", user)
-  
   return (
     <div>
       <AppSidebar />
@@ -26,8 +22,9 @@ const AddApplicationUser = () => {
         <div className="body flex-grow-1 px-3">
           <div className="mb-4">
             <h4>
-              <center>New Application</center>
+              <center>Add Application</center>
             </h4>            
+            <AppointmentBooking />
           </div>        
         </div>
         <AppFooter />
