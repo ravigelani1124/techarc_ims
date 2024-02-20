@@ -34,11 +34,12 @@ const userSchema = new mongoose.Schema({
     state: { type: String, required: true },
     zip: { type: String, required: true },
     country: { type: String, required: true },
+    role: { type: String, default: "user" },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
     const user = this;
-    if (user.isModified('user_password')) {
+    if (user.isModified('password')) {
         const salt = await bcrypt.genSalt(10);
         user.user_password = await bcrypt.hash(user.user_password, salt);
     }
