@@ -33,29 +33,40 @@ const ConsultantList = () => {
   const [consultancies, setConsultancies] = useState([])
 
   useEffect(() => {
-    chainAPIs()
-  }, [])
+    fetchDataForConsultant()
+  }, [user])
 
-  async function chainAPIs() {
-    await fetchDataForConsultant()
-    //await callConsultanyAPI();
-  }
-  const callConsultanyAPI = async () => {
+  const handleUpdateStatus = async (item) => {
+    setIsLoading(true)
+
     try {
-      const token = user.jwtToken
+      const id = item._id
+      const isActive = !item.record_status
+      const role = item.role
 
-      const response = await axios.get(DEFAULT_URL + 'consultancy/getConsultancyList', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+      console.log(id, isActive, role)
+      const response = await axios.post(DEFAULT_URL + 'auth/updateuserstatus', {
+        id: id,
+        isActive: isActive,
+        role: role,
       })
-      console.log('Consultancy----', response.data.data)
-      setConsultancies(response.data.data)
+
+      if (response.status === 200) {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        fetchDataForConsultant()
+      } else {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        console.error(response.data.message)
+      }
     } catch (error) {
-      console.error(error)
-      setAlertVisible(true)
+      setIsLoading(false)
       setErrorMessage(error.message)
+      setAlertVisible(true)
+      console.error(error.message)
     }
   }
   const fetchDataForConsultant = async () => {
@@ -174,7 +185,11 @@ const ConsultantList = () => {
                       {item.record_status ? (
                         <div>
                           {
-                            <CButton style={{ width: '100px' }} color="success">
+                            <CButton
+                              onClick={() => handleUpdateStatus(item)}
+                              style={{ width: '100px' }}
+                              color="success"
+                            >
                               Active
                             </CButton>
                           }
@@ -182,7 +197,11 @@ const ConsultantList = () => {
                       ) : (
                         <div>
                           {
-                            <CButton style={{ width: '100px' }} color="danger">
+                            <CButton
+                              onClick={() => handleUpdateStatus(item)}
+                              style={{ width: '100px' }}
+                              color="danger"
+                            >
                               In Active
                             </CButton>
                           }
