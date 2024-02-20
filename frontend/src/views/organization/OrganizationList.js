@@ -22,11 +22,13 @@ import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
 import { DEFAULT_URL } from 'src/utils/Constant'
 
-const OrganizationList = () => {
+import updateUserStatus from 'src/utils/userUtils'
 
+const OrganizationList = () => {    
+  
   useEffect(() => {
-    document.title = 'Admin | Organization';
-  }, []);
+      document.title = 'Admin | Organization'
+    }, [])
 
   const [showForm, setShowForm] = useState(false)
   const [consultancies, setConsultancies] = useState([])
@@ -63,6 +65,55 @@ const OrganizationList = () => {
     }
   }
 
+  const handleUpdateStatus = async (item) => {
+    
+    setIsLoading(true)
+
+    try{
+
+      const id = item._id
+      const isActive = !item.record_status
+      const role = item.role
+  
+      console.log(id, isActive, role)
+      const response  = await axios.post(DEFAULT_URL + 'auth/updateuserstatus', {
+        id: id,
+        isActive: isActive,
+        role: role
+      })
+  
+      if (response.status === 200) {
+            setIsLoading(false)      
+            setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        fetchDataForConsultancy()
+      }
+      else {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        console.error(response.data.message)
+      }
+    }catch(error){
+      setIsLoading(false)
+      setErrorMessage(error.message)
+      setAlertVisible(true)
+      console.error(error.message)
+    }
+
+    // updateUserStatus(id, isActive, role)
+    //   .then((data) => {
+    //     console.log(data) // Log the response data if needed
+    //     setIsLoading(false)
+    //     fetchDataForConsultancy()
+    //   })
+    //   .catch((error) => {
+    //     setIsLoading(false)
+    //     setErrorMessage(error.message)
+    //     setAlertVisible(true)
+    //     console.error(error.message) // Log any errors
+    //   })
+  }
   const filteredConsultancies = consultancies.filter((item) =>
     item.org_name_en.toLowerCase().includes(searchQuery.toLowerCase()),
   )
@@ -139,7 +190,7 @@ const OrganizationList = () => {
                 <CTableHeaderCell>Organization Name</CTableHeaderCell>
                 <CTableHeaderCell>Email</CTableHeaderCell>
                 <CTableHeaderCell>Phone</CTableHeaderCell>
-                <CTableHeaderCell>Status</CTableHeaderCell>                  
+                <CTableHeaderCell>Status</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
@@ -175,12 +226,26 @@ const OrganizationList = () => {
                   <CTableDataCell>
                     {item.record_status ? (
                       <div>
-                        {<CButton  style={{ width: '100px' }} color="success">Active</CButton>}                      
+                        {
+                          <CButton
+                            onClick={() => handleUpdateStatus(item)}
+                            style={{ width: '100px' }}
+                            color="success"
+                          >
+                            Active
+                          </CButton>
+                        }
                       </div>
                     ) : (
-                      <div>{<CButton  style={{ width: '100px' }} color="danger">In Active</CButton>}</div>
+                      <div>
+                        {
+                          <CButton style={{ width: '100px' }} color="danger">
+                            In Active
+                          </CButton>
+                        }
+                      </div>
                     )}
-                    </CTableDataCell>
+                  </CTableDataCell>
                 </CTableRow>
               ))}
             </CTableBody>

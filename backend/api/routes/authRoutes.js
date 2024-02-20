@@ -11,6 +11,7 @@ const router = express.Router();
 router.post('/adminSignup', authAdminController.super_signup);
 router.post('/adminLogin', authAdminController.super_login);
 router.get('/adminverify/:token', authAdminController.verify_email);
+router.post('/updateuserstatus', authAdminController.setUserActiveOrInactive);
 
 //consultant
 router.post('/consultantSignup', authMiddleware.authenticateToken, authConsultantController.consultant_signup);

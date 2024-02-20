@@ -1,11 +1,11 @@
-const UserAdmin = require('../models/UserAdmin');
-const bcrypt = require('bcryptjs');
-const jwt = require('../utils/jwt');
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
-const UserConsultant = require('../models/UserConsultant');
-
-
+const UserAdmin = require("../models/UserAdmin");
+const bcrypt = require("bcryptjs");
+const jwt = require("../utils/jwt");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const UserConsultant = require("../models/UserConsultant");
+const Organization = require("../models/Organization");
+const User = require("../models/User");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -15,45 +15,44 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const generateVerificationToken = () => {
-  return crypto.randomBytes(20).toString('hex');
+  return crypto.randomBytes(20).toString("hex");
 };
 
 async function super_signup(req, res) {
-  try{   
+  try {
     const { name, email, password, privateKey } = req.body;
 
-    if(!name){
+    if (!name) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Name is required",
-    });
-    } 
+      });
+    }
 
-    if(!email){
+    if (!email) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Email is required",
-    });
+      });
     }
 
-    if(!password){
+    if (!password) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Password is required",
-    });
+      });
     }
 
-    if(privateKey!=="123456"){
+    if (privateKey !== "123456") {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Please enter a valid private key",
-    });
+      });
     }
 
     const existingUser = await UserAdmin.findOne({ email });
@@ -61,9 +60,9 @@ async function super_signup(req, res) {
     if (existingUser) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "It seems you already have an account, please log in instead.",
-    });
+      });
     }
 
     const emailVerificationToken = generateVerificationToken();
@@ -72,28 +71,27 @@ async function super_signup(req, res) {
       name,
       email,
       password,
-      emailVerificationToken
-    }); 
+      emailVerificationToken,
+    });
 
-    const savedUser = await newUser.save(); 
+    const savedUser = await newUser.save();
 
-     // Send a verification email to the user
-     await sendVerificationEmail(email, emailVerificationToken);
-    
+    // Send a verification email to the user
+    await sendVerificationEmail(email, emailVerificationToken);
 
     res.status(200).json({
       status: "success",
       data: savedUser,
-      message: "Thank you for registering with us. Your account has been successfully created. Please verified your email address to login.",
-  });  
-
-  }catch(err){
+      message:
+        "Thank you for registering with us. Your account has been successfully created. Please verified your email address to login.",
+    });
+  } catch (err) {
     console.error(err);
     return res.status(400).json({
       status: "failed",
-      data:{},
+      data: {},
       message: err.message,
-  });
+    });
   }
 }
 
@@ -104,17 +102,17 @@ async function super_login(req, res) {
     if (!email) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Email is required",
-    });
+      });
     }
 
     if (!password) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Password is required",
-    });
+      });
     }
 
     try {
@@ -124,11 +122,12 @@ async function super_login(req, res) {
         return res.status(400).json({
           status: "failed",
           data: {},
-          message: "It seems you haven't have an account, please register instead.",
+          message:
+            "It seems you haven't have an account, please register instead.",
         });
       }
 
-      if(user.isVerified === false){
+      if (user.isVerified === false) {
         return res.status(400).json({
           status: "failed",
           data: {},
@@ -148,7 +147,7 @@ async function super_login(req, res) {
 
       const token = jwt.generateToken(user);
       // Save the token to the user document in the database
-      console.log("token---------",token);
+      console.log("token---------", token);
       user.jwtToken = token;
       await user.save();
 
@@ -158,21 +157,17 @@ async function super_login(req, res) {
         data: user,
         message: "Login successful",
       });
-
     } catch (err) {
       console.log(err);
     }
-
   } catch (err) {
     console.log(err);
   }
 }
 
-
 async function verify_email(req, res) {
-  
   const token = req.params.token;
-  
+
   try {
     // Find the user by the verification token
     const user = await UserAdmin.findOne({ emailVerificationToken: token });
@@ -181,7 +176,7 @@ async function verify_email(req, res) {
       return res.render("404", { errorMessage: "User not found" });
     }
 
-    if(token !== user.emailVerificationToken) {
+    if (token !== user.emailVerificationToken) {
       return res.render("404", { errorMessage: "invalid token" });
     }
     // Update the user's isVerified status
@@ -194,7 +189,6 @@ async function verify_email(req, res) {
     const message = "Your email has been successfully verified.";
 
     res.render("email-verification-success", { title, message });
-
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -206,7 +200,6 @@ async function verify_email(req, res) {
 
 // Function to send a verification email
 async function sendVerificationEmail(email, token) {
-
   const mailOptions = {
     from: "techarc@gmail.com",
     to: email,
@@ -283,16 +276,15 @@ async function sendVerificationEmail(email, token) {
   await transporter.sendMail(mailOptions);
 }
 
-
 async function delete_consultant_by_admin(req, res) {
   try {
     const id = req.body.id;
-    if(!id){
+    if (!id) {
       return res.status(400).json({
         status: "failed",
-        data:{},
+        data: {},
         message: "Id is required",
-    });
+      });
     }
     await UserConsultant.findByIdAndDelete(id);
     return res.status(200).json({
@@ -308,18 +300,69 @@ async function delete_consultant_by_admin(req, res) {
     });
   }
 }
+async function setUserActiveOrInactive(req, res) {
+  try {
+    const { id, isActive, role } = req.body;
 
-async function changePassword(req, res) {
-  const { email, password } = req.body;
-  
+    console.log(id, isActive, role)
+    if (!id || !isActive || !role) {
+      return res.status(400).json({
+        status: "failed",
+        data: {},
+        message: "Id, isActive, and role are required",
+      });
+    }
+
+    let model;
+    switch (role) {
+      case "organization":
+        model = Organization;
+        break;
+      case "consultant":
+        model = UserConsultant;
+        break;
+      case "user":
+        model = User;
+        break;
+      default:
+        return res.status(400).json({
+          status: "failed",
+          data: {},
+          message: "Invalid role provided",
+        });
+    }
+
+    const user = await model.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        data: {},
+        message: `${role.charAt(0).toUpperCase() + role.slice(1)} not found`,
+      });
+    }
+
+    user.record_status = isActive;
+    await user.save();
+    
+    return res.status(200).json({
+      status: "success",
+      data: user,
+      message: `${role.charAt(0).toUpperCase() + role.slice(1)} updated successfully`,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
 }
+
 
 module.exports = {
   super_signup,
   super_login,
   verify_email,
-  delete_consultant_by_admin
+  delete_consultant_by_admin,
+  setUserActiveOrInactive,
 };
-
-
-

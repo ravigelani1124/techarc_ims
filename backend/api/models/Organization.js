@@ -55,7 +55,8 @@ const organizationSchema = new mongoose.Schema(
     org_email_token: {
       type: String,
       default: null,
-    }
+    },
+    role: { type: String, default: "organization" },
   },
   { timestamps: true }
 );
