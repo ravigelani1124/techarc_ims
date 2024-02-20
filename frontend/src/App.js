@@ -23,6 +23,7 @@ const AddCounsultant = React.lazy(() => import('./components/ConsultantForm'));
 const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
 const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
 const AddUserPage = React.lazy(() => import('./components/AddUserForm'));
+const DashboardUser = React.lazy(() => import('./views/dashboard/DashBoardUser'));
 
 const App = () => {
 
@@ -60,10 +61,12 @@ const App = () => {
             <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />     
 
+            <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />
+           
         </Route>
 
         <Route exact path="/" element={<Launcher/>} />
-        <Route exact path="/adminauth" name="Admin Authentication" element={<AdminAuthPage />} />            
+        <Route exact path="/adminauth" name="Admin Authentication" element={<AdminAuthPage />} />
       </Routes>
         </UserProvider>
       </Suspense>

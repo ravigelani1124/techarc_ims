@@ -24,6 +24,10 @@ const Launcher = () => {
 
   const [consultantEmail , setConsultantEmail] = useState('')
   const [consultantPassword , setConsultantPassword] = useState('')
+
+  const [userEmail , setUserEmail] = useState('')
+  const [userPassword , setUserPassword] = useState('')
+
   const [isLoading, setIsLoading] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,7 +45,7 @@ const Launcher = () => {
       navigate('/consultant/dashboard');
     } else if(userLoggedIn && userLoggedIn.role === 'user') {
       // Handle other roles or unexpected cases
-      navigate('/');
+      navigate('/user/dashboard');
     }
   }
   , [navigate])
@@ -51,6 +55,23 @@ const Launcher = () => {
     setConsultantEmail('')
     setConsultantPassword('')
   };
+
+  const clearUserLoginField = () => {
+    setUserEmail('')
+    setUserPassword('')
+  }
+
+  const handleUserLogin = async (e) => {
+    e.preventDefault();
+    if (!userEmail || !userPassword) {
+      setErrorMessage('All Fields Required*');
+      setAlertVisible(true);
+    } else {
+      setAlertVisible(false);
+      setIsLoading(true);
+      await callUserLoginAPI();
+    }
+  }
 
   const handleConsultantLogin = async (e) => {
     e.preventDefault();
@@ -62,6 +83,31 @@ const Launcher = () => {
       setIsLoading(true);
       await callConsultantLoginAPI();
     }
+  };
+
+  const callUserLoginAPI = async () => {
+    try {
+      const response = await axios.post(DEFAULT_URL + 'auth/userlogin', {
+        user_email: userEmail,
+        user_password: userPassword,
+      });
+      const successMessage = response.data.data.message;
+      
+      setIsLoading(false);
+      setErrorMessage(successMessage);
+      setAlertVisible(true);
+      loginUser(response.data.data);
+      clearUserLoginField();
+      navigate('/user/dashboard');
+    } catch (error) {
+      setIsLoading(false);
+      setAlertVisible(true);
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else if (error.request) {
+        console.log('No response received:', error.request);
+  }
+}
   };
 
   const callConsultantLoginAPI = async () => {
@@ -166,6 +212,7 @@ const Launcher = () => {
                         placeholder="Email"
                         autoComplete="email"
                         required
+                        onChange={(e) => setUserEmail(e.target.value)}
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -178,11 +225,12 @@ const Launcher = () => {
                         placeholder="Password"
                         autoComplete="current-password"
                         required
+                        onChange={(e) => setUserPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton onClick={handleUserLogin} color="primary" className="px-4">
                           Login
                         </CButton>
                       </CCol>
