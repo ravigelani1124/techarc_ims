@@ -24,6 +24,31 @@ const _nav_user = [
       // text: 'NEW',
     },
   },
+  {
+    component: CNavGroup,
+    name: 'Application',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Application',
+        to: '/user/addapplication',
+        icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'Applications',
+        to: '/user/applications',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
+  },
 ];
 
 export default _nav_user;

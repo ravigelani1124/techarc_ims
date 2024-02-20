@@ -24,6 +24,8 @@ const Launcher = React.lazy(() => import('./views/launcher/Launcher'));
 const AdminAuthPage = React.lazy(() => import('./views/admin/AdminAuthPage'));
 const AddUserPage = React.lazy(() => import('./components/AddUserForm'));
 const DashboardUser = React.lazy(() => import('./views/dashboard/DashBoardUser'));
+const AddApplicationUser = React.lazy(() => import('./views/application/AddApplicationUser'));
+const NumberOfApplicationsUser = React.lazy(() => import('./views/application/NumberOfApplicationsUser'));
 
 const App = () => {
 
@@ -61,7 +63,10 @@ const App = () => {
             <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />     
 
+            {/* User Route */}
             <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />
+            <Route exact path="/user/addapplication" name="Add Application" element={<AddApplicationUser />} />
+            <Route exact path="/user/applications" name="Applications" element={<NumberOfApplicationsUser />} />
            
         </Route>
 
