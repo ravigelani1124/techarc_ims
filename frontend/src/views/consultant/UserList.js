@@ -91,6 +91,11 @@ const UserList = () => {
         },
       })
       console.log('Users----', response.data.data)
+
+      // const userlist = response.data.data
+      // console.log(userlist)
+      // userlist = userlist.filter((item) => item.consultant_id === user.consultant_id)
+      
       setUsers(response.data.data)
     } catch (error) {
       console.error(error)

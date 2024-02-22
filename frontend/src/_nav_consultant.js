@@ -27,12 +27,12 @@ const _nav_consultant = [
 
   {
     component: CNavGroup,
-    name: 'User',
+    name: 'Client',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Add User',
+        name: 'Add Client',
         to: '/consultant/adduser',
         icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
         badge: {
@@ -41,7 +41,7 @@ const _nav_consultant = [
       },
       {
         component: CNavItem,
-        name: 'Users',
+        name: 'Clients',
         to: '/consultant/users',
         icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
         badge: {

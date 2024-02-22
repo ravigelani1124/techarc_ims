@@ -33,7 +33,6 @@ const AppHeaderDropdown = () => {
     }    
   }
 
-  
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>

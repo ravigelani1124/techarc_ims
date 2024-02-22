@@ -1,70 +1,33 @@
-import React, { useState } from 'react';
-import {
-  CContainer,
-  CRow,
-  CCol,
-  CCard,
-  CCardBody,
-  CForm,
-  CFormGroup,
-  CLabel,
-  CInput,
-  CButton
-} from '@coreui/react';
+const express = require('express');
+const SunCalc = require('suncalc');
 
-const AppointmentBooking = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+const app = express();
+const PORT = 3000;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Implement booking logic here
-    console.log('Appointment booked:', { name, email, selectedDate });
-  };
+// API endpoint to determine if it's shiny or dark outside
+app.get('/shiny-or-dark', (req, res) => {
+  const { latitude, longitude } = req.query;
 
-  return (
-    <CContainer>
-      <CRow className="justify-content-center">
-        <CCol md="6">
-          <CCard>
-            <CCardBody>
-              <h5 className="card-title mb-4">Book Appointment</h5>
-              <CForm onSubmit={handleSubmit}>
-                <CFormGroup>
-                  <CLabel>Name</CLabel>
-                  <CInput
-                    type="text"
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel>Email</CLabel>
-                  <CInput
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </CFormGroup>
-                <CFormGroup>
-                  <CLabel>Date</CLabel>
-                  <CInput
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                  />
-                </CFormGroup>
-                <CButton type="submit" color="primary">Book Appointment</CButton>
-              </CForm>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    </CContainer>
-  );
-};
+  // Check if latitude and longitude are provided
+  if (!latitude || !longitude) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
 
-export default AppointmentBooking;
+  const { sunrise, sunset } = SunCalc.getTimes(new Date(), latitude, longitude);
+
+  // Get current time
+  const currentTime = new Date();
+
+  // Determine whether it's shiny or dark
+  const isShiny = currentTime > sunrise && currentTime < sunset;
+
+  // Send response
+  res.json({ isShiny });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
