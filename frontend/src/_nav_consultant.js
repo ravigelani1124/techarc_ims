@@ -10,6 +10,7 @@ import {
   cilPuzzle,
   cilCursor,
   cilTablet,
+  cilSpreadsheet,
 } from '@coreui/icons';
 import { CNavGroup, CNavItem } from '@coreui/react';
 
@@ -49,6 +50,16 @@ const _nav_consultant = [
         },
       },
     ],
+  },
+  {
+    component: CNavItem,
+    name: 'Set Availability',
+    to: '/consultant/setavailality',
+    icon: <CIcon icon={cilSpreadsheet} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      // text: 'NEW',
+    },
   },
 ];
 

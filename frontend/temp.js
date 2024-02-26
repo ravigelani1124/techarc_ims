@@ -1,33 +1,61 @@
-const express = require('express');
-const SunCalc = require('suncalc');
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
 
-const app = express();
-const PORT = 3000;
+function ConsultantAvailabilityForm() {
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
 
-// API endpoint to determine if it's shiny or dark outside
-app.get('/shiny-or-dark', (req, res) => {
-  const { latitude, longitude } = req.query;
+  const handleDayChange = (date) => {
+    setStartDate(date);
+  };
 
-  // Check if latitude and longitude are provided
-  if (!latitude || !longitude) {
-    return res.status(400).json({ error: 'Latitude and longitude are required' });
-  }
+  const handleAddTimeSlot = () => {
+    // Add your validation logic here if needed
+    setTimeSlots([...timeSlots, { day: startDate, startTime: '00:00', endTime: '00:00' }]);
+  };
 
-  const { sunrise, sunset } = SunCalc.getTimes(new Date(), latitude, longitude);
+  const handleTimeSlotChange = (index, field, value) => {
+    const updatedTimeSlots = [...timeSlots];
+    updatedTimeSlots[index][field] = value;
+    setTimeSlots(updatedTimeSlots);
+  };
 
-  // Get current time
-  const currentTime = new Date();
+  const handleRemoveTimeSlot = (index) => {
+    const updatedTimeSlots = [...timeSlots];
+    updatedTimeSlots.splice(index, 1);
+    setTimeSlots(updatedTimeSlots);
+  };
 
-  // Determine whether it's shiny or dark
-  const isShiny = currentTime > sunrise && currentTime < sunset;
+  return (
+    <div>
+      <h2>Consultant Availability</h2>
+      <div>
+        <label>Select Date:</label>
+        <DatePicker selected={startDate} onChange={handleDayChange} />
+      </div>
+      <button onClick={handleAddTimeSlot}>Add Time Slot</button>
+      {timeSlots.map((timeSlot, index) => (
+        <div key={index}>
+          <h3>{timeSlot.day.toDateString()}</h3>
+          <label>Start Time:</label>
+          <TimePicker
+            value={timeSlot.startTime}
+            onChange={(value) => handleTimeSlotChange(index, 'startTime', value)}
+          />
+          <label>End Time:</label>
+          <TimePicker
+            value={timeSlot.endTime}
+            onChange={(value) => handleTimeSlotChange(index, 'endTime', value)}
+          />
+          <button onClick={() => handleRemoveTimeSlot(index)}>Remove</button>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  // Send response
-  res.json({ isShiny });
-});
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
-
-
+export default ConsultantAvailabilityForm;
