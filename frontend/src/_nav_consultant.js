@@ -52,15 +52,32 @@ const _nav_consultant = [
     ],
   },
   {
-    component: CNavItem,
-    name: 'Set Availability',
-    to: '/consultant/setavailality',
+    component: CNavGroup,
+    name: 'Schedule',
     icon: <CIcon icon={cilSpreadsheet} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      // text: 'NEW',
-    },
+    items: [
+      {
+        component: CNavItem,
+        name: 'Set Availability',
+        to: '/consultant/setavailality',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+          // text: 'NEW',
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'MyCalender',
+        to: '/consultant/mycalender',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
   },
+  
 ];
 
 export default _nav_consultant;

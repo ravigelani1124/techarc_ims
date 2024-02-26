@@ -63,9 +63,6 @@ const SetConsultantAvailability = () => {
           )}
           <div className="body flex-grow-1 px-3">
               <div className="mb-4">
-                <h4>
-                  <center>Set Availability</center>
-                </h4>
                 <ConsultantAvailabilityForm />
               </div>
             </div>
