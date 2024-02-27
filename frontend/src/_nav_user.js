@@ -25,6 +25,15 @@ const _nav_user = [
     },
   },
   {
+    component: CNavItem,
+    name: 'Book Appointment',
+    to: '/user/bookappointment',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',      
+    },
+  },
+  {
     component: CNavGroup,
     name: 'Application',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,

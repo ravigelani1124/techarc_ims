@@ -68,7 +68,7 @@ const _nav_consultant = [
       },
       {
         component: CNavItem,
-        name: 'MyCalender',
+        name: 'My Calender',
         to: '/consultant/mycalender',
         icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
         badge: {
