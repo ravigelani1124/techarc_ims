@@ -1,9 +1,11 @@
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { CountryDropdown } from 'react-country-region-selector'
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index'
 import UserContext from 'src/utils/UserContext'
-import { useNavigate } from 'react-router-dom'
-import React, { useContext, useEffect, useState } from 'react'
 import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
+import { DEFAULT_URL } from 'src/utils/Constant'
 
 const AddVisaType = () => {
   const [loading, setLoading] = useState(false)
@@ -13,43 +15,94 @@ const AddVisaType = () => {
     visa_type_name: '',
     country: '',
     visa_fee: 0,
+    consultant_fee: 0,
     created_by: '',
     updated_by: '',
   })
 
+  const { user } = useContext(UserContext)
+  const navigate = useNavigate()
+
   useEffect(() => {
     document.title = 'Add Visa Type'
-  }, [])
-
-  const navigate = useNavigate()
-  const { user } = useContext(UserContext)
-
-  useEffect(() => {
     if (!user) {
       navigate('/')
     }
-  }, [user])
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
+
+    try {
+      const parsedFormData = {
+        ...formData,
+        visa_fee: parseFloat(formData.visa_fee),
+        consultant_fee: parseFloat(formData.consultant_fee),
+        created_by: user._id,
+        updated_by: user._id,
+      }
+
+      console.log(parsedFormData)
+
+      const response = await axios.post(`${DEFAULT_URL}visatype/addvisatype`, parsedFormData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      setErrorMessage(response.data.message)
+      setAlertVisible(true)
+      clearForm()
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleError = (error) => {
+    let message = 'An error occurred'
+    if (error.response) {
+      message = error.response.data.message + ' || ' + 'Validation failed'
+    } else if (error.request) {
+      message = error.request
+    } else {
+      message = error.message
+    }
+    setErrorMessage(message)
+    setAlertVisible(true)
   }
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    setFormData((prevData) => ({ ...prevData, [name]: value }))
   }
 
   const handleCountryChange = (val) => {
-    setFormData({ ...formData, country: val })
+    setFormData((prevData) => ({ ...prevData, country: val }))
+  }
+
+  const clearForm = () => {
+    setFormData({
+      visa_type_name: '',
+      country: '',
+      visa_fee: 0,
+      consultant_fee: 0,
+      created_by: '',
+      updated_by: '',
+    })
   }
 
   return (
     <div>
       <AppSidebar />
-      <div className="position-fixed top-50 start-50 end-50 translate-middle">
-        {' '}
-        {loading && <CSpinner />}
+      <div
+        className={`position-fixed top-50 start-50 end-50 translate-middle ${
+          loading ? '' : 'd-none'
+        }`}
+      >
+        <CSpinner />
       </div>
       {alertVisible && (
         <div
@@ -65,6 +118,7 @@ const AddVisaType = () => {
             visible={true}
             color="primary"
             className="text-white align-items-center"
+            onClose={() => setAlertVisible(false)}
           >
             <div className="d-flex">
               <CToastBody>{errorMessage}</CToastBody>
@@ -104,6 +158,7 @@ const AddVisaType = () => {
                   onChange={handleCountryChange}
                 />
               </div>
+
               <div className="mb-3">
                 <label htmlFor="visa_fee" className="form-label">
                   Visa Fee
@@ -112,12 +167,28 @@ const AddVisaType = () => {
                   type="text"
                   className="form-control"
                   id="visa_fee"
-                  name="Visa Fee"
+                  name="visa_fee"
                   placeholder="Fees"
                   pattern="[0-9]+"
                   required
                   onChange={handleChange}
-                  value={formData.zip}
+                  value={formData.visa_fee}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="consultant_fee" className="form-label">
+                  Consultant Fee
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="consultant_fee"
+                  name="consultant_fee"
+                  placeholder="Fees"
+                  pattern="[0-9]+"
+                  required
+                  onChange={handleChange}
+                  value={formData.consultant_fee}
                 />
               </div>
 

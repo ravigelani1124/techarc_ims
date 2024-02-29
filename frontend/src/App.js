@@ -27,8 +27,8 @@ const AddApplicationUser = React.lazy(() => import('./views/application/AddAppli
 const NumberOfApplicationsUser = React.lazy(() => import('./views/application/NumberOfApplicationsUser'));
 const SetConsultantAvailability = React.lazy(() => import('./views/consultant/SetConsultantAvailability'));
 const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'));
-const AddVisaType = React.lazy(() => import('./views/admin/AddVisaType'));
-
+const AddVisaType = React.lazy(() => import('./views/consultant/AddVisaType'));
+const VisaTypeList = React.lazy(() => import('./views/consultant/VisaTypeList'));
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -59,13 +59,15 @@ const App = () => {
             <Route exact path="/organization" name="Organization List" element={<OrganizationList />} />
             <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />  
             <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />   
-            <Route exact path="/addvisatype" name="Add Visa Type" element={<AddVisaType />} />             
+                        
 
             {/* Consultant Route */}
             <Route exact path="/consultant/dashboard" name="Dashboard" element={<DashboardConsultant/>} />     
             <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />    
             <Route exact path="/consultant/setavailality" name="SetAvailality" element={<SetConsultantAvailability/>} />     
+            <Route exact path="/addvisatype" name="Add Visa Type" element={<AddVisaType />} /> 
+            <Route exact path="/visatypes" name="Visa Types" element={<VisaTypeList />} /> 
 
             {/* User Route */}
             <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />

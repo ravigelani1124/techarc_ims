@@ -1,5 +1,5 @@
-import React from 'react';
-import CIcon from '@coreui/icons-react';
+import React from 'react'
+import CIcon from '@coreui/icons-react'
 import {
   cilDescription,
   cilLibraryAdd,
@@ -11,8 +11,10 @@ import {
   cilCursor,
   cilTablet,
   cilSpreadsheet,
-} from '@coreui/icons';
-import { CNavGroup, CNavItem } from '@coreui/react';
+  cilDoubleQuoteSansRight,
+  cilFeaturedPlaylist,
+} from '@coreui/icons'
+import { CNavGroup, CNavItem } from '@coreui/react'
 
 const _nav_consultant = [
   {
@@ -77,7 +79,32 @@ const _nav_consultant = [
       },
     ],
   },
-  
-];
+  {
+    component: CNavGroup,
+    name: 'Visa Type',
+    icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Visa Type',
+        to: '/addvisatype',
+        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
 
-export default _nav_consultant;
+      {
+        component: CNavItem,
+        name: 'Visa List',
+        to: '/visatypes',
+        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
+  },
+]
+
+export default _nav_consultant
