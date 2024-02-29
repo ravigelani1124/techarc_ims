@@ -9,7 +9,7 @@ import {
   cilStar,
   cilPuzzle,
   cilCursor,
-  cilTablet,
+  cilTablet,cilDoubleQuoteSansRight
 } from '@coreui/icons';
 import { CNavGroup, CNavItem } from '@coreui/react';
 
@@ -79,6 +79,23 @@ const _nav_admin = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Visa Type',
+    icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Visa Type',
+        to: '/addvisatype',
+        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },      
+    ],
+  },
+
 ];
 
 export default _nav_admin;

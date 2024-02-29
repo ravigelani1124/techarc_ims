@@ -27,6 +27,7 @@ const AddApplicationUser = React.lazy(() => import('./views/application/AddAppli
 const NumberOfApplicationsUser = React.lazy(() => import('./views/application/NumberOfApplicationsUser'));
 const SetConsultantAvailability = React.lazy(() => import('./views/consultant/SetConsultantAvailability'));
 const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'));
+const AddVisaType = React.lazy(() => import('./views/admin/AddVisaType'));
 
 const App = () => {
 
@@ -57,7 +58,8 @@ const App = () => {
             <Route exact path="/consultant" name="Consultant List" element={<ConsultantList />} />
             <Route exact path="/organization" name="Organization List" element={<OrganizationList />} />
             <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />  
-            <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />        
+            <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />   
+            <Route exact path="/addvisatype" name="Add Visa Type" element={<AddVisaType />} />             
 
             {/* Consultant Route */}
             <Route exact path="/consultant/dashboard" name="Dashboard" element={<DashboardConsultant/>} />     
