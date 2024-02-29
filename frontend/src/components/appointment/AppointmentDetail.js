@@ -32,7 +32,7 @@ const AppointmentDetail = () => {
     )
 
     console.log('------', selectedConsultant)
-    if (selectedConsultant) {      
+    if (selectedConsultant) {
       setConsultant(selectedConsultant)
 
       try {
@@ -123,7 +123,7 @@ const AppointmentDetail = () => {
                 className="form-select form-select-md"
                 aria-label=".form-select-sm example"
                 required
-                value={applications.visa_type_name}
+                value={applications.service_type_name}
                 onChange={(e) => setApplications(e.target)}
               >
                 <option value="" disabled>
@@ -131,7 +131,7 @@ const AppointmentDetail = () => {
                 </option>
                 {applicationType.map((application) => (
                   <option key={application._id} value={application._id}>
-                    {application.visa_type_name}
+                    {application.service_type_name}
                   </option>
                 ))}
               </select>

@@ -1,11 +1,11 @@
 const mangoose = require("mongoose");
 
-const visaTypeSchema = new mangoose.Schema(
+const serviceSchema = new mangoose.Schema(
   {
-    visa_type_name: { type: String, required: [true, "Visa type is required"] },
+    service_type_name: { type: String, required: [true, "Visa type is required"] },
     record_status: { type: Boolean, default: true },
     country: { type: String, required: [true, "Country is required"] },
-    visa_fee: { type: Number, required: [true, "Visa fee is required"] },
+    service_fee: { type: Number, required: [true, "Visa fee is required"] },
     consultant_fee: {
       type: Number,
       required: [true, "Consultant fee is required"],
@@ -25,6 +25,6 @@ const visaTypeSchema = new mangoose.Schema(
   { timestamps: true }
 );
 
-const VisaType = mangoose.model("VisaType", visaTypeSchema);
+const Services = mangoose.model("Service", serviceSchema);
 
-module.exports = VisaType;
+module.exports = Services;

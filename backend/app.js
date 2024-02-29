@@ -11,7 +11,7 @@ const dbName = process.env.MONGO_DBNAME || 'techarc';
 
 const authRoutes = require('./api/routes/authRoutes');
 const organizationRoute = require('./api/routes/organizationRoute');
-const visaTypeRoute = require('./api/routes/VisaTypeRoute');
+const serviceRoute = require('./api/routes/serviceRoute');
 
 app.set('view engine', 'ejs'); 
 
@@ -26,7 +26,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/organization', organizationRoute);
-app.use('/api/visatype', visaTypeRoute);
+app.use('/api/visatype', serviceRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

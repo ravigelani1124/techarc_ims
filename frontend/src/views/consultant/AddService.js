@@ -12,9 +12,9 @@ const AddService = () => {
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
-    visa_type_name: '',
+    service_type_name: '',
     country: '',
-    visa_fee: 0,
+    service_fee: 0,
     consultant_fee: 0,
     created_by: '',
     updated_by: '',
@@ -37,7 +37,7 @@ const AddService = () => {
     try {
       const parsedFormData = {
         ...formData,
-        visa_fee: parseFloat(formData.visa_fee),
+        service_fee: parseFloat(formData.service_fee),
         consultant_fee: parseFloat(formData.consultant_fee),
         created_by: user._id,
         updated_by: user._id,
@@ -85,9 +85,9 @@ const AddService = () => {
 
   const clearForm = () => {
     setFormData({
-      visa_type_name: '',
+      service_type_name: '',
       country: '',
-      visa_fee: 0,
+      service_fee: 0,
       consultant_fee: 0,
       created_by: '',
       updated_by: '',
@@ -133,20 +133,20 @@ const AddService = () => {
           <div style={{ padding: '0 20px' }}>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label htmlFor="visa_type_name" className="form-label">
+                <label htmlFor="service_type_name" className="form-label">
                 Service Name
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  id="visa_type_name"
-                  name="visa_type_name"
+                  id="service_type_name"
+                  name="service_type_name"
                   placeholder="Service Name"
                   pattern="[A-Za-z\s\-]+"
                   required
                   autoFocus
                   onChange={handleChange}
-                  value={formData.visa_type_name}
+                  value={formData.service_type_name}
                 />
               </div>
 
@@ -160,19 +160,19 @@ const AddService = () => {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="visa_fee" className="form-label">
+                <label htmlFor="service_fee" className="form-label">
                   Service Fee
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  id="visa_fee"
-                  name="visa_fee"
+                  id="service_fee"
+                  name="service_fee"
                   placeholder="Service Fees"
                   pattern="[0-9]+"
                   required
                   onChange={handleChange}
-                  value={formData.visa_fee}
+                  value={formData.service_fee}
                 />
               </div>
               <div className="mb-3">

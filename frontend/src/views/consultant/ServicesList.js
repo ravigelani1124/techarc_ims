@@ -63,7 +63,7 @@ const ServicesList = () => {
 
 
   const filteredVisa = visas.filter((item) =>
-    item.visa_type_name.toLowerCase().includes(searchQuery.toLowerCase()),
+    item.service_type_name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
 
@@ -124,11 +124,11 @@ const ServicesList = () => {
                         <div>{item.country}</div>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <div>{item.visa_type_name}</div>
+                        <div>{item.service_type_name}</div>
                       </CTableDataCell>
 
                       <CTableDataCell>
-                        <div>{"$" + item.visa_fee}</div>
+                        <div>{"$" + item.service_fee}</div>
                       </CTableDataCell>
 
                       <CTableDataCell>
