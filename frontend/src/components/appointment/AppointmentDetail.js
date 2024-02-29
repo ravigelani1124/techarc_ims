@@ -9,13 +9,12 @@ const AppointmentDetail = () => {
   const [selectedTime, setSelectedTime] = useState('')
   const [consultantList, setConsultantList] = useState([])
   const [applicationType, setApplicationType] = useState([])
-  const [applications, setApplications] = useState([])
+  const [applications, setApplications] = useState({})
   const { user } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [consultant, setConsultant] = useState('')
-  const [consultantId, setConsultantId] = useState('')
+  const [consultant, setConsultant] = useState({})
 
   useEffect(() => {
     getConsultantList()
@@ -33,9 +32,8 @@ const AppointmentDetail = () => {
     )
 
     console.log('------', selectedConsultant)
-    if (selectedConsultant) {
-      setConsultantId(selectedConsultant._id)
-      setConsultant(selectedConsultantName)
+    if (selectedConsultant) {      
+      setConsultant(selectedConsultant)
 
       try {
         setIsLoading(true)
@@ -103,7 +101,7 @@ const AppointmentDetail = () => {
                 className="form-select form-select-md"
                 aria-label=".form-select-sm example"
                 required
-                value={consultant}
+                value={consultant.consultant_name_en}
                 onChange={handleConsultantChange}
               >
                 <option value="" disabled>
@@ -125,8 +123,8 @@ const AppointmentDetail = () => {
                 className="form-select form-select-md"
                 aria-label=".form-select-sm example"
                 required
-                value={applications}
-                onChange={(e) => setApplications(e.target.value)}
+                value={applications.visa_type_name}
+                onChange={(e) => setApplications(e.target)}
               >
                 <option value="" disabled>
                   Select..

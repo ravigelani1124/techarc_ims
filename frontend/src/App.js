@@ -27,8 +27,8 @@ const AddApplicationUser = React.lazy(() => import('./views/application/AddAppli
 const NumberOfApplicationsUser = React.lazy(() => import('./views/application/NumberOfApplicationsUser'));
 const SetConsultantAvailability = React.lazy(() => import('./views/consultant/SetConsultantAvailability'));
 const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'));
-const AddVisaType = React.lazy(() => import('./views/consultant/AddVisaType'));
-const VisaTypeList = React.lazy(() => import('./views/consultant/VisaTypeList'));
+const AddService = React.lazy(() => import('./views/consultant/AddService'));
+const ServicesList = React.lazy(() => import('./views/consultant/ServicesList'));
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,8 +66,8 @@ const App = () => {
             <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />    
             <Route exact path="/consultant/setavailality" name="SetAvailality" element={<SetConsultantAvailability/>} />     
-            <Route exact path="/addvisatype" name="Add Visa Type" element={<AddVisaType />} /> 
-            <Route exact path="/visatypes" name="Visa Types" element={<VisaTypeList />} /> 
+            <Route exact path="/addservice" name="Add Service" element={<AddService />} /> 
+            <Route exact path="/seriveces" name="Services" element={<ServicesList />} /> 
 
             {/* User Route */}
             <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />

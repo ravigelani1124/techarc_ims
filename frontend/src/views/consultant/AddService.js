@@ -7,7 +7,7 @@ import UserContext from 'src/utils/UserContext'
 import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
 import { DEFAULT_URL } from 'src/utils/Constant'
 
-const AddVisaType = () => {
+const AddService = () => {
   const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -24,7 +24,7 @@ const AddVisaType = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    document.title = 'Add Visa Type'
+    document.title = 'Add Service'
     if (!user) {
       navigate('/')
     }
@@ -134,14 +134,14 @@ const AddVisaType = () => {
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label htmlFor="visa_type_name" className="form-label">
-                  Visa Type
+                Service Name
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="visa_type_name"
                   name="visa_type_name"
-                  placeholder="Visa Type Name"
+                  placeholder="Service Name"
                   pattern="[A-Za-z\s\-]+"
                   required
                   autoFocus
@@ -161,14 +161,14 @@ const AddVisaType = () => {
 
               <div className="mb-3">
                 <label htmlFor="visa_fee" className="form-label">
-                  Visa Fee
+                  Service Fee
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="visa_fee"
                   name="visa_fee"
-                  placeholder="Fees"
+                  placeholder="Service Fees"
                   pattern="[0-9]+"
                   required
                   onChange={handleChange}
@@ -206,4 +206,4 @@ const AddVisaType = () => {
   )
 }
 
-export default AddVisaType
+export default AddService

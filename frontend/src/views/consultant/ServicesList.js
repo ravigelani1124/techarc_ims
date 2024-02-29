@@ -16,7 +16,7 @@ import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
 import NoDataView from 'src/components/NoDataView'
 
-const VisaTypeList = () => {
+const ServicesList = () => {
   useEffect(() => {
     document.title = 'Users'
   }, [])
@@ -89,13 +89,13 @@ const VisaTypeList = () => {
               height: '80vh', // Adjust as needed
             }}
           >
-            <NoDataView message="Visa data not available" />
+            <NoDataView message="Services data not available" />
           </div>
         ) : (
           <div>
             <div className="mb-3" style={{ padding: '0 20px' }}>
               <CFormInput
-                placeholder="Search visa by name.."
+                placeholder="Search services by name.."
                 aria-label="Search input"
                 type="text"
                 value={searchQuery}
@@ -108,8 +108,8 @@ const VisaTypeList = () => {
                   <CTableRow>
                     <CTableHeaderCell>#</CTableHeaderCell>
                     <CTableHeaderCell>Country</CTableHeaderCell>
-                    <CTableHeaderCell>Visa Type</CTableHeaderCell>
-                    <CTableHeaderCell>Visa Fee</CTableHeaderCell>
+                    <CTableHeaderCell>Service</CTableHeaderCell>
+                    <CTableHeaderCell>Service Fee</CTableHeaderCell>
                     <CTableHeaderCell>Consultant Fee</CTableHeaderCell>
                     {/* <CTableHeaderCell>Status</CTableHeaderCell> */}
                   </CTableRow>
@@ -168,4 +168,4 @@ const VisaTypeList = () => {
   )
 }
 
-export default VisaTypeList
+export default ServicesList

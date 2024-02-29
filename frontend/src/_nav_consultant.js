@@ -81,13 +81,13 @@ const _nav_consultant = [
   },
   {
     component: CNavGroup,
-    name: 'Visa Type',
+    name: 'Services',
     icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Add Visa Type',
-        to: '/addvisatype',
+        name: 'Add Service',
+        to: '/addservice',
         icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
         badge: {
           color: 'info',
@@ -96,8 +96,8 @@ const _nav_consultant = [
 
       {
         component: CNavItem,
-        name: 'Visa List',
-        to: '/visatypes',
+        name: 'Services List',
+        to: '/seriveces',
         icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
         badge: {
           color: 'info',
