@@ -350,12 +350,40 @@ async function delete_user_by_consultant(req, res) {
 async function getConsultantList(req, res) {
   try {
     const consultants = await UserConsultant.find();
+
     return res.status(200).json({
       status: "success",
       data: consultants,
       message: "Consultant fetched successfully",
     });
   } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
+async function getConsultantByOrg(req,res) {
+  
+  try{
+    const consultant = await UserConsultant.find({org_id: req.params.org_id});
+
+    if(consultant.length === 0) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Consultant not found for the given org id",
+      });
+    }
+    
+    return res.status(200).json({
+      status: "success",
+      data: consultant,
+      message: "Consultant fetched successfully",
+    });
+
+  }catch(err) {
     console.error(err);
     return res.status(500).json({
       status: "error",
@@ -371,4 +399,5 @@ module.exports = {
   create_password_consultant,
   delete_user_by_consultant,
   getConsultantList,
+  getConsultantByOrg
 };
