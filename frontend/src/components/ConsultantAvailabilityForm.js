@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import {
@@ -9,21 +9,56 @@ import {
   CTableHeaderCell,
   CTableRow,
   CButton,
-  CFormInput,
   CSpinner,
   CToast,
   CToastBody,
   CToastClose,
 } from '@coreui/react'
 
+import { DEFAULT_URL } from 'src/utils/Constant'
+import UserContext from 'src/utils/UserContext'
+import axios from 'axios'
+
 const ConsultantAvailabilityForm = () => {
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedDate, setSelectedDate] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [timeSlots, setTimeSlots] = useState([])
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const { user } = useContext(UserContext)
+
+  useEffect(() => {
+    callTimeSlotApi()
+  }, [])
+
+  const callTimeSlotApi = async () => {
+    try {
+      const jwtToken = user.jwtToken
+      const consultantId = user._id
+      if (!consultantId) {
+        setIsLoading(false)
+        setErrorMessage('Login Required')
+        setAlertVisible(true)
+        return
+      }
+      const response = await axios.get(
+        `${DEFAULT_URL}bookappointment/gettimeslot/${consultantId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      )
+
+      console.log(response.data.data)
+      setTimeSlots(response.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleAddTimeSlot = () => {
     if (!selectedDate) {
@@ -70,16 +105,59 @@ const ConsultantAvailabilityForm = () => {
       return
     }
 
-    const newTimeSlot = {
-      date: selectedDate.toLocaleDateString(),
-      startTime,
-      endTime,
-    }
+    callAddTimeSlotApi()
+  }
 
-    setTimeSlots([...timeSlots, newTimeSlot])
-    setStartTime('')
-    setEndTime('')
-    setErrorMessage('')
+  const callAddTimeSlotApi = async () => {
+    try {
+      setIsLoading(true)
+      const jwtToken = user.jwtToken
+
+      console.log('jwtToken: ', jwtToken)
+      console.log('user: ', selectedDate.toLocaleDateString(), startTime, endTime)
+
+      let day = selectedDate.toLocaleDateString()
+      let start_time = startTime
+      let end_time = endTime
+      let created_by = user?._id
+      let updated_by = user?._id
+      const response = await axios.post(
+        DEFAULT_URL + 'bookappointment/addtimeslot',
+        {
+          day,
+          start_time,
+          end_time,
+          created_by,
+          updated_by,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      )
+      const successMessage = response.data.message
+      setIsLoading(false)
+      setErrorMessage(successMessage)
+      setAlertVisible(true)
+      setStartTime('')
+      setEndTime('')
+      setSelectedDate('')
+      callTimeSlotApi()
+    } catch (error) {
+      setIsLoading(false)
+      setAlertVisible(true)
+      if (error.response) {
+        setErrorMessage(error.response.data.message)
+      } else if (error.request) {
+        console.log('No response received:', error.request)
+        setErrorMessage(error.request)
+      } else {
+        console.log('Error during request setup:', error.message)
+        setErrorMessage(error.request)
+      }
+    }
   }
 
   return (
@@ -88,6 +166,14 @@ const ConsultantAvailabilityForm = () => {
         <div className="position-fixed  start-50 end-50 translate-middle">
           {isLoading && <CSpinner />}
         </div>
+        {isLoading && (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: '90vh' }}
+          >
+            <CSpinner />
+          </div>
+        )}
         {alertVisible && (
           <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
             <CToast
@@ -105,7 +191,7 @@ const ConsultantAvailabilityForm = () => {
           </div>
         )}
 
-        <div>          
+        <div>
           <form>
             <div className="row mb-3">
               <div className="col-sm-4 d-flex align-items-center">
@@ -170,6 +256,7 @@ const ConsultantAvailabilityForm = () => {
               <CTableHeaderCell>Date</CTableHeaderCell>
               <CTableHeaderCell>Start Time</CTableHeaderCell>
               <CTableHeaderCell>End Time</CTableHeaderCell>
+              <CTableHeaderCell>Status</CTableHeaderCell>
               <CTableHeaderCell>Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -180,13 +267,24 @@ const ConsultantAvailabilityForm = () => {
                   <div>{index + 1}</div>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <div>{item.date}</div>
+                  <div>{item.day}</div>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <div>{item.startTime}</div>
+                  <div>{item.start_time}</div>
                 </CTableDataCell>
                 <CTableDataCell>
-                  <div>{item.endTime}</div>
+                  <div>{item.end_time}</div>
+                </CTableDataCell>
+                <CTableDataCell>
+                  {item.is_available ? (
+                    <div>
+                      <div className="text-success">Available</div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-danger">Booked</div>
+                    </div>
+                  )}
                 </CTableDataCell>
                 <CTableDataCell>
                   <div>

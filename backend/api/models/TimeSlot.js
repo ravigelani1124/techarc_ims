@@ -16,6 +16,17 @@ const timeSlotSchema = new mongoose.Schema(
             ref: "admin",
             required: true,
         },
+        is_available: { type: Boolean, default: true },
+        created_by: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "consultant",
+            required: true,
+        },
+        updated_by: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "consultant",
+            required: true,
+        },
     },
     { timestamps: true }
 );

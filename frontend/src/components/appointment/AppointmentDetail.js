@@ -5,16 +5,15 @@ import { DEFAULT_URL } from 'src/utils/Constant'
 import { CSpinner } from '@coreui/react'
 
 const AppointmentDetail = () => {
-  const [selectedDate, setSelectedDate] = useState('')
-  const [selectedTime, setSelectedTime] = useState('')
-  const [consultantList, setConsultantList] = useState([])
-  const [applicationType, setApplicationType] = useState([])
-  const [applications, setApplications] = useState({})
   const { user } = useContext(UserContext)
+  const [selectedDate, setSelectedDate] = useState('')
+  const [consultantList, setConsultantList] = useState([])
+  const [servicesList, setServicesList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [consultant, setConsultant] = useState({})
+  const [timeSlots, setTimeSlots] = useState([])
+  const [service, setService] = useState({})
 
   useEffect(() => {
     getConsultantList()
@@ -23,18 +22,15 @@ const AppointmentDetail = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     // Implement booking logic here
-    console.log('Appointment booked:', { name, email, selectedDate, selectedTime })
+    console.log('Appointment booked:', { selectedDate })
   }
+
   const handleConsultantChange = async (e) => {
     const selectedConsultantName = e.target.value
     const selectedConsultant = consultantList.find(
       (consultant) => consultant.consultant_name_en === selectedConsultantName,
     )
-
-    console.log('------', selectedConsultant)
     if (selectedConsultant) {
-      setConsultant(selectedConsultant)
-
       try {
         setIsLoading(true)
         const response = await axios.get(
@@ -46,10 +42,12 @@ const AppointmentDetail = () => {
             },
           },
         )
-        setApplicationType(response.data.data)
+        setServicesList(response.data.data)
+        setSelectedDate('')
+        callTimeSlotApi(selectedConsultant._id)
       } catch (error) {
-        setApplicationType([])
-        setIsLoading(false)
+        console.error('Error fetching services:', error)
+        setServicesList([])
         setErrorMessage(error.response?.data?.message || 'An error occurred')
         setAlertVisible(true)
       } finally {
@@ -68,11 +66,35 @@ const AppointmentDetail = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log('Consultant----', response.data.data)
       setConsultantList(response.data.data)
-      setIsLoading(false)
     } catch (error) {
+      console.error('Error fetching consultant list:', error)
       setErrorMessage(error.response?.data?.message || 'An error occurred')
+      setAlertVisible(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const callTimeSlotApi = async (consultantId) => {
+    try {
+      if (!consultantId) {
+        throw new Error('Consultant ID is required')
+      }
+      const response = await axios.get(
+        `${DEFAULT_URL}bookappointment/gettimeslot/${consultantId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.jwtToken}`,
+          },
+        },
+      )
+      const availableSlots = response.data.data.filter((slot) => slot.is_available)
+      setTimeSlots(availableSlots)
+    } catch (error) {
+      console.error('Error fetching time slots:', error)
+      setErrorMessage(error.message)
       setAlertVisible(true)
     } finally {
       setIsLoading(false)
@@ -82,85 +104,81 @@ const AppointmentDetail = () => {
   return (
     <div>
       <div className="body flex-grow-1 px-3">
-        <div>
-          {isLoading && (
-            <div
-              className="d-flex justify-content-center align-items-center"
-              style={{ minHeight: '100vh' }}
+        {isLoading && (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
+            <CSpinner />
+          </div>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="consultant" className="form-label">
+              Consultant
+            </label>
+            <select
+              id="consultant"
+              className="form-select form-select-md"
+              aria-label=".form-select-sm example"
+              required
+              onChange={handleConsultantChange}
             >
-              <CSpinner />
-            </div>
-          )}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="consultant" className="form-label">
-                Consultant
-              </label>
-              <select
-                id="consultant"
-                className="form-select form-select-md"
-                aria-label=".form-select-sm example"
-                required
-                value={consultant.consultant_name_en}
-                onChange={handleConsultantChange}
-              >
-                <option value="" disabled>
-                  Select..
+              <option value="" disabled selected>
+                Select..
+              </option>
+              {consultantList.map((consultant) => (
+                <option key={consultant._id} value={consultant.consultant_name_en}>
+                  {consultant.consultant_name_en}
                 </option>
-                {consultantList.map((consultant) => (
-                  <option key={consultant._id} value={consultant.consultant_name_en}>
-                    {consultant.consultant_name_en}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="applicationType" className="form-label">
-                Application Type
-              </label>
-              <select
-                id="applicationType"
-                className="form-select form-select-md"
-                aria-label=".form-select-sm example"
-                required
-                value={applications.service_type_name}
-                onChange={(e) => setApplications(e.target)}
-              >
-                <option value="" disabled>
-                  Select..
+              ))}
+            </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="servicesList" className="form-label">
+              Services
+            </label>
+            <select
+              id="servicesList"
+              className="form-select form-select-md"
+              aria-label=".form-select-sm example"
+              required
+              value={service.service_type_name}
+              onChange={(e) => setService(e.target.value)}
+            >
+              <option value="" disabled selected>
+                Select..
+              </option>
+              {servicesList.map((service) => (
+                <option key={service._id} value={service._id}>
+                  {service.service_type_name}
                 </option>
-                {applicationType.map((application) => (
-                  <option key={application._id} value={application._id}>
-                    {application.service_type_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="code" className="form-label">
-                Available Date and Time
-              </label>
-              <select
-                className="form-select form-select-md"
-                aria-label=".form-select-sm example"
-                required
-                value={applicationType}
-                onChange={(e) => setApplicationType(e.target.value)}
-              >
-                <option value="" disabled selected>
-                  Select..
+              ))}
+            </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="timeslot" className="form-label">
+              Available Date and Time
+            </label>
+            <select
+              id="timeslot"
+              className="form-select form-select-md"
+              aria-label=".form-select-sm example"
+              required
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            >
+              <option value="" disabled selected>
+                Select..
+              </option>
+              {timeSlots.map((time) => (
+                <option key={time._id} value={time._id}>
+                  {time.day} {time.start_time} - {time.end_time}
                 </option>
-                {applicationType.map((application) => (
-                  <option key={application._id} value={application._id}>
-                    {application.application_name_en}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-3 d-flex justify-content-end"></div>
-          </form>
-        </div>
+              ))}
+            </select>
+          </div>          
+        </form>
       </div>
     </div>
   )

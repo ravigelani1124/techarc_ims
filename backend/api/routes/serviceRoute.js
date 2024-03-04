@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/addvisatype',  serviceController.addVisaType);
-router.get('/getvisatypes', serviceController.getVisaTypes);
+router.post('/addvisatype', authMiddleware.authenticateToken,  serviceController.addVisaType);
+router.get('/getvisatypes', authMiddleware.authenticateToken,    serviceController.getVisaTypes);
 router.get('/getvisatypesbyconsultant/:consultant_id',  serviceController.getVisatypeByConsultantId);
 module.exports = router
