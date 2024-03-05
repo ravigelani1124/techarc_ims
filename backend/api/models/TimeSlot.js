@@ -27,6 +27,19 @@ const timeSlotSchema = new mongoose.Schema(
             ref: "consultant",
             required: true,
         },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "user",
+            default: null,
+        },
+        user_name: {
+            type: String,
+            default: null,
+        },
+        user_email: {
+            type: String,
+            default: null,
+        },
     },
     { timestamps: true }
 );
