@@ -2,7 +2,7 @@ import React, {useContext, useEffect,} from 'react';
 import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
 import { useNavigate } from 'react-router-dom'
-
+import DashboardCard from 'src/components/DashboardCard';
 
 const Dashboard = () => {
 
@@ -37,6 +37,15 @@ const Dashboard = () => {
               <center>{"Hello, " + (user?.name || 'Guest') + "!"}</center>
             </h6>
           </div>        
+          <div className="d-flex justify-content-center mb-4">          
+            <DashboardCard title="Total Organizations" value="01" />
+            <div style={{ width: '20px' }} /> 
+            <DashboardCard title="Total Consultants" value="34" />
+            <div style={{ width: '20px' }} /> 
+            <DashboardCard title="Total Applications" value="120" />
+            <div style={{ width: '20px' }} /> 
+            <DashboardCard title="Revenue" value="$34500" />
+          </div>            
         </div>
         <AppFooter />
       </div>

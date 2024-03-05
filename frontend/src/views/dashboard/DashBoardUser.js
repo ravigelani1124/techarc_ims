@@ -3,7 +3,6 @@ import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
 import UserContext from 'src/utils/UserContext';
 import { useNavigate } from 'react-router-dom'
 
-
 const DashboardUser = () => {
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const DashboardUser = () => {
             <h6>
               <center>{"Hello, " + (user?.user_name_en || 'Guest') + "!"}</center>
             </h6>
-          </div>        
+          </div>              
         </div>
         <AppFooter />
       </div>

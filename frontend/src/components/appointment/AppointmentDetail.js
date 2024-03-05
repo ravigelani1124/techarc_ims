@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import UserContext from 'src/utils/UserContext'
 import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
-import { CSpinner } from '@coreui/react'
+import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const AppointmentDetail = () => {
   const { user } = useContext(UserContext)
@@ -26,6 +26,11 @@ const AppointmentDetail = () => {
   }
 
   const handleConsultantChange = async (e) => {
+    setSelectedDate('')
+    setServicesList([])
+    setService({})
+    setTimeSlots([])
+
     const selectedConsultantName = e.target.value
     const selectedConsultant = consultantList.find(
       (consultant) => consultant.consultant_name_en === selectedConsultantName,
@@ -43,7 +48,6 @@ const AppointmentDetail = () => {
           },
         )
         setServicesList(response.data.data)
-        setSelectedDate('')
         callTimeSlotApi(selectedConsultant._id)
       } catch (error) {
         console.error('Error fetching services:', error)
@@ -69,7 +73,7 @@ const AppointmentDetail = () => {
       setConsultantList(response.data.data)
     } catch (error) {
       console.error('Error fetching consultant list:', error)
-      setErrorMessage(error.response?.data?.message || 'An error occurred')
+      setErrorMessage(error.message || 'An error occurred')
       setAlertVisible(true)
     } finally {
       setIsLoading(false)
@@ -90,11 +94,16 @@ const AppointmentDetail = () => {
           },
         },
       )
+      if (response.data.data === null || response.data.data.length === 0) {
+        setErrorMessage('No time slots available')
+        setAlertVisible(true)
+        return
+      }
       const availableSlots = response.data.data.filter((slot) => slot.is_available)
       setTimeSlots(availableSlots)
     } catch (error) {
-      console.error('Error fetching time slots:', error)
-      setErrorMessage(error.message)
+      console.error('Error fetching consultant list:', error)
+      setErrorMessage(error.message || 'An error occurred')
       setAlertVisible(true)
     } finally {
       setIsLoading(false)
@@ -110,6 +119,22 @@ const AppointmentDetail = () => {
             style={{ minHeight: '100vh' }}
           >
             <CSpinner />
+          </div>
+        )}
+        {alertVisible && (
+          <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
+            <CToast
+              autohide={false}
+              visible={true}
+              color="primary"
+              className="text-white align-items-center"
+              onClose={() => setAlertVisible(false)}
+            >
+              <div className="d-flex">
+                <CToastBody>{errorMessage}</CToastBody>
+                <CToastClose className="me-2 m-auto" white />
+              </div>
+            </CToast>
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -144,7 +169,7 @@ const AppointmentDetail = () => {
               aria-label=".form-select-sm example"
               required
               value={service.service_type_name}
-              onChange={(e) => setService(e.target.value)}
+              onChange={(e) => setService(e.target)}
             >
               <option value="" disabled selected>
                 Select..
@@ -177,7 +202,7 @@ const AppointmentDetail = () => {
                 </option>
               ))}
             </select>
-          </div>          
+          </div>
         </form>
       </div>
     </div>
