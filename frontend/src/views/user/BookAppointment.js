@@ -12,6 +12,8 @@ const BookAppointment = () => {
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 
+  const [formData, setFormData] = useState({});
+
   const handleNextStep = () => {
     setStep(step + 1)
   }
@@ -24,16 +26,28 @@ const BookAppointment = () => {
     document.title = 'Book Appointment'
   }, [])
 
+  const handleNext = (data) => {
+    setFormData((prevData) => ({ ...prevData, ...data }));
+    setStep(step + 1);
+  };
+
+
+  const handleSubmit = (data) => {
+    setFormData((prevData) => ({ ...prevData, ...data }));
+    // Submit the form data
+    console.log("Form data:", formData);
+  };
+
   const renderStepComponent = () => {
     switch (step) {
       case 1:
-        return <AppointmentDetail />
+        return <AppointmentDetail onNext={handleNext} />
       case 2:
-        return <PriceBreakDown />
+        return <PriceBreakDown data={formData} onNext={handleNext} />
       case 3:
-        return <UploadDocument />
+        return <UploadDocument data={formData} onNext={handleNext}/>
       case 4:
-        return <PriceBreakDown />
+        return <PriceBreakDown data={formData} onSubmit={handleSubmit}/>
       default:
         return null
     }
@@ -53,7 +67,7 @@ const BookAppointment = () => {
               <ProgressBar step={step} />
               <div className="mt-4">{renderStepComponent()}</div>
 
-              <div className="d-flex justify-content-between mb-3">
+              {/* <div className="d-flex justify-content-between mb-3">
                 {step > 1 && (
                   <button className="btn btn-primary" onClick={handleBackStep}>
                     Back
@@ -64,7 +78,7 @@ const BookAppointment = () => {
                     Next
                   </button>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
