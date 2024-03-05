@@ -29,6 +29,7 @@ const SetConsultantAvailability = React.lazy(() => import('./views/consultant/Se
 const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'));
 const AddService = React.lazy(() => import('./views/consultant/AddService'));
 const ServicesList = React.lazy(() => import('./views/consultant/ServicesList'));
+const ConsultantCalender = React.lazy(() => import('./views/consultant/ConsultantCalender'));
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +67,7 @@ const App = () => {
             <Route exact path="/consultant/adduser" name="Add User" element={<AddUserPage/>} />     
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />    
             <Route exact path="/consultant/setavailality" name="SetAvailality" element={<SetConsultantAvailability/>} />     
+            <Route exact path="/consultant/mycalender" name="My Calender" element={<ConsultantCalender/>} />     
             <Route exact path="/addservice" name="Add Service" element={<AddService />} /> 
             <Route exact path="/seriveces" name="Services" element={<ServicesList />} /> 
 
