@@ -17,13 +17,14 @@ const OrganizationForm = () => {
   const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [addressType, setAddressType] = useState('')
   const [formData, setFormData] = useState({
     org_code: '',
     org_name_en: '',
     org_name_fr: '',
     org_email: '',
     org_phone: '',
-    address_type: '',
+    address_type: addressType,
     street_no: '',
     street_name: '',
     city: '',
@@ -87,23 +88,20 @@ const OrganizationForm = () => {
       })
     } catch (error) {
       setLoading(false)
-      console.error('ErrorEmpty:', error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Error:', error)
-        setErrorMessage(error.response.data.message + ' || ' + 'Validation failed')
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received:', error.request)
-        setErrorMessage(error.request)
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error:', error.message)
-        setErrorMessage(error.message)
-      }
+      handleAPIError(error)
     }
     setAlertVisible(true)
+  }
+
+  const handleAPIError = (error) => {
+    console.error('Error:', error)
+    if (error.response) {
+      setErrorMessage(error.response.data.message + ' || ' + 'Validation failed')
+    } else if (error.request) {
+      setErrorMessage(error.request)
+    } else {
+      setErrorMessage(error.message)
+    }
   }
 
   return (
@@ -205,9 +203,8 @@ const OrganizationForm = () => {
             </div>
 
             <AddressTypeDropdown
-              addressTypes={['Home', 'Work', 'Other']}
-              selectedAddressType={formData.address_type}
-              handleAddressTypeChange={handleChange}
+              selectedAddressType={addressType}
+              handleAddressTypeChange={(e)=>setAddressType(e.target.value)}
             />
             <div className="mb-3">
               <label htmlFor="streetNo" className="form-label">
