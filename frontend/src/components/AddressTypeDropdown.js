@@ -2,7 +2,7 @@ import React from 'react';
 
 const AddressTypeDropdown = ({  selectedAddressType, handleAddressTypeChange }) => {
   const addressTypes = ['Home', 'Work'];
-  
+    
   return (
     <div className="mb-3">
       <label htmlFor="addressType" className="form-label">
@@ -28,8 +28,3 @@ const AddressTypeDropdown = ({  selectedAddressType, handleAddressTypeChange }) 
 
 export default AddressTypeDropdown;
 
-<AddressTypeDropdown
-  addressTypes={['Home', 'Work', 'Other']}
-  selectedAddressType={selectedAddressType}
-  handleAddressTypeChange={handleAddressTypeChange}
-/>

@@ -36,10 +36,12 @@ async function addOrganization(req, res) {
       org_name_fr,
       org_email,
       org_phone,
+      phone_type,
       created_by,
       updated_by,
+      address_type,
       street_no,
-      street_name,
+      street_name,      
       city,
       state,
       zip,
@@ -54,6 +56,8 @@ async function addOrganization(req, res) {
       org_name_fr,
       org_email,
       org_phone,
+      phone_type,
+      address_type,
       street_no,
       street_name,
       city,
@@ -69,6 +73,7 @@ async function addOrganization(req, res) {
 
     await new Address({
       cleint_id: savedOrganization._id, // Associate address with organization
+      address_type,
       street_no,
       street_name,
       city,

@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, default: "user" },
     jwtToken: { type: String, default: null },
     is_email_verified: { type: Boolean, default: false },
+    user_phone: { type: String, default: null },
     is_phone_verified: { type: Boolean, default: false },
     user_email_token: { type: String, default: null },
     record_status:{ type:Boolean,default:true},
@@ -35,6 +36,7 @@ const userSchema = new mongoose.Schema({
     zip: { type: String, required: true },
     country: { type: String, required: true },
     role: { type: String, default: "user" },
+    phone_type: { type: String, default: "Mobile" },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

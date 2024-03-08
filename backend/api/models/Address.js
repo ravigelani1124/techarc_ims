@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
+    address_type: { type: String, required: [true, "Address type is required"] },
     street_no: { type: String, required: [true, "Street no is required"] },
     street_name: { type: String, required: [true, "Address is required"] },
     city: { type: String, required: [true, "City is required"] },

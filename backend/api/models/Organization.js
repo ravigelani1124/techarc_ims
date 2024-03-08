@@ -39,6 +39,7 @@ const organizationSchema = new mongoose.Schema(
       minlength: [10, "Phone number must be 10 digits long"],
       maxlength: [10, "Phone number must be 10 digits long"],
     },
+    phone_type: { type: String, default: "Mobile" },
     is_email_verified: { type: Boolean, default: false },
     is_phone_verified: { type: Boolean, default: false },
     record_status: { type: Boolean, default: true },

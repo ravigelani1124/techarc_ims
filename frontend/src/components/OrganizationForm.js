@@ -1,20 +1,20 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { AppSidebar, AppFooter, AppHeader } from './index';
-import UserContext from 'src/utils/UserContext';
-import axios from 'axios';
-import { DEFAULT_URL } from 'src/utils/Constant';
-import {  CFormLabel,  CSpinner,CToast,CToastBody,CToastClose } from '@coreui/react';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import { CRow, CCol } from '@coreui/react';
+import React, { useState, useContext, useEffect } from 'react'
+import { AppSidebar, AppFooter, AppHeader } from './index'
+import UserContext from 'src/utils/UserContext'
+import axios from 'axios'
+import { DEFAULT_URL } from 'src/utils/Constant'
+import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
+import { CRow, CCol } from '@coreui/react'
+import AddressTypeDropdown from './AddressTypeDropdown'
 
 const OrganizationForm = () => {
-
   useEffect(() => {
-    document.title = 'Admin | Add Organization';
-  }, []);
+    document.title = 'Admin | Add Organization'
+  }, [])
 
-  const { user } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext)
+  const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [formData, setFormData] = useState({
@@ -23,36 +23,37 @@ const OrganizationForm = () => {
     org_name_fr: '',
     org_email: '',
     org_phone: '',
+    address_type: '',
     street_no: '',
     street_name: '',
     city: '',
     state: '',
     zip: '',
     country: '',
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleCountryChange = (val) => {
-    setFormData({ ...formData, country: val });
-  };
+    setFormData({ ...formData, country: val })
+  }
 
   const handleRegionChange = (val) => {
-    setFormData({ ...formData, state: val });
-  };
+    setFormData({ ...formData, state: val })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await addOrganizationAPIs();
-  };
+    e.preventDefault()
+    setLoading(true)
+    await addOrganizationAPIs()
+  }
 
   const addOrganizationAPIs = async () => {
     try {
-      const jwtToken = user.jwtToken;
+      const jwtToken = user.jwtToken
       const response = await axios.post(
         `${DEFAULT_URL}organization/addorganization`,
         {
@@ -65,74 +66,78 @@ const OrganizationForm = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${jwtToken}`,
           },
-        }
-      );
-      setLoading(false);
-      const successMessage = response.data.message;        
-      setErrorMessage(successMessage);
-    setFormData({
-      org_code: '',
-      org_name_en: '',
-      org_name_fr: '',
-      org_email: '',
-      org_phone: '',
-      street_no: '',
-      street_name: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: '',
-    })
-    } catch (error) {  
-      setLoading(false);
-      console.error('ErrorEmpty:', error);    
+        },
+      )
+      setLoading(false)
+      const successMessage = response.data.message
+      setErrorMessage(successMessage)
+      setFormData({
+        org_code: '',
+        org_name_en: '',
+        org_name_fr: '',
+        org_email: '',
+        org_phone: '',
+        address_type: '',
+        street_no: '',
+        street_name: '',
+        city: '',
+        state: '',
+        zip: '',
+        country: '',
+      })
+    } catch (error) {
+      setLoading(false)
+      console.error('ErrorEmpty:', error)
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.error('Error:', error);
-        setErrorMessage(error.response.data.message + ' || ' + "Validation failed");
+        console.error('Error:', error)
+        setErrorMessage(error.response.data.message + ' || ' + 'Validation failed')
       } else if (error.request) {
         // The request was made but no response was received
-        console.error('No response received:', error.request);
-        setErrorMessage(error.request);
+        console.error('No response received:', error.request)
+        setErrorMessage(error.request)
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.error('Error:', error.message);
-        setErrorMessage(error.message);        
+        console.error('Error:', error.message)
+        setErrorMessage(error.message)
       }
     }
     setAlertVisible(true)
-  };
+  }
 
   return (
     <>
       <AppSidebar />
-      <div className="position-fixed top-50 start-50 end-50 translate-middle" > {loading && <CSpinner/>}</div>
+      <div className="position-fixed top-50 start-50 end-50 translate-middle">
+        {' '}
+        {loading && <CSpinner />}
+      </div>
       {alertVisible && (
-          <div
-            style={{
-              position: 'fixed',
-              top: '20px',
-              right: '20px',
-              zIndex: '9999', // Ensure it's above other content
-            }}
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: '9999', // Ensure it's above other content
+          }}
+        >
+          <CToast
+            autohide={false}
+            visible={true}
+            color="primary"
+            className="text-white align-items-center"
           >
-            <CToast
-              autohide={false}
-              visible={true}
-              color="primary"
-              className="text-white align-items-center"
-            >
-              <div className="d-flex">
-                <CToastBody>{errorMessage}</CToastBody>
-                <CToastClose className="me-2 m-auto" white />
-              </div>
-            </CToast>
-          </div>
-        )}
+            <div className="d-flex">
+              <CToastBody>{errorMessage}</CToastBody>
+              <CToastClose className="me-2 m-auto" white />
+            </div>
+          </CToast>
+        </div>
+      )}
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        <div style={{ padding: '0 20px' }}>                
+        <div style={{ padding: '0 20px' }}>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="organizationName" className="form-label">
@@ -198,6 +203,12 @@ const OrganizationForm = () => {
                 value={formData.org_phone}
               />
             </div>
+
+            <AddressTypeDropdown
+              addressTypes={['Home', 'Work', 'Other']}
+              selectedAddressType={formData.address_type}
+              handleAddressTypeChange={handleChange}
+            />
             <div className="mb-3">
               <label htmlFor="streetNo" className="form-label">
                 Street No.
@@ -293,7 +304,7 @@ const OrganizationForm = () => {
         <AppFooter />
       </div>
     </>
-  );
-};
- 
-export default OrganizationForm;
+  )
+}
+
+export default OrganizationForm

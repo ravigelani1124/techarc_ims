@@ -31,6 +31,19 @@ const UserList = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [users, setUsers] = useState([])
 
+  const [expandedRows, setExpandedRows] = useState([])
+
+  const toggleRow = (index) => {
+    const newExpandedRows = [...expandedRows]
+    if (newExpandedRows.includes(index)) {
+      const indexToRemove = newExpandedRows.indexOf(index)
+      newExpandedRows.splice(indexToRemove, 1)
+    } else {
+      newExpandedRows.push(index)
+    }
+    setExpandedRows(newExpandedRows)
+  }
+
   useEffect(() => {
     fetchUsers()
   }, [user])
@@ -95,7 +108,7 @@ const UserList = () => {
       // const userlist = response.data.data
       // console.log(userlist)
       // userlist = userlist.filter((item) => item.consultant_id === user.consultant_id)
-      
+
       setUsers(response.data.data)
     } catch (error) {
       console.error(error)
@@ -149,6 +162,102 @@ const UserList = () => {
               />
             </div>
             <div style={{ padding: '0 20px' }}>
+              <CTable align="middle" className="mb-0 border" hover responsive>
+                <CTableHead color="light">
+                  <CTableRow>
+                    <CTableHeaderCell>#</CTableHeaderCell>
+                    <CTableHeaderCell>Code</CTableHeaderCell>
+                    <CTableHeaderCell>Name</CTableHeaderCell>
+                    <CTableHeaderCell>Email</CTableHeaderCell>
+                    <CTableHeaderCell>Phone</CTableHeaderCell>
+                    <CTableHeaderCell>Status</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {filtersUsers.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <CTableRow onClick={() => toggleRow(index)}>
+                        <CTableDataCell>
+                          <div>{index + 1}</div>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <div>{item.user_code}</div>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          <div>{item.user_name_en}</div>
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.is_email_verified ? (
+                            <div>
+                              {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                            </div>
+                          ) : (
+                            <div>
+                              {<CIcon icon={cilXCircle} className="text-danger" size="xl" />}
+                            </div>
+                          )}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.is_phone_verified ? (
+                            <div>
+                              {<CIcon icon={cilCheckCircle} className="text-success" size="xl" />}
+                            </div>
+                          ) : (
+                            <div>
+                              {<CIcon icon={cilXCircle} className="text-danger" size="xl" />}
+                            </div>
+                          )}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {item.record_status ? (
+                            <div>
+                              {
+                                <CButton
+                                  onClick={() => handleUpdateStatus(item)}
+                                  style={{ width: '100px' }}
+                                  color="success"
+                                >
+                                  Active
+                                </CButton>
+                              }
+                            </div>
+                          ) : (
+                            <div>
+                              {
+                                <CButton
+                                  onClick={() => handleUpdateStatus(item)}
+                                  style={{ width: '100px' }}
+                                  color="danger"
+                                >
+                                  In Active
+                                </CButton>
+                              }
+                            </div>
+                          )}
+                        </CTableDataCell>
+                      </CTableRow>
+                      {expandedRows.includes(index) && (
+                        <CTableRow>
+                        <CTableDataCell colSpan="6">
+                          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Address</div>
+                          <div><span style={{ fontWeight: 'bold' }}>Street:</span> {item.street_no} {item.street_name}</div>
+                          <div><span style={{ fontWeight: 'bold' }}>City:</span> {item.city}</div> 
+                          <div><span style={{ fontWeight: 'bold' }}>State:</span> {item.state}</div> 
+                          <div><span style={{ fontWeight: 'bold' }}>Country:</span> {item.country}</div> 
+                          <div><span style={{ fontWeight: 'bold' }}>Zip:</span> {item.zip}</div>  
+
+                          <div style={{ fontWeight: 'bold', marginTop: '10px' }}>Contact Details</div>                        
+                          <div style={{ marginTop: '10px' }}><span style={{ fontWeight: 'bold' }}>{item.phone_type + " : "}</span> {item.user_phone}</div>                            
+                          
+                        </CTableDataCell>                        
+                      </CTableRow>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
+            {/* <div style={{ padding: '0 20px' }}>
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light">
                   <CTableRow>
@@ -221,7 +330,7 @@ const UserList = () => {
                   ))}
                 </CTableBody>
               </CTable>
-            </div>
+            </div> */}
           </div>
         )}
 
