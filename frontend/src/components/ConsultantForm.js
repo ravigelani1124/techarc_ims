@@ -6,6 +6,9 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react';
 import { CRow, CCol } from '@coreui/react';
 import { DEFAULT_URL } from 'src/utils/Constant';
+import AddressTypeDropdown from './AddressTypeDropdown'
+import PhoneTypeDropdown from './PhoneTypeDropdown'
+
 
 const ConsultantForm = () => {
   const { user } = useContext(UserContext);
@@ -13,6 +16,8 @@ const ConsultantForm = () => {
   const [alertVisible, setAlertVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [orgs, setOrgs] = useState([]);
+  const [addressType, setAddressType] = useState('')
+  const [phoneType, setPhoneType] = useState('')
   const [selectedOrg, setSelectedOrg] = useState('');
   const [formData, setFormData] = useState({
     consultant_code: '',
@@ -22,6 +27,8 @@ const ConsultantForm = () => {
     consultant_email: '',
     org_name_en: '',
     org_id: '',
+    phone_type: '',
+    address_type: '',
     street_no: '',
     street_name: '',
     city: '',
@@ -92,6 +99,8 @@ const ConsultantForm = () => {
         {
           ...formData,
           org_id: selectedOrg,
+          address_type: addressType,
+          phone_type: phoneType,
           created_by: user._id,
           updated_by: user._id,
         },
@@ -130,6 +139,8 @@ const ConsultantForm = () => {
       org_id: '',
       street_no: '',
       street_name: '',
+      phone_type: '',
+      address_type: '',
       city: '',
       state: '',
       zip: '',
@@ -250,6 +261,10 @@ const ConsultantForm = () => {
                 onChange={handleChange}
               />
             </div>
+            <PhoneTypeDropdown
+              selectedPhoneType={phoneType}
+              handlePhoneTypeChange={(e) => setPhoneType(e.target.value)}
+            />
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
                 Phone
@@ -266,6 +281,11 @@ const ConsultantForm = () => {
                 onChange={handleChange}
               />
             </div>
+            <AddressTypeDropdown
+              selectedAddressType={addressType}
+              handleAddressTypeChange={(e) => setAddressType(e.target.value)}
+            />
+
             <div className="mb-3">
               <label htmlFor="streetNo" className="form-label">
                 Street No.

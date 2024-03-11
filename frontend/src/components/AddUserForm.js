@@ -6,12 +6,17 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
 import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
 import { CRow, CCol } from '@coreui/react'
 import { DEFAULT_URL } from 'src/utils/Constant'
+import AddressTypeDropdown from './AddressTypeDropdown'
+import PhoneTypeDropdown from './PhoneTypeDropdown'
+
 
 const AddUserForm = () => {
   const { user } = useContext(UserContext)
   const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [addressType, setAddressType] = useState('')
+  const [phoneType, setPhoneType] = useState('')
   const [formData, setFormData] = useState({
     user_code: '',
     user_name_en: '',
@@ -19,6 +24,8 @@ const AddUserForm = () => {
     user_phone: '',
     consultant_id: '',
     consultant_name_en: '',
+    phone_type: '',
+    address_type: '',
     street_no: '',
     street_name: '',
     city: '',
@@ -65,6 +72,8 @@ const AddUserForm = () => {
         ...formData,
           consultant_id: user._id,
           consultant_name_en: user.consultant_name_en,
+          address_type: addressType,
+          phone_type: phoneType,
           created_by: user._id,
           updated_by: user._id,
       },
@@ -101,6 +110,8 @@ const AddUserForm = () => {
       consultant_id: '',
       consultant_name_en: '',
       street_no: '',
+      phone_type: '',
+      address_type: '',
       street_name: '',
       city: '',
       state: '',
@@ -189,6 +200,11 @@ const AddUserForm = () => {
               />
             </div>
             
+            <PhoneTypeDropdown
+              selectedPhoneType={phoneType}
+              handlePhoneTypeChange={(e) => setPhoneType(e.target.value)}
+            />
+
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
                 Phone
@@ -205,6 +221,12 @@ const AddUserForm = () => {
                 onChange={handleChange}
               />
             </div>
+
+            <AddressTypeDropdown
+              selectedAddressType={addressType}
+              handleAddressTypeChange={(e) => setAddressType(e.target.value)}
+            />
+
             <div className="mb-3">
               <label htmlFor="streetNo" className="form-label">
                 Street No.

@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
     zip: { type: String, required: true },
     country: { type: String, required: true },
     role: { type: String, default: "user" },
-    phone_type: { type: String, default: "Mobile" },
+    address_type: { type: String, required: [true, "Address type is required"] },
+    phone_type: { type: String, required: [true, "Address type is required"] },
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

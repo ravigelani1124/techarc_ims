@@ -7,6 +7,7 @@ import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/r
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
 import { CRow, CCol } from '@coreui/react'
 import AddressTypeDropdown from './AddressTypeDropdown'
+import PhoneTypeDropdown from './PhoneTypeDropdown'
 
 const OrganizationForm = () => {
   useEffect(() => {
@@ -18,13 +19,15 @@ const OrganizationForm = () => {
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [addressType, setAddressType] = useState('')
+  const [phoneType, setPhoneType] = useState('')
   const [formData, setFormData] = useState({
     org_code: '',
     org_name_en: '',
     org_name_fr: '',
     org_email: '',
+    phone_type: '',
     org_phone: '',
-    address_type: addressType,
+    address_type: '',
     street_no: '',
     street_name: '',
     city: '',
@@ -55,10 +58,14 @@ const OrganizationForm = () => {
   const addOrganizationAPIs = async () => {
     try {
       const jwtToken = user.jwtToken
+      console.log(formData)
+      console.log(addressType, phoneType)
       const response = await axios.post(
         `${DEFAULT_URL}organization/addorganization`,
         {
           ...formData,
+          address_type: addressType,
+          phone_type: phoneType,
           created_by: user._id,
           updated_by: user._id,
         },
@@ -77,6 +84,7 @@ const OrganizationForm = () => {
         org_name_en: '',
         org_name_fr: '',
         org_email: '',
+        phone_type: '',
         org_phone: '',
         address_type: '',
         street_no: '',
@@ -185,6 +193,11 @@ const OrganizationForm = () => {
                 value={formData.org_email}
               />
             </div>
+
+            <PhoneTypeDropdown
+              selectedPhoneType={phoneType}
+              handlePhoneTypeChange={(e) => setPhoneType(e.target.value)}
+            />
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
                 Phone
@@ -204,7 +217,7 @@ const OrganizationForm = () => {
 
             <AddressTypeDropdown
               selectedAddressType={addressType}
-              handleAddressTypeChange={(e)=>setAddressType(e.target.value)}
+              handleAddressTypeChange={(e) => setAddressType(e.target.value)}
             />
             <div className="mb-3">
               <label htmlFor="streetNo" className="form-label">

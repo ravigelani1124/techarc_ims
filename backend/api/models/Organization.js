@@ -23,6 +23,7 @@ const organizationSchema = new mongoose.Schema(
       type: String,
       required: [false, "Organization name is required"],
     },
+    address_type: { type: String, required: [true, "Address type is required"] },
     org_email: {
       type: String,
       unique: true,

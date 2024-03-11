@@ -220,7 +220,7 @@ const ConsultantList = () => {
               {expandedRows.includes(index) && (
                         <CTableRow>
                         <CTableDataCell colSpan="7">
-                          <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>Address</div>
+                        <div style={{ marginTop: '10px' }}><span style={{ fontWeight: 'bold' }}>{"Address : "}</span> {item.address_type}</div>                            
                           <div><span style={{ fontWeight: 'bold' }}>Street:</span> {item.street_no} {item.street_name}</div>
                           <div><span style={{ fontWeight: 'bold' }}>City:</span> {item.city}</div> 
                           <div><span style={{ fontWeight: 'bold' }}>State:</span> {item.state}</div> 

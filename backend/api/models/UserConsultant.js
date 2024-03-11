@@ -9,6 +9,8 @@ const userConsultantSchema = new mongoose.Schema(
     consultant_license_number: { type: String, required: true },
     consultant_phone: { type: String, required: true },
     consultant_email: { type: String, required: true, unique: true },
+    address_type: { type: String, required: [true, "Address type is required"] },
+    phone_type: { type: String, required: [true, "Address type is required"] },
     org_name_en: { type: String, required: true },
     org_id: {
       type: mongoose.Schema.Types.ObjectId,

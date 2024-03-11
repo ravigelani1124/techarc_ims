@@ -22,6 +22,8 @@ const userSignup = async (req, res) => {
       "consultant_id",
       "consultant_name_en",
       "street_no",
+      "phone_type",
+      "address_type",
       "street_name",
       "city",
       "state",
@@ -57,6 +59,7 @@ const userSignup = async (req, res) => {
 
     // Create a new address
     const newAddress = new Address({
+      address_type: userData.address_type,
       cleint_id: savedUser._id,
       street_no: userData.street_no,
       street_name: userData.street_name,

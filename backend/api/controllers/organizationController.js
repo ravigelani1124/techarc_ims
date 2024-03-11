@@ -29,6 +29,8 @@ async function getOrganizations(req, res) {
 }
 
 async function addOrganization(req, res) {
+
+
   try {
     const {
       org_code,
@@ -47,6 +49,15 @@ async function addOrganization(req, res) {
       zip,
       country,
     } = req.body;
+
+    if(!org_code || !org_name_en || !org_email || !org_phone || !address_type || !street_no 
+      || !street_name || !city || !state || !zip || !country || !created_by || !updated_by || !phone_type) {
+      return res.status(400).json({
+        status: "failed",
+        data: {},
+        message: "All fields are required",
+      });
+    }
 
     const org_email_token = generateVerificationToken();
 

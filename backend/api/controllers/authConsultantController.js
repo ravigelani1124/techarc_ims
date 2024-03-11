@@ -28,6 +28,8 @@ async function consultant_signup(req, res) {
       org_id,
       street_no,
       street_name,
+      phone_type,
+      address_type,
       city,
       state,
       zip,
@@ -49,7 +51,8 @@ async function consultant_signup(req, res) {
       !city ||
       !state ||
       !zip ||
-      !country
+      !country ||  !phone_type ||
+      !address_type
     ) {
       return res.status(400).json({
         status: "failed",
@@ -77,6 +80,8 @@ async function consultant_signup(req, res) {
       consultant_email,
       org_name_en,
       org_id,
+      phone_type,
+      address_type,
       street_no,
       street_name,
       city,
@@ -89,7 +94,8 @@ async function consultant_signup(req, res) {
     });
     const savedUser = await newUser.save();
 
-    await new Address({
+    await new Address({      
+      address_type,
       cleint_id: newUser._id, // Associate address with organization
       street_no,
       street_name,
