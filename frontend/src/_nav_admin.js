@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilDescription,
+  cilLinkBroken,
   cilLibraryAdd,
   cilNoteAdd,
   cibAddthis,
@@ -117,6 +117,23 @@ const _nav_admin = [
           color: 'info',
         },
       },
+    ],
+  },
+
+  {
+    component: CNavGroup,
+    name: 'Utils',
+    icon: <CIcon icon={cilLinkBroken} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Document',
+        to: '/adddocument',
+        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },    
     ],
   },
 ]
