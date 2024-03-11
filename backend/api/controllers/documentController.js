@@ -3,11 +3,11 @@ const Document = require("../models/documents");
 async function addDocument(req, res) {
 
     try{
-        const { document_name, document_description} = req.body;
+        const { document_name, document_code} = req.body;
 
       if (
         !document_name ||
-        !document_description
+        !document_code
       ) {
         return res.status(400).json({
           status: "failed",
@@ -26,7 +26,7 @@ async function addDocument(req, res) {
       }
       const document = new Document({
         document_name,
-        document_description,
+        document_code,
       });
 
       await document.save();

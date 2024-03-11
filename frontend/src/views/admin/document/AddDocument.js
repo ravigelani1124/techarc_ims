@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { AppSidebar, AppFooter, AppHeader } from '../../components/index';
+import { AppSidebar, AppFooter, AppHeader } from '../../../components/index';
 import UserContext from 'src/utils/UserContext';
 import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react';
 import { DEFAULT_URL } from 'src/utils/Constant';

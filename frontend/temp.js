@@ -1,482 +1,114 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { AppSidebar, AppFooter, AppHeader } from './index';
-import UserContext from 'src/utils/UserContext';
-import axios from 'axios';
-import { DEFAULT_URL } from 'src/utils/Constant';
-import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import { CRow, CCol } from '@coreui/react';
-import AddressTypeDropdown from './AddressTypeDropdown';
+import React, { useState } from 'react';
 
-const OrganizationForm = () => {
-  useEffect(() => {
-    document.title = 'Admin | Add Organization';
-  }, []);
+const EditDocumentModal = ({ document, onSave, onClose }) => {
+  const [docName, setDocName] = useState(document.name);
 
-  const { user } = useContext(UserContext);
-  const [loading, setLoading] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [formData, setFormData] = useState({
-    org_code: '',
-    org_name_en: '',
-    org_name_fr: '',
-    org_email: '',
-    org_phone: '',
-    address_type: '',
-    street_no: '',
-    street_name: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleCountryChange = (val) => {
-    setFormData({ ...formData, country: val });
-  };
-
-  const handleRegionChange = (val) => {
-    setFormData({ ...formData, state: val });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    await addOrganizationAPIs();
-  };
-
-  const addOrganizationAPIs = async () => {
-    try {
-      const jwtToken = user.jwtToken;
-      const response = await axios.post(
-        `${DEFAULT_URL}organization/addorganization`,
-        {
-          ...formData,
-          created_by: user._id,
-          updated_by: user._id,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        },
-      );
-      setLoading(false);
-      const successMessage = response.data.message;
-      setErrorMessage(successMessage);
-      setFormData({
-        org_code: '',
-        org_name_en: '',
-        org_name_fr: '',
-        org_email: '',
-        org_phone: '',
-        address_type: '',
-        street_no: '',
-        street_name: '',
-        city: '',
-        state: '',
-        zip: '',
-        country: '',
-      });
-    } catch (error) {
-      setLoading(false);
-      handleAPIError(error);
-    }
-    setAlertVisible(true);
-  };
-
-  const handleAPIError = (error) => {
-    console.error('Error:', error);
-    if (error.response) {
-      setErrorMessage(error.response.data.message + ' || ' + 'Validation failed');
-    } else if (error.request) {
-      setErrorMessage(error.request);
-    } else {
-      setErrorMessage(error.message);
-    }
+  const handleSave = () => {
+    onSave({ ...document, name: docName });
+    onClose();
   };
 
   return (
-    <>
-      <AppSidebar />
-      <div className="position-fixed top-50 start-50 end-50 translate-middle">{loading && <CSpinner />}</div>
-      {alertVisible && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '9999',
-          }}
-        >
-          <CToast autohide={false} visible={true} color="primary" className="text-white align-items-center">
-            <div className="d-flex">
-              <CToastBody>{errorMessage}</CToastBody>
-              <CToastClose className="me-2 m-auto" white />
+    <div className="modal fixed w-full h-full top-0 left-0 flex items-center justify-center">
+      <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+      <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+        <div className="modal-content py-4 text-left px-6">
+          <div className="flex justify-between items-center pb-3">
+            <p className="text-2xl font-bold">Edit Document</p>
+            <div className="modal-close cursor-pointer z-50" onClick={onClose}>
+              <svg className="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                <path
+                  d="M12.364 11.636a.999.999 0 1 1-1.414 1.414L9 10.414l-1.95 1.95a.999.999 0 1 1-1.414-1.414l1.95-1.95-1.95-1.95a.999.999 0 1 1 1.414-1.414l1.95 1.95 1.95-1.95a.999.999 0 1 1 1.414 1.414l-1.95 1.95 1.95 1.95z"
+                />
+              </svg>
             </div>
-          </CToast>
-        </div>
-      )}
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
-        <div style={{ padding: '0 20px' }}>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="organizationName" className="form-label">
-                Name
-              </label>
+          </div>
+          <form>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="docName">Document Name</label>
               <input
                 type="text"
-                className="form-control"
-                id="organizationName"
-                name="org_name_en"
-                placeholder="Organization Name"
-                pattern="[A-Za-z\s\-]+"
-                required
-                autoFocus
-                onChange={handleChange}
-                value={formData.org_name_en}
+                id="docName"
+                value={docName}
+                onChange={(e) => setDocName(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-            {/* Other input fields */}
-            <AddressTypeDropdown              
-              selectedAddressType={formData.address_type}
-              handleAddressTypeChange={handleChange}
-            />
-            {/* Remaining input fields */}
-            <div className="mb-3 d-flex justify-content-end">
-              <button type="submit" className="btn btn-primary px-4">
-                Submit
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleSave}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Save
               </button>
             </div>
           </form>
         </div>
-        <AppFooter />
       </div>
-    </>
+    </div>
   );
 };
 
-export default OrganizationForm;
+const DocumentTable = ({ documents }) => {
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
+  const handleEditClick = (document) => {
+    setSelectedDocument(document);
+    setModalOpen(true);
+  };
 
-
-
-import React, { useState, useContext, useEffect } from 'react'
-import { AppSidebar, AppFooter, AppHeader } from './index'
-import UserContext from 'src/utils/UserContext'
-import axios from 'axios'
-import { DEFAULT_URL } from 'src/utils/Constant'
-import { CFormLabel, CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector'
-import { CRow, CCol } from '@coreui/react'
-import AddressTypeDropdown from './AddressTypeDropdown'
-
-const OrganizationForm = () => {
-  useEffect(() => {
-    document.title = 'Admin | Add Organization'
-  }, [])
-
-  const { user } = useContext(UserContext)
-  const [loading, setLoading] = useState(false)
-  const [alertVisible, setAlertVisible] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [addressTypes, setAddressTypes] = useState([])
-  const [formData, setFormData] = useState({
-    org_code: '',
-    org_name_en: '',
-    org_name_fr: '',
-    org_email: '',
-    org_phone: '',
-    address_type: '',
-    street_no: '',
-    street_name: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: '',
-  })
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
-
-  const handleCountryChange = (val) => {
-    setFormData({ ...formData, country: val })
-  }
-
-  const handleRegionChange = (val) => {
-    setFormData({ ...formData, state: val })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    await addOrganizationAPIs()
-  }
-
-  const addOrganizationAPIs = async () => {
-    try {
-      const jwtToken = user.jwtToken
-      const response = await axios.post(
-        `${DEFAULT_URL}organization/addorganization`,
-        {
-          ...formData,
-          created_by: user._id,
-          updated_by: user._id,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        },
-      )
-      setLoading(false)
-      const successMessage = response.data.message
-      setErrorMessage(successMessage)
-      setFormData({
-        org_code: '',
-        org_name_en: '',
-        org_name_fr: '',
-        org_email: '',
-        org_phone: '',
-        address_type: '',
-        street_no: '',
-        street_name: '',
-        city: '',
-        state: '',
-        zip: '',
-        country: '',
-      })
-    } catch (error) {
-      setLoading(false)
-      console.error('ErrorEmpty:', error)
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Error:', error)
-        setErrorMessage(error.response.data.message + ' || ' + 'Validation failed')
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received:', error.request)
-        setErrorMessage(error.request)
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error:', error.message)
-        setErrorMessage(error.message)
-      }
-    }
-    setAlertVisible(true)
-  }
+  const handleSave = (updatedDocument) => {
+    // Example: Save to API
+    console.log("Updated Document:", updatedDocument);
+    // Implement API call to save the updated document
+  };
 
   return (
-    <>
-      <AppSidebar />
-      <div className="position-fixed top-50 start-50 end-50 translate-middle">
-        {' '}
-        {loading && <CSpinner />}
-      </div>
-      {alertVisible && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '9999', // Ensure it's above other content
-          }}
-        >
-          <CToast
-            autohide={false}
-            visible={true}
-            color="primary"
-            className="text-white align-items-center"
-          >
-            <div className="d-flex">
-              <CToastBody>{errorMessage}</CToastBody>
-              <CToastClose className="me-2 m-auto" white />
-            </div>
-          </CToast>
-        </div>
+    <div>
+      <table className="min-w-full leading-normal">
+        <thead>
+          <tr>
+            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
+            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {documents.map((document, index) => (
+            <tr key={index}>
+              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{document.name}</td>
+              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <button className="text-blue-500" onClick={() => handleEditClick(document)}>Edit</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {modalOpen && (
+        <EditDocumentModal
+          document={selectedDocument}
+          onSave={handleSave}
+          onClose={() => setModalOpen(false)}
+        />
       )}
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-        <AppHeader />
-        <div style={{ padding: '0 20px' }}>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="organizationName" className="form-label">
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="organizationName"
-                name="org_name_en"
-                placeholder="Organization Name"
-                pattern="[A-Za-z\s\-]+"
-                required
-                autoFocus
-                onChange={handleChange}
-                value={formData.org_name_en}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="code" className="form-label">
-                Code
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="code"
-                name="org_code"
-                placeholder="ORG234"
-                pattern="[A-Za-z0-9]{1,5}"
-                required
-                onChange={handleChange}
-                value={formData.org_code}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="org_email"
-                placeholder="abc@example.com"
-                required
-                onChange={handleChange}
-                value={formData.org_email}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="phone" className="form-label">
-                Phone
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="phone"
-                name="org_phone"
-                placeholder="647-273-5676"
-                pattern="[0-9]{10}"
-                required
-                onChange={handleChange}
-                value={formData.org_phone}
-              />
-            </div>
+    </div>
+  );
+};
 
-            <AddressTypeDropdown              
-              selectedAddressType={formData.address_type}
-              handleAddressTypeChange={handleChange}
-            />
-            <div className="mb-3">
-              <label htmlFor="streetNo" className="form-label">
-                Street No.
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="streetNo"
-                name="street_no"
-                placeholder="52"
-                pattern="[0-9]+"
-                required
-                onChange={handleChange}
-                value={formData.street_no}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="address" className="form-label">
-                Address
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="address"
-                name="street_name"
-                placeholder="Queen street"
-                pattern="[A-Za-z\s\-]+"
-                required
-                onChange={handleChange}
-                value={formData.street_name}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="city" className="form-label">
-                City
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="city"
-                name="city"
-                placeholder="Toronto"
-                pattern="[A-Za-z\s\-]+"
-                required
-                onChange={handleChange}
-                value={formData.city}
-              />
-            </div>
-            <div className="mb-3">
-              <CFormLabel htmlFor="country">Country & Region</CFormLabel>
-              <CRow>
-                <CCol xs="6">
-                  <CountryDropdown
-                    className="form-control"
-                    value={formData.country}
-                    onChange={handleCountryChange}
-                  />
-                </CCol>
-                <CCol xs="6">
-                  <RegionDropdown
-                    className="form-control"
-                    country={formData.country}
-                    value={formData.state}
-                    onChange={handleRegionChange}
-                  />
-                </CCol>
-              </CRow>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="zip" className="form-label">
-                Postal Code
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="zip"
-                name="zip"
-                placeholder="M3N 1L6"
-                pattern="[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d"
-                required
-                onChange={handleChange}
-                value={formData.zip}
-              />
-            </div>
+// Example usage:
+const documents = [
+  { id: 1, name: 'Document 1' },
+  { id: 2, name: 'Document 2' },
+  { id: 3, name: 'Document 3' }
+];
 
-            <div className="mb-3 d-flex justify-content-end">
-              <button type="submit" className="btn btn-primary px-4">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-        <AppFooter />
-      </div>
-    </>
-  )
-}
+const App = () => {
+  return (
+    <div className="container mx-auto mt-8">
+      <DocumentTable documents={documents} />
+    </div>
+  );
+};
 
-export default OrganizationForm
-
+export default App;

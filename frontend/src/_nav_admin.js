@@ -133,7 +133,16 @@ const _nav_admin = [
         badge: {
           color: 'info',
         },
-      },    
+      },   
+      {
+        component: CNavItem,
+        name: 'Document List',
+        to: '/documents',
+        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      }, 
     ],
   },
 ]
