@@ -22,6 +22,6 @@ userAdminSchema.pre('save', async function (next) {
   next();
 });
 
-const UserAdmin = mongoose.model('UserAdmin', userAdminSchema);
+const UserAdmin = mongoose.model('Admin', userAdminSchema);
 
 module.exports = UserAdmin;
