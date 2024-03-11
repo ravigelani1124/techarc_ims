@@ -1,18 +1,20 @@
-import React from 'react';
-import CIcon from '@coreui/icons-react';
+import React from 'react'
+import CIcon from '@coreui/icons-react'
 import {
   cilDescription,
   cilLibraryAdd,
   cilNoteAdd,
+  cibAddthis,
   cilNotes,
   cilSpeedometer,
   cilStar,
   cilPuzzle,
   cilCursor,
-  cilTablet,cilDoubleQuoteSansRight,  
+  cilTablet,
+  cilDoubleQuoteSansRight,
   cilFeaturedPlaylist,
-} from '@coreui/icons';
-import { CNavGroup, CNavItem } from '@coreui/react';
+} from '@coreui/icons'
+import { CNavGroup, CNavItem } from '@coreui/react'
 
 const _nav_admin = [
   {
@@ -83,14 +85,14 @@ const _nav_admin = [
 
   {
     component: CNavGroup,
-    name: 'Application Types',
+    name: 'Applications',
     icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Add Application Type',
+        name: 'Application Type',
         to: '/addapplicationtype',
-        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
         badge: {
           color: 'info',
         },
@@ -98,7 +100,17 @@ const _nav_admin = [
 
       {
         component: CNavItem,
-        name: 'Application Types',
+        name: 'Application SubType',
+        to: '/addsubtypetype',
+        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+
+      {
+        component: CNavItem,
+        name: 'Application List',
         to: '/applicationtypes',
         icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
         badge: {
@@ -107,9 +119,6 @@ const _nav_admin = [
       },
     ],
   },
+]
 
-];
-
-
-export default _nav_admin;
-
+export default _nav_admin

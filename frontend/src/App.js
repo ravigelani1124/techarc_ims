@@ -31,6 +31,7 @@ const AddService = React.lazy(() => import('./views/consultant/AddService'));
 const ServicesList = React.lazy(() => import('./views/consultant/ServicesList'));
 const ConsultantCalender = React.lazy(() => import('./views/consultant/ConsultantCalender'));
 const AddApplicationType = React.lazy(() => import('./views/admin/AddApplicationType'));
+const AddAppSubType = React.lazy(() => import('./views/admin/AddAppSubType'));
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -62,6 +63,7 @@ const App = () => {
             <Route exact path="/addorg" name="Add Organization" element={<AddOrganization />} />  
             <Route exact path="/addconsultant" name="Add Consultant" element={<AddCounsultant />} />   
             <Route exact path="/addapplicationtype" name="Add Application Type" element={<AddApplicationType/>} />   
+            <Route exact path="/addsubtypetype" name="Add Application Sub Type" element={<AddAppSubType/>} />   
                         
 
             {/* Consultant Route */}
