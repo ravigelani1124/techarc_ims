@@ -9,7 +9,8 @@ import {
   cilStar,
   cilPuzzle,
   cilCursor,
-  cilTablet,cilDoubleQuoteSansRight
+  cilTablet,cilDoubleQuoteSansRight,  
+  cilFeaturedPlaylist,
 } from '@coreui/icons';
 import { CNavGroup, CNavItem } from '@coreui/react';
 
@@ -80,6 +81,35 @@ const _nav_admin = [
     ],
   },
 
+  {
+    component: CNavGroup,
+    name: 'Application Types',
+    icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Application Type',
+        to: '/addapplicationtype',
+        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+
+      {
+        component: CNavItem,
+        name: 'Application Types',
+        to: '/applicationtypes',
+        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
+  },
+
 ];
 
+
 export default _nav_admin;
+

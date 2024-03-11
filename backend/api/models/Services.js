@@ -10,7 +10,7 @@ const serviceSchema = new mangoose.Schema(
       type: Number,
       required: [true, "Consultant fee is required"],
     },
-  
+
     created_by: {
       type: mangoose.Schema.Types.ObjectId,
       ref: "consultant",
