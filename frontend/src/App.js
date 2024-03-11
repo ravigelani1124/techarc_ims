@@ -30,10 +30,11 @@ const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'))
 const AddService = React.lazy(() => import('./views/consultant/AddService'));
 const ServicesList = React.lazy(() => import('./views/consultant/ServicesList'));
 const ConsultantCalender = React.lazy(() => import('./views/consultant/ConsultantCalender'));
-const AddApplicationType = React.lazy(() => import('./views/admin/AddApplicationType'));
+const AddApplicationType = React.lazy(() => import('./views/admin/applicationtype/AddApplicationType'));
 const AddAppSubType = React.lazy(() => import('./views/admin/AddAppSubType'));
 const DocumentList = React.lazy(() => import('./views/admin/document/DocumentList'));
 const AddDocument = React.lazy(() => import('./views/admin/document/AddDocument'));
+const ApplicationTypeList = React.lazy(() => import('./views/admin/applicationtype/ApplicationTypeList'));
 
 const App = () => {
 
@@ -69,6 +70,7 @@ const App = () => {
             <Route exact path="/addsubtypetype" name="Add Application Sub Type" element={<AddAppSubType/>} />   
             <Route exact path="/adddocument" name="Add Document" element={<AddDocument/>} />
             <Route exact path="/documents" name="Document List" element={<DocumentList/>} />
+            <Route exact path="/applicationtype" name="Application Type List" element={<ApplicationTypeList/>} />
                         
 
             {/* Consultant Route */}

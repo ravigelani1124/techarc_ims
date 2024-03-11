@@ -4,10 +4,7 @@ import {
   cilLinkBroken,
   cilLibraryAdd,
   cilNoteAdd,
-  cibAddthis,
-  cilNotes,
   cilSpeedometer,
-  cilStar,
   cilPuzzle,
   cilCursor,
   cilTablet,
@@ -92,7 +89,17 @@ const _nav_admin = [
         component: CNavItem,
         name: 'Application Type',
         to: '/addapplicationtype',
-        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
+        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+
+      {
+        component: CNavItem,
+        name: 'Application List',
+        to: '/applicationtype',
+        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
         badge: {
           color: 'info',
         },
@@ -102,17 +109,7 @@ const _nav_admin = [
         component: CNavItem,
         name: 'Application SubType',
         to: '/addsubtypetype',
-        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
-
-      {
-        component: CNavItem,
-        name: 'Application List',
-        to: '/applicationtypes',
-        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
+        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
         badge: {
           color: 'info',
         },
@@ -122,18 +119,18 @@ const _nav_admin = [
 
   {
     component: CNavGroup,
-    name: 'Utils',
+    name: 'Documents',
     icon: <CIcon icon={cilLinkBroken} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
         name: 'Add Document',
         to: '/adddocument',
-        icon: <CIcon icon={cibAddthis} customClassName="nav-icon" />,
+        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
         badge: {
           color: 'info',
         },
-      },   
+      },
       {
         component: CNavItem,
         name: 'Document List',
@@ -142,7 +139,7 @@ const _nav_admin = [
         badge: {
           color: 'info',
         },
-      }, 
+      },
     ],
   },
 ]
