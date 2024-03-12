@@ -249,25 +249,26 @@ const OrganizationList = () => {
                       </CTableRow>
                       {expandedRows.includes(index) && (
                         <CTableRow>
-                        <CTableDataCell colSpan="6">
-                        <div style={{ marginTop: '10px' }}><span style={{ fontWeight: 'bold' }}>{"Address : "}</span> {item.address_type}</div>                            
-                          <div><span style={{ fontWeight: 'bold' }}>Street:</span> {item.street_no} {item.street_name}</div>
-                          <div><span style={{ fontWeight: 'bold' }}>City:</span> {item.city}</div> 
-                          <div><span style={{ fontWeight: 'bold' }}>State:</span> {item.state}</div> 
-                          <div><span style={{ fontWeight: 'bold' }}>Country:</span> {item.country}</div> 
-                          <div><span style={{ fontWeight: 'bold' }}>Zip:</span> {item.zip}</div>  
-                          <div style={{ fontWeight: 'bold', marginTop: '10px' }}>Contact Details</div>                        
-                          <div style={{ marginTop: '10px' }}><span style={{ fontWeight: 'bold' }}>{item.phone_type + " : "}</span> {item.org_phone}</div>                            
-                          
-                        </CTableDataCell>                        
-                      </CTableRow>
+                          <CTableDataCell colSpan="7">
+                            <div style={{ marginTop: '10px' }}>
+                              <span style={{ fontWeight: 'bold' }}>
+                                {item.address_type} Address:
+                              </span>{' '}
+                              {item.street_no} {item.street_name}, {item.city}, {item.state},{' '}
+                              {item.country}, {item.zip}
+                            </div>
+                            <div style={{ marginTop: '10px' }}>
+                              <span style={{ fontWeight: 'bold' }}>{item.phone_type} Contact:</span>{' '}
+                              {item.org_phone}
+                            </div>
+                          </CTableDataCell>
+                        </CTableRow>
                       )}
                     </React.Fragment>
                   ))}
                 </CTableBody>
               </CTable>
             </div>
-        
           </div>
         )}
 
