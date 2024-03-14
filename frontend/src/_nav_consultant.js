@@ -79,32 +79,19 @@ const _nav_consultant = [
       },
     ],
   },
-  {
-    component: CNavGroup,
-    name: 'Services',
-    icon: <CIcon icon={cilDoubleQuoteSansRight} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Add Service',
-        to: '/addservice',
-        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
 
-      {
-        component: CNavItem,
-        name: 'Services List',
-        to: '/seriveces',
-        icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
-    ],
+  {
+    component: CNavItem,
+    name: 'My Services',
+    to: '/myservices',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      // text: 'NEW',
+    },
   },
+
+
 ]
 
 export default _nav_consultant

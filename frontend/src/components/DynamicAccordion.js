@@ -8,7 +8,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPenAlt } from '@coreui/icons'
-import EditSubApplicationType from 'src/views/admin/EditSubApplicationType'
+import EditSubApplicationType from 'src/views/admin/applicationtype/EditSubApplicationType'
 import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
 import UserContext from 'src/utils/UserContext'

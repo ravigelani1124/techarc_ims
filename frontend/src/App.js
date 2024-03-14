@@ -27,7 +27,7 @@ const AddApplicationUser = React.lazy(() => import('./views/application/AddAppli
 const NumberOfApplicationsUser = React.lazy(() => import('./views/application/NumberOfApplicationsUser'));
 const SetConsultantAvailability = React.lazy(() => import('./views/consultant/SetConsultantAvailability'));
 const BookAppointment = React.lazy(() => import('./views/user/BookAppointment'));
-const AddService = React.lazy(() => import('./views/consultant/AddService'));
+const MyServiceConsultant = React.lazy(() => import('./views/consultant/MyServiceConsultant'));
 const ServicesList = React.lazy(() => import('./views/consultant/ServicesList'));
 const ConsultantCalender = React.lazy(() => import('./views/consultant/ConsultantCalender'));
 const AddApplicationType = React.lazy(() => import('./views/admin/applicationtype/AddApplicationType'));
@@ -81,7 +81,7 @@ const App = () => {
             <Route exact path="/consultant/users" name="Users" element={<UserList/>} />    
             <Route exact path="/consultant/setavailality" name="SetAvailality" element={<SetConsultantAvailability/>} />     
             <Route exact path="/consultant/mycalender" name="My Calender" element={<ConsultantCalender/>} />     
-            <Route exact path="/addservice" name="Add Service" element={<AddService />} /> 
+            <Route exact path="/myservices" name="My Services" element={<MyServiceConsultant />} /> 
             <Route exact path="/seriveces" name="Services" element={<ServicesList />} /> 
 
             {/* User Route */}

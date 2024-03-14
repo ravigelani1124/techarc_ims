@@ -1,5 +1,6 @@
 const ApplicationType = require("../models/ApplicationType");
 const ApplicationSubType = require("../models/ApplicationSubType");
+const ConsultantServices = require("../models/ConsultantServices");
 async function addApplicationType(req, res) {
   try {
     const {
@@ -247,6 +248,68 @@ async function updateSubApplicationType(req, res) {
   }
 }
 
+async function addConsultantSelectedServices(req, res) {
+  try {
+    const { consultant_id, services } = req.body;
+
+    if (!consultant_id) {
+      return res.status(400).json({
+        status: "failed",
+        data: {},
+        message: "Id is required",
+      });
+    }
+
+    const updatedService = await ConsultantServices.findOneAndUpdate(
+      { consultant_id: consultant_id },
+      { services },
+      { new: true, upsert: true }
+    );
+
+    const message = updatedService
+      ? "Consultant selected services updated successfully"
+      : "Consultant selected services added successfully";
+
+    return res.status(200).json({
+      status: "success",
+      data: updatedService,
+      message: message,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+async function getConsultantSelectedServices(req, res) {
+  try {
+    const { id } = req.params;
+    const consultantSelectedServices = await ConsultantServices.findOne({ consultant_id: id });
+
+    if (!consultantSelectedServices) {
+      return res.status(404).json({
+        status: "failed",
+        data: {},
+        message: "Consultant selected services not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      data: consultantSelectedServices.services,
+      message: "Consultant selected services fetched successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
 module.exports = {
   addApplicationType,
   getApplicationType,
@@ -254,4 +317,6 @@ module.exports = {
   addSubApplicationType,
   getAllApplicationWithSubType,
   updateSubApplicationType,
+  addConsultantSelectedServices,
+  getConsultantSelectedServices,
 };
