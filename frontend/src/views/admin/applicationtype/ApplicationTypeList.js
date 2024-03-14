@@ -44,9 +44,7 @@ const ApplicationTypeList = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      setDocuments(response.data.data)
-      setErrorMessage(response.data.message)
-      setAlertVisible(true)
+      setDocuments(response.data.data)      
     } catch (error) {
       setErrorMessage(error.response.data)
       setAlertVisible(true)

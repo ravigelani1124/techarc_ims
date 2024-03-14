@@ -15,6 +15,7 @@ const applicationTypeSchema = new mangoose.Schema(
             ref: "admin",
             required: true,
         },
+        sub_application_type: { type: [], default: [] },
     },
     { timestamps: true }
 );
