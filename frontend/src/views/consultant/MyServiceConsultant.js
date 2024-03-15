@@ -127,8 +127,8 @@ const MyServiceConsultant = () => {
           },
         },
       )
-
-      console.log(response.data.data)      
+      setErrorMessage(response.data.message)  
+      setAlertVisible(true)
       fetchAllServices()
     } catch (error) {
       handleError(error)
