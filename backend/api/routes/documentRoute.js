@@ -7,5 +7,7 @@ const router = express.Router();
 router.post('/addDocument', authMiddleware.authenticateToken, documentController.addDocument);
 router.get('/getDocuments', authMiddleware.authenticateToken, documentController.getDocuments);
 router.post('/updateDocument/:id', authMiddleware.authenticateToken, documentController.updatedDocument);
+router.post('/selectedServicesDoc', authMiddleware.authenticateToken, documentController.consultantSelectedServicesDocument);
+router.post('/getSelectedServicesDoc',  documentController.getConsultantSelectedServicesDocument);
 
 module.exports = router

@@ -1,4 +1,5 @@
 const Document = require("../models/documents");
+const SetConsultantServiceDoc = require("../models/SetConsultantServiceDoc");
 
 async function addDocument(req, res) {
   try {
@@ -101,8 +102,76 @@ const updatedDocument = async (req, res) => {
   }
 };
 
+async function consultantSelectedServicesDocument(req, res) {
+  try {
+    const { sub_application_id, consultant_id, documents } = req.body;
+
+    if (!sub_application_id || !consultant_id || !documents) {
+      return res.status(400).json({
+        status: "failed",
+        data: {},
+        message: "All fields are required",
+      });
+    }
+
+    let query = { sub_application_id, consultant_id };
+    let update = { documents };
+    let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+    const setConsultantServiceDoc =
+      await SetConsultantServiceDoc.findOneAndUpdate(query, update, options);
+    return res.status(200).json({
+      status: "success",
+      data: setConsultantServiceDoc,
+      message: "Document updated or added successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+async function getConsultantSelectedServicesDocument(req, res) {
+  try {
+    
+    const { sub_application_id, consultant_id } = req.body;
+    console.log(sub_application_id, consultant_id);
+    
+    if (!sub_application_id || !consultant_id) {
+      return res.status(400).json({
+        status: "failed",
+        data: {},
+        message: "All fields are required",
+      });
+    }
+
+    const setConsultantServiceDoc = await SetConsultantServiceDoc.findOne({
+      sub_application_id,
+      consultant_id,
+    });
+
+
+    return res.status(200).json({
+      status: "success",
+      data: setConsultantServiceDoc,
+      message: "Document fetched successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
 module.exports = {
   addDocument,
   getDocuments,
   updatedDocument,
+  consultantSelectedServicesDocument,
+  getConsultantSelectedServicesDocument
 };

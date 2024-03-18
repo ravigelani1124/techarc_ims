@@ -15,8 +15,9 @@ import {
   CAccordion,
   CAccordionBody,
   CAccordionHeader,
-  CAccordionItem,
+  CAccordionItem,  
 } from '@coreui/react'
+import DocumentSelectionModal from './model/DocumentSelectionModal'
 
 const MyServiceConsultant = () => {
   const [loading, setLoading] = useState(false)
@@ -26,6 +27,16 @@ const MyServiceConsultant = () => {
   const [selectedItems, setSelectedItems] = useState([])
   const { user } = useContext(UserContext)
   const navigate = useNavigate()
+  const [subItem, setSubItem] = useState()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     document.title = 'My Services'
@@ -127,7 +138,7 @@ const MyServiceConsultant = () => {
           },
         },
       )
-      setErrorMessage(response.data.message)  
+      setErrorMessage(response.data.message)
       setAlertVisible(true)
       fetchAllServices()
     } catch (error) {
@@ -136,6 +147,12 @@ const MyServiceConsultant = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleDocumentButton = (subApplication) => {
+    setSubItem(subApplication)
+    setIsModalOpen(true)
+    
   }
 
   return (
@@ -193,12 +210,22 @@ const MyServiceConsultant = () => {
                   <CAccordionBody>
                     <CListGroup>
                       {item.sub_application_type.map((subItem, subIndex) => (
-                        <CListGroupItem key={subIndex}>
-                          <CFormCheck
-                            label={subItem.sub_application_description}
-                            checked={selectedItems.includes(subItem._id)}
-                            onChange={() => handleItemSelect(subItem._id)}
-                          />
+                        <CListGroupItem
+                          key={subIndex}
+                          className="d-flex align-items-center justify-content-between"
+                        >
+                          <div className="d-flex align-items-center">
+                            <CFormCheck
+                              label={subItem.sub_application_description}
+                              checked={selectedItems.includes(subItem._id)}
+                              onChange={() => handleItemSelect(subItem._id)}
+                            />
+                          </div>
+                          <div>
+                            <CButton color="light" onClick={() => handleDocumentButton(subItem)}>
+                              Documents
+                            </CButton>
+                          </div>
                         </CListGroupItem>
                       ))}
                     </CListGroup>
@@ -207,8 +234,8 @@ const MyServiceConsultant = () => {
               ))}
             </CAccordion>
           </div>
-        </div>
-
+        </div>        
+        {isModalOpen && <DocumentSelectionModal isOpen={isModalOpen} onClose={closeModal} subItem={subItem}/>}
         <AppFooter />
       </div>
     </div>
