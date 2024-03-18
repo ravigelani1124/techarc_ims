@@ -9,14 +9,18 @@ const AppointmentDetail = ({ onNext }) => {
   const [selectedDate, setSelectedDate] = useState('')
   const [consultantList, setConsultantList] = useState([])
   const [servicesList, setServicesList] = useState([])
+
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [timeSlots, setTimeSlots] = useState([])
+
+  const [applicationTypeList, setApplicationTypeList] = useState([])
   const [service, setService] = useState('')
 
   //set From selection data
   const [selectedConsultant, setSelectedConsultant] = useState({})
+  const [selectedApplicationType, setSelectedApplicationType] = useState({})
   const [selectedService, setSelectedService] = useState({})
   const [selectedTimeSlot, setSelectedTimeSlot] = useState({})
 
@@ -47,6 +51,7 @@ const AppointmentDetail = ({ onNext }) => {
     const data = {
       booking_details: {
         consultant_data: selectedConsultant,
+        application_type: selectedApplicationType,
         service_data: selectedService,
         timeslot_data: selectedTimeSlot,
       },
@@ -61,12 +66,24 @@ const AppointmentDetail = ({ onNext }) => {
     setSelectedService(selectedService)
   }
 
+  const handleApplicationTypeChange = (e) => {
+    setServicesList([])
+    const selectedApplicationTypeId = e.target.value
+    const selectedApplicationType = applicationTypeList.find(
+      (application) => application._id === selectedApplicationTypeId,
+    )
+    setSelectedApplicationType(selectedApplicationType)
+
+    const services = selectedApplicationType ? selectedApplicationType.sub_application_type : []
+    setServicesList(services)
+  }
+
   const handleTimeSlotChange = (e) => {
     setSelectedDate(e.target.value)
     const selectedTimeSlot = timeSlots.find((timeSlot) => timeSlot._id === e.target.value)
     setSelectedTimeSlot(selectedTimeSlot)
   }
-  
+
   const handleConsultantChange = async (e) => {
     setSelectedDate('')
     setServicesList([])
@@ -79,11 +96,12 @@ const AppointmentDetail = ({ onNext }) => {
     )
 
     setSelectedConsultant(selectedConsultant)
+
     if (selectedConsultant) {
       try {
         setIsLoading(true)
         const response = await axios.get(
-          `${DEFAULT_URL}visatype/getvisatypesbyconsultant/${selectedConsultant._id}`,
+          `${DEFAULT_URL}application/getconsultantapplicationdata/${selectedConsultant._id}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -91,7 +109,9 @@ const AppointmentDetail = ({ onNext }) => {
             },
           },
         )
-        setServicesList(response.data.data)
+        console.log(response.data.data)
+        //setServicesList(response.data.data)
+        setApplicationTypeList(response.data.data)
         callTimeSlotApi(selectedConsultant._id)
       } catch (error) {
         console.error('Error fetching services:', error)
@@ -182,15 +202,38 @@ const AppointmentDetail = ({ onNext }) => {
             </select>
           </div>
           <div className="mb-3">
-            <label htmlFor="servicesList" className="form-label">
-              Services
+            <label htmlFor="applicationtypelist" className="form-label">
+              Types of Applications
             </label>
             <select
-              id="servicesList"
+              id="applicationtypelist"
               className="form-select form-select-md"
               aria-label=".form-select-sm example"
               required
-              value={service}
+              value={selectedApplicationType._id || ''}
+              onChange={handleApplicationTypeChange}
+            >
+              <option value="" disabled>
+                Select..
+              </option>
+              {applicationTypeList.map((applicationType) => (
+                <option key={applicationType._id} value={applicationType._id}>
+                  {applicationType.application_description}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="applicationsList" className="form-label">
+              Applications
+            </label>
+            <select
+              id="applicationsList"
+              className="form-select form-select-md"
+              aria-label=".form-select-sm example"
+              required
+              value={selectedService._id || ''}
               onChange={handleServiceChange}
             >
               <option value="" disabled>
@@ -198,11 +241,12 @@ const AppointmentDetail = ({ onNext }) => {
               </option>
               {servicesList.map((service) => (
                 <option key={service._id} value={service._id}>
-                  {service.service_type_name}
+                  {service.sub_application_description}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="mb-3">
             <label htmlFor="timeslot" className="form-label">
               Available Date and Time

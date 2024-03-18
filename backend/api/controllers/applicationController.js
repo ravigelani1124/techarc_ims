@@ -286,7 +286,9 @@ async function addConsultantSelectedServices(req, res) {
 async function getConsultantSelectedServices(req, res) {
   try {
     const { id } = req.params;
-    const consultantSelectedServices = await ConsultantServices.findOne({ consultant_id: id });
+    const consultantSelectedServices = await ConsultantServices.findOne({
+      consultant_id: id,
+    });
 
     if (!consultantSelectedServices) {
       return res.status(404).json({
@@ -310,6 +312,52 @@ async function getConsultantSelectedServices(req, res) {
   }
 }
 
+async function getConsultantApplicationTypeData(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Find consultant services by consultant_id
+    const consultantServices = await ConsultantServices.findOne({ consultant_id: id });
+
+    if (!consultantServices) {
+      return res.status(404).json({
+        status: "failed",
+        data: {},
+        message: "Consultant services not found",
+      });
+    }
+
+    // Extract service array from consultant services
+    const serviceIds = consultantServices.services;
+
+    // Find application subtypes for the service IDs
+    const applicationSubTypes = await ApplicationSubType.find({ _id: { $in: serviceIds } });
+
+    // Extract application IDs from the found application subtypes
+    const applicationIds = applicationSubTypes.map(subType => subType.application_id);
+
+    // Find application types corresponding to the application IDs
+    const applicationTypes = await ApplicationType.find({ _id: { $in: applicationIds } });
+
+    applicationTypes.forEach(applicationType => {
+      applicationType.sub_application_type = applicationSubTypes.filter(subType => subType.application_id.toString() === applicationType._id.toString());
+    })
+
+    return res.status(200).json({
+      status: "success",
+      data: applicationTypes,
+      message: "Application types fetched successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
 module.exports = {
   addApplicationType,
   getApplicationType,
@@ -319,4 +367,5 @@ module.exports = {
   updateSubApplicationType,
   addConsultantSelectedServices,
   getConsultantSelectedServices,
+  getConsultantApplicationTypeData,
 };

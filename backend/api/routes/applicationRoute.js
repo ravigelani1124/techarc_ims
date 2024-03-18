@@ -11,4 +11,5 @@ router.get('/getapplicationwithsubtype', authMiddleware.authenticateToken, appli
 router.put('/updatesubapplicationtype/:id', authMiddleware.authenticateToken, applicationController.updateSubApplicationType);
 router.post('/addconsultantselectedservices', authMiddleware.authenticateToken, applicationController.addConsultantSelectedServices);
 router.get('/getconsultantselectedservices/:id',authMiddleware.authenticateToken,  applicationController.getConsultantSelectedServices);
+router.get('/getconsultantapplicationdata/:id',  applicationController.getConsultantApplicationTypeData);
 module.exports = router
