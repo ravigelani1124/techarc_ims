@@ -1,5 +1,6 @@
 const TimeSlot = require("../models/TimeSlot");
 
+
 const addTimeSlot = async (req, res) => {
   try {
     const { day, start_time, end_time,  created_by, updated_by } = req.body;
@@ -57,6 +58,30 @@ const getTimeSlotById = async (req, res) => {
     });
   }
 };
+
+const changeTimeSlotStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const timeSlot = await TimeSlot.findByIdAndUpdate(
+      id,
+      { is_available: status },
+      { new: true }
+    );
+    return res.status(200).json({
+      status: "success",
+      data: timeSlot,
+      message: "Time slot status updated successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
 
 module.exports = {
   addTimeSlot,

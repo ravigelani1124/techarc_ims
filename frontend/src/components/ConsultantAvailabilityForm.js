@@ -256,7 +256,8 @@ const ConsultantAvailabilityForm = () => {
               <CTableHeaderCell>Date</CTableHeaderCell>
               <CTableHeaderCell>Start Time</CTableHeaderCell>
               <CTableHeaderCell>End Time</CTableHeaderCell>
-              <CTableHeaderCell>Status</CTableHeaderCell>
+              <CTableHeaderCell>Status</CTableHeaderCell>              
+              <CTableHeaderCell>Auto Closed</CTableHeaderCell>              
               <CTableHeaderCell>Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -286,6 +287,18 @@ const ConsultantAvailabilityForm = () => {
                     </div>
                   )}
                 </CTableDataCell>
+                <CTableDataCell>
+                  {item.record_status ? (
+                    <div>
+                      <div className="text-success">Available</div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-danger">Auto Closed</div>
+                    </div>
+                  )}
+                </CTableDataCell>
+
                 <CTableDataCell>
                   <div>
                     {
