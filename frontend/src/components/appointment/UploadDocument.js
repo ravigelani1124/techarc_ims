@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import UserContext from 'src/utils/UserContext'
 import axios from 'axios'
-import { DEFAULT_URL } from 'src/utils/Constant'
 import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
+import UserContext from 'src/utils/UserContext'
+import { DEFAULT_URL } from 'src/utils/Constant'
 
 const UploadDocument = ({ data, onNext, onBack }) => {
   const { user } = useContext(UserContext)
@@ -12,37 +12,53 @@ const UploadDocument = ({ data, onNext, onBack }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-
-  console.log('Upload Document', data)
+  const [documents, setDocuments] = useState([])
 
   useEffect(() => {
     if (data) {
-      setFormData(data)
+      setFormData(data)      
       getDocBasedOnSubApplicationAndConsultant()
     }
-
   }, [data])
 
-
+  
   const getDocBasedOnSubApplicationAndConsultant = async () => {
-    const consultant_id = formData.consultant_data._id
-    const sub_application_id = formData.service_data._id
+    const { consultant_data, service_data } = formData.booking_details
+    const consultant_id = consultant_data._id
+    const sub_application_id = service_data._id
 
-    const response = await axios.get(
-      `${DEFAULT_URL}document/getDocBasedOnSubApplicationAndConsultant`,
-      {
-        sub_application_id,
-        consultant_id,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.jwtToken}`,
+    console.log({ sub_application_id, consultant_id })
+
+    try {
+      const response = await axios.post(
+        `${DEFAULT_URL}document/getDocBasedOnSubApplicationAndConsultant`,
+        { sub_application_id: sub_application_id, consultant_id: consultant_id },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.jwtToken}`,
+          },
         },
-      },
-    )
-    setErrorMessage(response.data.data)
-    setAlertVisible(true)
-    console.log(response.data.data)
+      )
+
+      if (response.status === 200) {
+        // Assuming response.data contains documents and message fields
+        setDocuments(response.data.data) // Set documents state
+        setErrorMessage(response.data.message) // Set error message state
+        setAlertVisible(true) // Set alert visibility state
+      } else {
+        // Handle non-200 status codes
+        setErrorMessage('Error fetching documents. Please try again later.')
+        setAlertVisible(true)
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error fetching documents:', error)
+      setErrorMessage('Error fetching documents. Please try again later.')
+      setAlertVisible(true)
+    }
   }
+
   const handleFileChange = (event) => {
     setSelectedFiles(event.target.files)
   }
@@ -66,7 +82,6 @@ const UploadDocument = ({ data, onNext, onBack }) => {
         },
       })
 
-      // Handle API response if needed
       console.log('Upload successful:', response.data)
     } catch (error) {
       console.error('Error uploading files:', error)
@@ -75,13 +90,11 @@ const UploadDocument = ({ data, onNext, onBack }) => {
   }
 
   const handleNext = () => {
-    // Validate other data if needed
     const otherData = {}
     onNext({ ...data, otherData })
   }
 
   const handleBack = () => {
-    // Validate other data if needed
     const otherData = {}
     onBack({ ...data, otherData })
   }
@@ -118,7 +131,6 @@ const UploadDocument = ({ data, onNext, onBack }) => {
       <button type="submit" onClick={handleNext} className="btn btn-primary px-4">
         Next
       </button>
-
       <button type="submit" onClick={handleBack} className="btn btn-primary px-4">
         Back
       </button>

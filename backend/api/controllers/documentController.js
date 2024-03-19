@@ -169,6 +169,7 @@ async function getConsultantSelectedServicesDocument(req, res) {
 async function getDocBasedOnSubApplicationAndConsultant(req, res) {
   try {
     const { sub_application_id, consultant_id } = req.body;
+
     console.log(sub_application_id, consultant_id);
     
     if (!sub_application_id || !consultant_id) {
@@ -179,10 +180,7 @@ async function getDocBasedOnSubApplicationAndConsultant(req, res) {
       });
     }
 
-    const setConsultantServiceDoc = await SetConsultantServiceDoc.findOne({
-      sub_application_id,
-      consultant_id,
-    });
+    const setConsultantServiceDoc = await SetConsultantServiceDoc.findOne({ sub_application_id, consultant_id });
     
     if (!setConsultantServiceDoc) {
       return res.status(404).json({
@@ -194,11 +192,7 @@ async function getDocBasedOnSubApplicationAndConsultant(req, res) {
 
     const documentIds = setConsultantServiceDoc.documents;
 
-    // Fetch all documents asynchronously
-    const documentPromises = documentIds.map(async (docId) => {
-      return Document.findById(docId);
-    });
-
+    const documentPromises = documentIds.map(async (docId) => Document.findById(docId));
     const documents = await Promise.all(documentPromises);
 
     return res.status(200).json({
@@ -207,13 +201,14 @@ async function getDocBasedOnSubApplicationAndConsultant(req, res) {
       message: "Documents fetched successfully",
     });
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching documents:', err);
     return res.status(500).json({
       status: "error",
       message: "Internal Server Error",
     });
   }  
 }
+
 
 
 module.exports = {
