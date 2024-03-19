@@ -9,5 +9,6 @@ router.get('/getDocuments', authMiddleware.authenticateToken, documentController
 router.post('/updateDocument/:id', authMiddleware.authenticateToken, documentController.updatedDocument);
 router.post('/selectedServicesDoc', authMiddleware.authenticateToken, documentController.consultantSelectedServicesDocument);
 router.post('/getSelectedServicesDoc',  documentController.getConsultantSelectedServicesDocument);
+router.get('/getDocBasedOnSubApplicationAndConsultant',  documentController.getDocBasedOnSubApplicationAndConsultant);
 
 module.exports = router
