@@ -1,14 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
+import {
+  CSpinner,
+  CToast,
+  CToastBody,
+  CToastClose,
+  CForm,
+  CButton,
+  CFormInput,
+  CFormLabel,
+} from '@coreui/react'
 import UserContext from 'src/utils/UserContext'
 import { DEFAULT_URL } from 'src/utils/Constant'
 
 const UploadDocument = ({ data, onNext, onBack }) => {
   const { user } = useContext(UserContext)
   const [formData, setFormData] = useState(data)
-  const [selectedFiles, setSelectedFiles] = useState(null)
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [selectedFiles, setSelectedFiles] = useState({})
+  const [uploadProgress, setUploadProgress] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -16,23 +25,21 @@ const UploadDocument = ({ data, onNext, onBack }) => {
 
   useEffect(() => {
     if (data) {
-      setFormData(data)      
+      setFormData(data)
       getDocBasedOnSubApplicationAndConsultant()
     }
   }, [data])
 
-  
   const getDocBasedOnSubApplicationAndConsultant = async () => {
+    setIsLoading(true)
     const { consultant_data, service_data } = formData.booking_details
     const consultant_id = consultant_data._id
     const sub_application_id = service_data._id
 
-    console.log({ sub_application_id, consultant_id })
-
     try {
       const response = await axios.post(
         `${DEFAULT_URL}document/getDocBasedOnSubApplicationAndConsultant`,
-        { sub_application_id: sub_application_id, consultant_id: consultant_id },
+        { sub_application_id, consultant_id },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -41,44 +48,50 @@ const UploadDocument = ({ data, onNext, onBack }) => {
         },
       )
 
+
       if (response.status === 200) {
-        // Assuming response.data contains documents and message fields
-        setDocuments(response.data.data) // Set documents state
-        setErrorMessage(response.data.message) // Set error message state
-        setAlertVisible(true) // Set alert visibility state
+        setDocuments(response.data.data)
       } else {
-        // Handle non-200 status codes
         setErrorMessage('Error fetching documents. Please try again later.')
         setAlertVisible(true)
       }
+      setIsLoading(false)
     } catch (error) {
-      // Handle network errors or other exceptions
+      setIsLoading(false)
       console.error('Error fetching documents:', error)
       setErrorMessage('Error fetching documents. Please try again later.')
       setAlertVisible(true)
     }
   }
 
-  const handleFileChange = (event) => {
-    setSelectedFiles(event.target.files)
+  const handleFileChange = (event, documentId) => {
+    const files = event.target.files
+    setSelectedFiles((prevState) => ({
+      ...prevState,
+      [documentId]: files,
+    }))
   }
 
-  const handleUpload = async () => {
-    if (!selectedFiles) {
-      alert('Please select files to upload.')
+  const handleUpload = async (documentId) => {
+    const files = selectedFiles[documentId]
+    if (!files || files.length === 0) {
+      alert('Please select a file to upload.')
       return
     }
 
     const formData = new FormData()
-    for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append('files', selectedFiles[i])
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i])
     }
 
     try {
       const response = await axios.post('YOUR_API_ENDPOINT', formData, {
         onUploadProgress: (progressEvent) => {
           const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-          setUploadProgress(progress)
+          setUploadProgress((prevState) => ({
+            ...prevState,
+            [documentId]: progress,
+          }))
         },
       })
 
@@ -90,6 +103,14 @@ const UploadDocument = ({ data, onNext, onBack }) => {
   }
 
   const handleNext = () => {
+    const allDocumentsUploaded = Object.values(selectedFiles).every(
+      (files) => files && files.length > 0,
+    )
+    if (!allDocumentsUploaded) {
+      alert('Please upload all documents before proceeding.')
+      return
+    }
+
     const otherData = {}
     onNext({ ...data, otherData })
   }
@@ -125,15 +146,42 @@ const UploadDocument = ({ data, onNext, onBack }) => {
           </CToast>
         </div>
       )}
-      <input type="file" multiple onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
-      {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
-      <button type="submit" onClick={handleNext} className="btn btn-primary px-4">
-        Next
-      </button>
-      <button type="submit" onClick={handleBack} className="btn btn-primary px-4">
-        Back
-      </button>
+      <CForm>
+        {documents.map((document, index) => (
+          <div key={index} className="mb-3 d-flex  justify-content-center flex-column">
+            <CFormLabel htmlFor={`formFile-${index}`}>{document.document_name}</CFormLabel>
+            
+            <div className="md-3 d-flex align-items-center">
+              
+              <CFormInput
+                type="file"
+                id={`formFile-${index}`}
+                onChange={(event) => handleFileChange(event, document._id)}
+                className="me-2"/>
+              
+              <CButton
+              style={{ marginBottom: '10px' }}
+                color="secondary"
+                onClick={() => handleUpload(document._id)}
+                className="mt-2">
+                Upload
+              </CButton>
+            </div>
+
+            {/* {uploadProgress[document._id] > 0 && (
+              <p className="mb-0 mt-2">Upload Progress: {uploadProgress[document._id]}%</p>
+            )} */}
+          </div>
+        ))}
+      </CForm>
+      <div className="d-flex justify-content-between">
+        {/* <button type="submit" onClick={handleBack} className="btn btn-primary px-4 py-2">
+          Back
+        </button> */}
+        <button type="submit" onClick={handleNext} className="btn btn-primary px-4 py-2">
+          Next
+        </button>
+      </div>
     </div>
   )
 }
