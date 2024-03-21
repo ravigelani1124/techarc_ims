@@ -48,7 +48,6 @@ const UploadDocument = ({ data, onNext, onBack }) => {
         },
       )
 
-
       if (response.status === 200) {
         setDocuments(response.data.data)
       } else {
@@ -70,12 +69,15 @@ const UploadDocument = ({ data, onNext, onBack }) => {
       ...prevState,
       [documentId]: files,
     }))
+
+    console.log('handle File change', selectedFiles)
   }
 
   const handleUpload = async (documentId) => {
     const files = selectedFiles[documentId]
     if (!files || files.length === 0) {
-      alert('Please select a file to upload.')
+      setErrorMessage('Please select a file to upload.')
+      setAlertVisible(true)
       return
     }
 
@@ -95,10 +97,13 @@ const UploadDocument = ({ data, onNext, onBack }) => {
         },
       })
 
+      setErrorMessage('File uploaded successfully.')
+      setAlertVisible(true)
       console.log('Upload successful:', response.data)
     } catch (error) {
+      setErrorMessage('Error uploading files. Please try again later.')
+      setAlertVisible(true)
       console.error('Error uploading files:', error)
-      alert('Error uploading files. Please try again later.')
     }
   }
 
@@ -107,7 +112,8 @@ const UploadDocument = ({ data, onNext, onBack }) => {
       (files) => files && files.length > 0,
     )
     if (!allDocumentsUploaded) {
-      alert('Please upload all documents before proceeding.')
+      setErrorMessage('Please upload all documents before proceeding.')
+      setAlertVisible(true)
       return
     }
 
@@ -150,20 +156,21 @@ const UploadDocument = ({ data, onNext, onBack }) => {
         {documents.map((document, index) => (
           <div key={index} className="mb-3 d-flex  justify-content-center flex-column">
             <CFormLabel htmlFor={`formFile-${index}`}>{document.document_name}</CFormLabel>
-            
+
             <div className="md-3 d-flex align-items-center">
-              
               <CFormInput
                 type="file"
                 id={`formFile-${index}`}
                 onChange={(event) => handleFileChange(event, document._id)}
-                className="me-2"/>
-              
+                className="me-2"
+              />
+
               <CButton
-              style={{ marginBottom: '10px' }}
+                style={{ marginBottom: '10px' }}
                 color="secondary"
                 onClick={() => handleUpload(document._id)}
-                className="mt-2">
+                className="mt-2"
+              >
                 Upload
               </CButton>
             </div>
