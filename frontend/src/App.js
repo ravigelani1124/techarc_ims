@@ -36,6 +36,7 @@ const DocumentList = React.lazy(() => import('./views/admin/document/DocumentLis
 const AddDocument = React.lazy(() => import('./views/admin/document/AddDocument'));
 const ApplicationTypeList = React.lazy(() => import('./views/admin/applicationtype/ApplicationTypeList'));
 const AllServices = React.lazy(() => import('./views/admin/applicationtype/AllServices'));
+const ConsultantUtils = React.lazy(() => import('./views/consultant/ConsultantUtils'));
 
 const App = () => {
 
@@ -83,6 +84,7 @@ const App = () => {
             <Route exact path="/consultant/mycalender" name="My Calender" element={<ConsultantCalender/>} />     
             <Route exact path="/myservices" name="My Services" element={<MyServiceConsultant />} /> 
             <Route exact path="/seriveces" name="Services" element={<ServicesList />} /> 
+            <Route exact path="/consultant/utilities" name="Utilities" element={<ConsultantUtils />} /> 
 
             {/* User Route */}
             <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />

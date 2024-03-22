@@ -2,6 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cilDescription,
+  cilBraille,
   cilLibraryAdd,
   cilNoteAdd,
   cilNotes,
@@ -90,6 +91,20 @@ const _nav_consultant = [
       // text: 'NEW',
     },
   },
+
+  {
+    component: CNavItem,
+    name: 'Utilities',
+    to: '/consultant/utilities',
+    icon: <CIcon icon={cilBraille} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      // text: 'NEW',
+    },
+  },
+
+  
+
 
 
 ]
