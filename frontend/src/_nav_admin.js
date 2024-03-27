@@ -87,7 +87,7 @@ const _nav_admin = [
     items: [
       {
         component: CNavItem,
-        name: 'Service',
+        name: 'Application',
         to: '/addapplicationtype',
         icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
         badge: {
@@ -97,26 +97,27 @@ const _nav_admin = [
 
       {
         component: CNavItem,
-        name: 'Sub Service',
-        to: '/addsubtypetype',
-        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
-      {
-        component: CNavItem,
-        name: 'Service List',
+        name: 'Application List',
         to: '/applicationtype',
         icon: <CIcon icon={cilFeaturedPlaylist} customClassName="nav-icon" />,
         badge: {
           color: 'info',
         },
       },
-
+      
       {
         component: CNavItem,
-        name: 'All Services',
+        name: 'Sub Application',
+        to: '/addsubtypetype',
+        icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+     
+      {
+        component: CNavItem,
+        name: 'All Applications',
         to: '/applicationservices',
         icon: <CIcon icon={cilLibraryAdd} customClassName="nav-icon" />,
         badge: {

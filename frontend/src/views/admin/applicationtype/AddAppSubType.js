@@ -5,7 +5,19 @@ import { AppSidebar, AppFooter, AppHeader } from '../../../components/index'
 import UserContext from 'src/utils/UserContext'
 import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
 import { DEFAULT_URL } from 'src/utils/Constant'
-
+import {
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+  CButton,
+  CListGroup,
+  CListGroupItem,
+  CFormCheck,
+  CButtonGroup,
+} from '@coreui/react'
+import DocumentListItem from './DocumentListItem'
 const AddAppSubType = () => {
   const [loading, setLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
@@ -14,6 +26,8 @@ const AddAppSubType = () => {
   const [applicationTypeList, setApplicationTypeList] = useState([])
   const { user } = useContext(UserContext)
   const navigate = useNavigate()
+  const [documents, setDocuments] = useState([])
+  const [selectedDocs, setSelectedDocs] = useState([])
 
   const [formData, setFormData] = useState({
     application_id: '',
@@ -29,6 +43,26 @@ const AddAppSubType = () => {
       navigate('/')
     }
   }, [user, navigate])
+
+  useEffect(() => {
+    fetchDocuments()
+  }, [user])
+
+  const fetchDocuments = async () => {
+    try {
+      const token = user?.jwtToken
+      const response = await axios.get(`${DEFAULT_URL}document/getdocuments`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setDocuments(response.data.data)
+      callSelectedDoc(subItem)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,35 +88,37 @@ const AddAppSubType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
 
-    const parsedFormData = {
-      ...formData,
-      application_id: applicationType?._id,
-      created_by: user?._id,
-      updated_by: user?._id,
-    }
+    console.log('test', selectedDocs)
+    // setLoading(true)
 
-    console.log('test', parsedFormData)
-    try {
-      const response = await axios.post(
-        `${DEFAULT_URL}application/addsubapplicationtype`,
-        parsedFormData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user?.jwtToken}`,
-          },
-        },
-      )      
-      setErrorMessage(response.data.message)
-      setAlertVisible(true)
-      clearForm()
-    } catch (error) {
-      handleError(error)
-    } finally {
-      setLoading(false)
-    }
+    // const parsedFormData = {
+    //   ...formData,
+    //   application_id: applicationType?._id,
+    //   created_by: user?._id,
+    //   updated_by: user?._id,
+    // }
+
+    // console.log('test', parsedFormData)
+    // try {
+    //   const response = await axios.post(
+    //     `${DEFAULT_URL}application/addsubapplicationtype`,
+    //     parsedFormData,
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: `Bearer ${user?.jwtToken}`,
+    //       },
+    //     },
+    //   )
+    //   setErrorMessage(response.data.message)
+    //   setAlertVisible(true)
+    //   clearForm()
+    // } catch (error) {
+    //   handleError(error)
+    // } finally {
+    //   setLoading(false)
+    // }
   }
 
   const handleError = (error) => {
@@ -111,7 +147,6 @@ const AddAppSubType = () => {
       created_by: '',
       updated_by: '',
     })
-
   }
 
   const handleApplicationTypeChange = (e) => {
@@ -121,6 +156,18 @@ const AddAppSubType = () => {
     )
     console.log('selected', selectedApplicationType)
     setApplicationType(selectedApplicationType)
+  }
+
+  const handleSelectAll = () => {
+    const allDocumentIds = documents.map((doc) => doc._id)
+    setSelectedDocs(allDocumentIds)
+  }
+
+  const handleDeselectAll = () => {
+    setSelectedDocs([])
+  }
+  const handleSave = () => {
+    // You can handle saving the selected documents here
   }
 
   return (
@@ -208,6 +255,33 @@ const AddAppSubType = () => {
                   onChange={handleChange}
                   value={formData.sub_application_description}
                 />
+              </div>
+
+              <div
+                style={{
+                  border: '1px solid #ccc',
+                  padding: '10px',
+                  marginBottom: '20px',
+                  marginTop: '20px',
+                }}
+              >
+                <CModalHeader closeButton={false}>
+                  <label htmlFor="sub_application_description" className="form-label">
+                    Select Documents
+                  </label>
+                </CModalHeader>
+                <CModalBody>
+                  <CListGroup>
+                    {documents.map((document) => (
+                      <DocumentListItem
+                        key={document._id}
+                        document={document}
+                        selectedDocs={selectedDocs}
+                        setSelectedDocs={setSelectedDocs}
+                      />
+                    ))}
+                  </CListGroup>
+                </CModalBody>
               </div>
               <div className="mb-3 d-flex justify-content-end">
                 <button type="submit" className="btn btn-primary px-4">
