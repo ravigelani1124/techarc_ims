@@ -38,6 +38,8 @@ const ApplicationTypeList = React.lazy(() => import('./views/admin/applicationty
 const AllServices = React.lazy(() => import('./views/admin/applicationtype/AllServices'));
 const ConsultantUtils = React.lazy(() => import('./views/consultant/ConsultantUtils'));
 
+const News = React.lazy(() => import('./components/news'));
+
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -95,6 +97,7 @@ const App = () => {
         </Route>
 
         <Route exact path="/" element={<Launcher/>} />
+        <Route exact path="/news" element={<News />} />
         <Route exact path="/adminauth" name="Admin Authentication" element={<AdminAuthPage />} />
       </Routes>
         </UserProvider>

@@ -144,14 +144,14 @@ const Launcher = () => {
       {/* Header */}
       <header className="bg-dark text-white text-center py-3">
         <div className="header-content d-flex justify-content-end">
-          <Link to="/about" className="nav-link me-3">
-            About
+          <Link to="/" className="nav-link me-3">
+            Home
           </Link>
-          <Link to="/visa" className="nav-link me-3">
-            Visa
+          <Link to="/news" className="nav-link me-3">
+            News
           </Link>
-          <Link to="/blog" className="nav-link me-3">
-            Blog
+          <Link to="/faqs" className="nav-link me-3">
+            FAQs
           </Link>
           <Link to="/contact" className="nav-link me-3">
             Contact

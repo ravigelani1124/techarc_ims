@@ -153,7 +153,7 @@ const Login = () => {
     <>
     <div className="bg-light min-vh-100 d-flex flex-column justify-content-between">
       {/* Header */}
-      <header className="bg-dark text-white text-center py-3">
+      {/* <header className="bg-dark text-white text-center py-3">
         <div className="header-content d-flex justify-content-end">
           <Link to="/about" className="nav-link me-3">
             About
@@ -168,7 +168,7 @@ const Login = () => {
             Contact
           </Link>
         </div>
-      </header>
+      </header> */}
 
       {/* Main content */}
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -338,9 +338,9 @@ const Login = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-dark text-white text-center p-2">
+      {/* <footer className="bg-dark text-white text-center p-2">
         <span className="me-2">Powerd by : TechArc</span>
-      </footer>
+      </footer> */}
       </div>
     </>
   );
