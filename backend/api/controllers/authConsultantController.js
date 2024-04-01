@@ -5,6 +5,9 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
 const Address = require("../models/Address");
+const ConsultantFees = require("../models/ConsultantFees");
+const { log } = require("console");
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -51,7 +54,8 @@ async function consultant_signup(req, res) {
       !city ||
       !state ||
       !zip ||
-      !country ||  !phone_type ||
+      !country ||
+      !phone_type ||
       !address_type
     ) {
       return res.status(400).json({
@@ -94,7 +98,7 @@ async function consultant_signup(req, res) {
     });
     const savedUser = await newUser.save();
 
-    await new Address({      
+    await new Address({
       address_type,
       cleint_id: newUser._id, // Associate address with organization
       street_no,
@@ -173,7 +177,10 @@ async function consultant_login(req, res) {
           message: "Please set your password first",
         });
       }
-      const isPasswordValid = await bcrypt.compare(consultant_password, user.consultant_password);
+      const isPasswordValid = await bcrypt.compare(
+        consultant_password,
+        user.consultant_password
+      );
 
       if (!isPasswordValid) {
         return res.status(400).json({
@@ -235,13 +242,20 @@ async function create_password_consultant(req, res) {
 
   const consultant_email = email;
   const consultant_password = password;
-  const user = await UserConsultant.findOne({ consultant_email: consultant_email });
+  const user = await UserConsultant.findOne({
+    consultant_email: consultant_email,
+  });
   if (!user) {
-    return res.render("404", { errorMessage: "It seems you haven't have an account, please register instead." });    
+    return res.render("404", {
+      errorMessage:
+        "It seems you haven't have an account, please register instead.",
+    });
   }
 
   if (user.consultant_password !== null) {
-    return res.render("404", { errorMessage: "You have already set your password. Please login instead" });
+    return res.render("404", {
+      errorMessage: "You have already set your password. Please login instead",
+    });
   }
 
   const hashedPassword = await bcrypt.hash(consultant_password, 10);
@@ -371,25 +385,23 @@ async function getConsultantList(req, res) {
   }
 }
 
-async function getConsultantByOrg(req,res) {
-  
-  try{
-    const consultant = await UserConsultant.find({org_id: req.params.org_id});
+async function getConsultantByOrg(req, res) {
+  try {
+    const consultant = await UserConsultant.find({ org_id: req.params.org_id });
 
-    if(consultant.length === 0) {
+    if (consultant.length === 0) {
       return res.status(404).json({
         status: "failed",
         message: "Consultant not found for the given org id",
       });
     }
-    
+
     return res.status(200).json({
       status: "success",
       data: consultant,
       message: "Consultant fetched successfully",
     });
-
-  }catch(err) {
+  } catch (err) {
     console.error(err);
     return res.status(500).json({
       status: "error",
@@ -398,6 +410,88 @@ async function getConsultantByOrg(req,res) {
   }
 }
 
+// getConsultant fees
+async function getConsultantFees(req, res) {
+  console.log(req.params);
+  const { consultant_id } = req.params;
+  
+
+  if (!consultant_id) {
+    return res.status(400).json({
+      status: "failed",
+      data: {},
+      message: "Consultant ID is required",
+    });
+  }
+  
+  try {
+    const fees = await ConsultantFees.findOne({ consultant_id });
+    
+    if (!fees) {
+      return res.status(404).json({
+        status: "failed",
+        message: "Consultant fees not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      data: fees,
+      message: "Fees fetched successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
+  // postConsultant fees accordingly to consultant id
+async function updateFees(req, res) {
+  try {
+    const { consultant_id, fees } = req.body;
+
+    // Check if consultant_id is provided
+    if (!consultant_id) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Consultant ID is required.",
+      });
+    }
+
+    // Find the consultant by ID
+    let consultant = await ConsultantFees.findOne({ consultant_id });
+
+    if (consultant) {
+      // If the consultant exists, update the fees
+      consultant.consultant_fees = fees;
+    } else {
+      // If the consultant doesn't exist, create a new entry
+      consultant = new ConsultantFees({
+        consultant_id,
+        consultant_fees: fees,
+      });
+    }
+    await consultant.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: consultant ? "Fees updated successfully" : "Fees added successfully",
+      data: consultant,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
 module.exports = {
   consultant_signup,
   consultant_login,
@@ -405,5 +499,7 @@ module.exports = {
   create_password_consultant,
   delete_user_by_consultant,
   getConsultantList,
-  getConsultantByOrg
+  getConsultantByOrg,
+  getConsultantFees,
+  updateFees,
 };

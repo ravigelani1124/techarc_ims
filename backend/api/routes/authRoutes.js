@@ -23,6 +23,9 @@ router.delete('/deleteConsultant',authMiddleware.authenticateToken, authAdminCon
 router.delete('/deleteUser',authMiddleware.authenticateToken, authConsultantController.delete_user_by_consultant);
 router.get('/getConsultantList', authMiddleware.authenticateToken, authConsultantController.getConsultantList);
 router.get('/getConsultantByOrg/:org_id', authConsultantController.getConsultantByOrg);
+router.post('/consultantFees', authConsultantController.updateFees);
+router.get('/consultantFees/:consultant_id', authConsultantController.getConsultantFees);
+
 
 //user
 router.post('/userSignup',authMiddleware.authenticateToken, authUserController.userSignup);

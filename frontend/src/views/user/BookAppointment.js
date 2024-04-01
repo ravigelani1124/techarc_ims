@@ -64,11 +64,9 @@ const BookAppointment = () => {
         <AppHeader />
         <div>
           <div>
-            <div style={{ textAlign: 'center' }}>
-              <h3>Book Appointment</h3>
-            </div>
-            <div className="container mt-5">
-              <ProgressBar step={step} />
+            
+            <div className="container mt-5">            
+              
               <div className="mt-4">{renderStepComponent()}</div>
 
               {/* <div className="d-flex justify-content-between mb-3">

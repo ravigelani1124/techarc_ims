@@ -3,8 +3,8 @@ import UserContext from 'src/utils/UserContext'
 import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
 import { CSpinner, CToast, CToastBody, CToastClose } from '@coreui/react'
-import { CForm, CButton, CFormInput, CFormLabel } from '@coreui/react'
-
+import { CForm, CButton, CFormInput, CFormLabel, CListGroupItem, CListGroup } from '@coreui/react'
+import ProgressBar from 'src/components/ProgressBar'
 const AppointmentDetail = ({ onNext }) => {
   const { user } = useContext(UserContext)
 
@@ -147,26 +147,6 @@ const AppointmentDetail = ({ onNext }) => {
       setAlertVisible(true)
       console.error('Error uploading document:', error)
     }
-
-    // try {
-    //   const response = await axios.post('YOUR_API_ENDPOINT', formData, {
-    //     onUploadProgress: (progressEvent) => {
-    //       const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-    //       setUploadProgress((prevState) => ({
-    //         ...prevState,
-    //         [documentId]: progress,
-    //       }))
-    //     },
-    //   })
-
-    //   setErrorMessage('File uploaded successfully.'+ response.data)
-    //   setAlertVisible(true)
-    //   console.log('Upload successful:', response.data)
-    // } catch (error) {
-    //   setErrorMessage('Error uploading files. Please try again later.')
-    //   setAlertVisible(true)
-    //   console.error('Error uploading files:', error)
-    // }
   }
 
   const handleConsultantChange = async (e) => {
@@ -244,36 +224,6 @@ const AppointmentDetail = ({ onNext }) => {
     }
   }
 
-  const getDocBasedOnSubApplicationAndConsultant = async (sub_application_id, consultant_id) => {
-    setIsLoading(true)
-    try {
-      const response = await axios.post(
-        `${DEFAULT_URL}document/getDocBasedOnSubApplicationAndConsultant`,
-        { sub_application_id, consultant_id },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.jwtToken}`,
-          },
-        },
-      )
-
-      if (response.status === 200) {
-        setIsDocumentVisible(true)
-        setDocuments(response.data.data)
-      } else {
-        setErrorMessage('Error fetching documents. Please try again later.')
-        setAlertVisible(true)
-      }
-      setIsLoading(false)
-    } catch (error) {
-      setIsLoading(false)
-      console.error('Error fetching documents:', error)
-      setErrorMessage('Error fetching documents. Please try again later.')
-      setAlertVisible(true)
-    }
-  }
-
   const handleApplicationDetails = () => {
     console.log(
       'handle Application Details',
@@ -294,31 +244,24 @@ const AppointmentDetail = ({ onNext }) => {
     }
     setIsDocumentVisible(true)
     setDocuments(selectedService.documents)
-    //getDocBasedOnSubApplicationAndConsultant(selectedService._id, selectedConsultant._id);
   }
 
   const handleDocumentUploadDetails = () => {
-    // Check if all required documents are uploaded
-    const requiredDocuments = documents.filter((document) => !document.is_optional)
-    const requiredDocumentIds = requiredDocuments.map((document) => document._id)
-    const missingRequiredDocuments = requiredDocumentIds.filter(
-      (id) => !uploadedDocuments.includes(id),
-    )
-
-    if (missingRequiredDocuments.length > 0) {
-      // Display an error message or handle the missing documents as needed
-      setErrorMessage('Please upload all required documents before proceeding.')
-      setAlertVisible(true)
-    } else {
-      // All required documents are uploaded, proceed with API calls or other actions
-      // Call your APIs or perform other actions here
-      console.log('All required documents uploaded. Proceeding...')
-      setIsPriceVisible(true)
-    }
+    setIsPriceVisible(true)
   }
 
   return (
     <div style={{ marginBottom: '20px' }}>
+      <div
+        style={{        
+          textAlign: 'center',       
+        }}
+      >
+        <h4 style={{ padding: '10px' }}>Book Appointment</h4>
+        {/* <ProgressBar step={1} /> */}
+      </div>
+    
+
       <div className="body flex-grow-1 px-3">
         {isLoading && (
           <div
@@ -453,11 +396,26 @@ const AppointmentDetail = ({ onNext }) => {
             <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px' }}>
               <CForm>
                 <CFormLabel htmlFor="formFile">
-                  <strong>Upload Documents</strong>
+                  <strong>List of Documents</strong>
                 </CFormLabel>
-                {documents.map((document, index) => (
-                  <div key={index} className="mb-3 d-flex justify-content-center flex-column">
-                    <CFormLabel htmlFor={`formFile-${index}`}>
+                <CListGroup>
+                  {documents.map((document, index) => (
+                    <div key={index} className="mb-3 d-flex justify-content-center flex-column">
+                      <CListGroupItem className="d-flex justify-content-between align-items-center">
+                        <div className="label-container">
+                          <label htmlFor="application_code" className="form-label">
+                            {document.document_name}
+                          </label>
+                        </div>
+                        <div className="badge-container">
+                          <span
+                            className={`badge ${document.is_optional ? 'bg-success' : 'bg-danger'}`}
+                          >
+                            {document.is_optional ? 'Optional' : 'Required'}
+                          </span>
+                        </div>
+                      </CListGroupItem>
+                      {/* <CFormLabel htmlFor={`formFile-${index}`}>
                       {document.document_name}
                       {!document.is_optional && <span style={{ color: 'red' }}>*</span>}
                     </CFormLabel>
@@ -478,9 +436,10 @@ const AppointmentDetail = ({ onNext }) => {
                       >
                         Upload
                       </CButton>
+                    </div> */}
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </CListGroup>
 
                 <CButton
                   style={{ marginBottom: '10px' }}
