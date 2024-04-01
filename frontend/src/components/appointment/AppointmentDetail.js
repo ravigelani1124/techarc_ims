@@ -35,7 +35,7 @@ const AppointmentDetail = ({ onNext }) => {
   const [isPriceVisible, setIsPriceVisible] = useState(false)
 
   //document upload
-  const [uploadedDocuments, setUploadedDocuments] = useState([]);
+  const [uploadedDocuments, setUploadedDocuments] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,21 +107,22 @@ const AppointmentDetail = ({ onNext }) => {
     setSelectedTimeSlot(selectedTimeSlot)
   }
 
-  const handleFileChange = (event, documentId) => {
-    const updatedUploadedDocuments = [...uploadedDocuments, documentId];
-    setUploadedDocuments(updatedUploadedDocuments);
+  const handleFileChange = (event, document) => {
+    const updatedUploadedDocuments = [...uploadedDocuments, document._id]
+    setUploadedDocuments(updatedUploadedDocuments)
 
     const files = event.target.files
     setSelectedFiles((prevState) => ({
       ...prevState,
-      [documentId]: files,
+      [document._id]: files,
     }))
 
     console.log('handle File change', selectedFiles)
   }
 
-  const handleUpload = async (documentId) => {
-    const files = selectedFiles[documentId]
+  const handleUpload = async (document) => {
+    const files = selectedFiles[document._id]
+
     if (!files || files.length === 0) {
       setErrorMessage('Please select a file to upload.')
       setAlertVisible(true)
@@ -130,28 +131,42 @@ const AppointmentDetail = ({ onNext }) => {
 
     const formData = new FormData()
     for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i])
+      formData.append('file', files[i])
+      formData.append('document_name', document.document_name)
     }
 
     try {
-      const response = await axios.post('YOUR_API_ENDPOINT', formData, {
-        onUploadProgress: (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-          setUploadProgress((prevState) => ({
-            ...prevState,
-            [documentId]: progress,
-          }))
-        },
-      })
-
-      setErrorMessage('File uploaded successfully.')
+      const response = await axios.post(`${DEFAULT_URL}file/upload`, formData)
+      const uploadedDocument = response.data.data
+      setErrorMessage('File uploaded successfully.' + uploadedDocument)
       setAlertVisible(true)
       console.log('Upload successful:', response.data)
+      //setDocumentLink(uploadedDocument.document_link);
     } catch (error) {
       setErrorMessage('Error uploading files. Please try again later.')
       setAlertVisible(true)
-      console.error('Error uploading files:', error)
+      console.error('Error uploading document:', error)
     }
+
+    // try {
+    //   const response = await axios.post('YOUR_API_ENDPOINT', formData, {
+    //     onUploadProgress: (progressEvent) => {
+    //       const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+    //       setUploadProgress((prevState) => ({
+    //         ...prevState,
+    //         [documentId]: progress,
+    //       }))
+    //     },
+    //   })
+
+    //   setErrorMessage('File uploaded successfully.'+ response.data)
+    //   setAlertVisible(true)
+    //   console.log('Upload successful:', response.data)
+    // } catch (error) {
+    //   setErrorMessage('Error uploading files. Please try again later.')
+    //   setAlertVisible(true)
+    //   console.error('Error uploading files:', error)
+    // }
   }
 
   const handleConsultantChange = async (e) => {
@@ -282,22 +297,24 @@ const AppointmentDetail = ({ onNext }) => {
     //getDocBasedOnSubApplicationAndConsultant(selectedService._id, selectedConsultant._id);
   }
 
-  const handleDocumentUploadDetails = () => {    
-     // Check if all required documents are uploaded
-     const requiredDocuments = documents.filter(document => !document.is_optional);
-     const requiredDocumentIds = requiredDocuments.map(document => document._id);
-     const missingRequiredDocuments = requiredDocumentIds.filter(id => !uploadedDocuments.includes(id));
- 
-     if (missingRequiredDocuments.length > 0) {
-       // Display an error message or handle the missing documents as needed
-       setErrorMessage('Please upload all required documents before proceeding.');
-       setAlertVisible(true);
-     } else {
-       // All required documents are uploaded, proceed with API calls or other actions
-       // Call your APIs or perform other actions here
-       console.log('All required documents uploaded. Proceeding...');
-       setIsPriceVisible(true)
-     }    
+  const handleDocumentUploadDetails = () => {
+    // Check if all required documents are uploaded
+    const requiredDocuments = documents.filter((document) => !document.is_optional)
+    const requiredDocumentIds = requiredDocuments.map((document) => document._id)
+    const missingRequiredDocuments = requiredDocumentIds.filter(
+      (id) => !uploadedDocuments.includes(id),
+    )
+
+    if (missingRequiredDocuments.length > 0) {
+      // Display an error message or handle the missing documents as needed
+      setErrorMessage('Please upload all required documents before proceeding.')
+      setAlertVisible(true)
+    } else {
+      // All required documents are uploaded, proceed with API calls or other actions
+      // Call your APIs or perform other actions here
+      console.log('All required documents uploaded. Proceeding...')
+      setIsPriceVisible(true)
+    }
   }
 
   return (
@@ -449,14 +466,14 @@ const AppointmentDetail = ({ onNext }) => {
                       <CFormInput
                         type="file"
                         id={`formFile-${index}`}
-                        onChange={(event) => handleFileChange(event, document._id)}
+                        onChange={(event) => handleFileChange(event, document)}
                         className="me-2"
                       />
 
                       <CButton
                         style={{ marginBottom: '10px' }}
                         color="secondary"
-                        onClick={() => handleUpload(document._id)}
+                        onClick={() => handleUpload(document)}
                         className="mt-2"
                       >
                         Upload

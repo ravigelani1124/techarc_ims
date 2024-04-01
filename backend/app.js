@@ -19,6 +19,8 @@ const serviceRoute = require('./api/routes/serviceRoute');
 const bookAppointmentRoute = require('./api/routes/bookAppointmentRoute');
 const appicationRoute = require('./api/routes/applicationRoute');
 const documentRoute = require('./api/routes/documentRoute');
+const fileRoute = require('./api/routes/FileRoute');
+
 app.set('view engine', 'ejs'); 
 
 const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}${dbName}`;
@@ -36,6 +38,7 @@ app.use('/api/visatype', serviceRoute);
 app.use('/api/bookappointment', bookAppointmentRoute);
 app.use('/api/application', appicationRoute);
 app.use('/api/document', documentRoute);
+app.use('/api/file', fileRoute);
 
 
 cron.schedule("* * * * *", async () => {
@@ -63,6 +66,8 @@ cron.schedule("* * * * *", async () => {
     console.error("Error updating record statuses:", error);
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
