@@ -124,6 +124,7 @@ async function addSubApplicationType(req, res) {
       sub_application_description,
       created_by,
       updated_by,
+      documents,
     } = req.body;
 
     if (
@@ -164,6 +165,7 @@ async function addSubApplicationType(req, res) {
       sub_application_description,
       created_by,
       updated_by,
+      documents
     });
 
     await subApplicationType.save();

@@ -33,6 +33,7 @@ const AddAppSubType = () => {
     application_id: '',
     sub_application_code: '',
     sub_application_description: '',
+    documents: [],
     created_by: '',
     updated_by: '',
   })
@@ -90,35 +91,36 @@ const AddAppSubType = () => {
     e.preventDefault()
 
     console.log('test', selectedDocs)
-    // setLoading(true)
+    setLoading(true)
 
-    // const parsedFormData = {
-    //   ...formData,
-    //   application_id: applicationType?._id,
-    //   created_by: user?._id,
-    //   updated_by: user?._id,
-    // }
+    const parsedFormData = {
+      ...formData,
+      application_id: applicationType?._id,
+      documents: selectedDocs,
+      created_by: user?._id,
+      updated_by: user?._id,
+    }
 
-    // console.log('test', parsedFormData)
-    // try {
-    //   const response = await axios.post(
-    //     `${DEFAULT_URL}application/addsubapplicationtype`,
-    //     parsedFormData,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: `Bearer ${user?.jwtToken}`,
-    //       },
-    //     },
-    //   )
-    //   setErrorMessage(response.data.message)
-    //   setAlertVisible(true)
-    //   clearForm()
-    // } catch (error) {
-    //   handleError(error)
-    // } finally {
-    //   setLoading(false)
-    // }
+    console.log('test', parsedFormData)
+    try {
+      const response = await axios.post(
+        `${DEFAULT_URL}application/addsubapplicationtype`,
+        parsedFormData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user?.jwtToken}`,
+          },
+        },
+      )
+      setErrorMessage(response.data.message)
+      setAlertVisible(true)
+      clearForm()
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleError = (error) => {
@@ -147,6 +149,9 @@ const AddAppSubType = () => {
       created_by: '',
       updated_by: '',
     })
+
+    setSelectedDocs([])
+    setDocuments([])
   }
 
   const handleApplicationTypeChange = (e) => {
