@@ -34,6 +34,9 @@ const AppointmentDetail = ({ onNext }) => {
   const [isDocmentVsisible, setIsDocumentVisible] = useState(false)
   const [isPriceVisible, setIsPriceVisible] = useState(false)
 
+  //document upload
+  const [uploadedDocuments, setUploadedDocuments] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,25 +73,25 @@ const AppointmentDetail = ({ onNext }) => {
     onNext(data)
   }
 
-  const handleServiceChange = (e) => {    
-    setDocuments([]);        
-    setSelectedFiles({});
-    setUploadProgress({});
-    setIsDocumentVisible(false);
-    setIsPriceVisible(false);
+  const handleServiceChange = (e) => {
+    setDocuments([])
+    setSelectedFiles({})
+    setUploadProgress({})
+    setIsDocumentVisible(false)
+    setIsPriceVisible(false)
     setService(e.target.value)
     const selectedService = servicesList.find((service) => service._id === e.target.value)
     setSelectedService(selectedService)
   }
 
-  const handleApplicationTypeChange = (e) => {    
-    setServicesList([]);    
-    setDocuments([]);    
-    setSelectedService({});        
-    setSelectedFiles({});
-    setUploadProgress({});
-    setIsDocumentVisible(false);
-    setIsPriceVisible(false);
+  const handleApplicationTypeChange = (e) => {
+    setServicesList([])
+    setDocuments([])
+    setSelectedService({})
+    setSelectedFiles({})
+    setUploadProgress({})
+    setIsDocumentVisible(false)
+    setIsPriceVisible(false)
     const selectedApplicationTypeId = e.target.value
     const selectedApplicationType = applicationTypeList.find(
       (application) => application._id === selectedApplicationTypeId,
@@ -105,6 +108,9 @@ const AppointmentDetail = ({ onNext }) => {
   }
 
   const handleFileChange = (event, documentId) => {
+    const updatedUploadedDocuments = [...uploadedDocuments, documentId];
+    setUploadedDocuments(updatedUploadedDocuments);
+
     const files = event.target.files
     setSelectedFiles((prevState) => ({
       ...prevState,
@@ -149,29 +155,29 @@ const AppointmentDetail = ({ onNext }) => {
   }
 
   const handleConsultantChange = async (e) => {
-    setApplicationTypeList([]);
-    setServicesList([]);
-    setTimeSlots([]);
-    setDocuments([]);
-    setSelectedApplicationType({});
-    setSelectedService({});
-    setSelectedTimeSlot({});
-    setSelectedDate('');
-    setSelectedFiles({});
-    setUploadProgress({});
-    setIsDocumentVisible(false);
-    setIsPriceVisible(false);
-  
-    const selectedConsultantName = e.target.value;
+    setApplicationTypeList([])
+    setServicesList([])
+    setTimeSlots([])
+    setDocuments([])
+    setSelectedApplicationType({})
+    setSelectedService({})
+    setSelectedTimeSlot({})
+    setSelectedDate('')
+    setSelectedFiles({})
+    setUploadProgress({})
+    setIsDocumentVisible(false)
+    setIsPriceVisible(false)
+
+    const selectedConsultantName = e.target.value
     const selectedConsultant = consultantList.find(
-      (consultant) => consultant.consultant_name_en === selectedConsultantName
-    );
-  
-    setSelectedConsultant(selectedConsultant);
-  
+      (consultant) => consultant.consultant_name_en === selectedConsultantName,
+    )
+
+    setSelectedConsultant(selectedConsultant)
+
     if (selectedConsultant) {
       try {
-        setIsLoading(true);
+        setIsLoading(true)
         const response = await axios.get(
           `${DEFAULT_URL}application/getconsultantapplicationdata/${selectedConsultant._id}`,
           {
@@ -179,22 +185,21 @@ const AppointmentDetail = ({ onNext }) => {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${user.jwtToken}`,
             },
-          }
-        );
-        console.log(response.data.data);
-        setApplicationTypeList(response.data.data);
-        callTimeSlotApi(selectedConsultant._id);
+          },
+        )
+        console.log(response.data.data)
+        setApplicationTypeList(response.data.data)
+        callTimeSlotApi(selectedConsultant._id)
       } catch (error) {
-        console.error('Error fetching services:', error);
-        setServicesList([]);
-        setErrorMessage(error.response?.data?.message || 'An error occurred');
-        setAlertVisible(true);
+        console.error('Error fetching services:', error)
+        setServicesList([])
+        setErrorMessage(error.response?.data?.message || 'An error occurred')
+        setAlertVisible(true)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     }
-  };
-  
+  }
 
   const callTimeSlotApi = async (consultantId) => {
     try {
@@ -255,16 +260,45 @@ const AppointmentDetail = ({ onNext }) => {
   }
 
   const handleApplicationDetails = () => {
-    console.log('handle Application Details', selectedConsultant, selectedApplicationType, selectedService, selectedTimeSlot);
-    if (!selectedConsultant._id || !selectedApplicationType._id || !selectedService._id || !selectedTimeSlot._id) {
-      setErrorMessage('Please select all fields');
-      setAlertVisible(true);
-      return;
-    }    
-    getDocBasedOnSubApplicationAndConsultant(selectedService._id, selectedConsultant._id);
-  };
-  
+    console.log(
+      'handle Application Details',
+      selectedConsultant,
+      selectedApplicationType,
+      selectedService,
+      selectedTimeSlot,
+    )
+    if (
+      !selectedConsultant._id ||
+      !selectedApplicationType._id ||
+      !selectedService._id ||
+      !selectedTimeSlot._id
+    ) {
+      setErrorMessage('Please select all fields')
+      setAlertVisible(true)
+      return
+    }
+    setIsDocumentVisible(true)
+    setDocuments(selectedService.documents)
+    //getDocBasedOnSubApplicationAndConsultant(selectedService._id, selectedConsultant._id);
+  }
 
+  const handleDocumentUploadDetails = () => {    
+     // Check if all required documents are uploaded
+     const requiredDocuments = documents.filter(document => !document.is_optional);
+     const requiredDocumentIds = requiredDocuments.map(document => document._id);
+     const missingRequiredDocuments = requiredDocumentIds.filter(id => !uploadedDocuments.includes(id));
+ 
+     if (missingRequiredDocuments.length > 0) {
+       // Display an error message or handle the missing documents as needed
+       setErrorMessage('Please upload all required documents before proceeding.');
+       setAlertVisible(true);
+     } else {
+       // All required documents are uploaded, proceed with API calls or other actions
+       // Call your APIs or perform other actions here
+       console.log('All required documents uploaded. Proceeding...');
+       setIsPriceVisible(true)
+     }    
+  }
 
   return (
     <div style={{ marginBottom: '20px' }}>
@@ -406,7 +440,10 @@ const AppointmentDetail = ({ onNext }) => {
                 </CFormLabel>
                 {documents.map((document, index) => (
                   <div key={index} className="mb-3 d-flex justify-content-center flex-column">
-                    <CFormLabel htmlFor={`formFile-${index}`}>{document.document_name}</CFormLabel>
+                    <CFormLabel htmlFor={`formFile-${index}`}>
+                      {document.document_name}
+                      {!document.is_optional && <span style={{ color: 'red' }}>*</span>}
+                    </CFormLabel>
 
                     <div className="md-3 d-flex align-items-center">
                       <CFormInput
@@ -427,6 +464,15 @@ const AppointmentDetail = ({ onNext }) => {
                     </div>
                   </div>
                 ))}
+
+                <CButton
+                  style={{ marginBottom: '10px' }}
+                  color="secondary"
+                  onClick={handleDocumentUploadDetails}
+                  className="mt-2"
+                >
+                  Next
+                </CButton>
               </CForm>
             </div>
           )}
