@@ -89,7 +89,7 @@ const AddAppSubType = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
+    
     console.log('test', selectedDocs)
     setLoading(true)
 
@@ -150,8 +150,7 @@ const AddAppSubType = () => {
       updated_by: '',
     })
 
-    setSelectedDocs([])
-    setDocuments([])
+    setSelectedDocs([])    
   }
 
   const handleApplicationTypeChange = (e) => {
