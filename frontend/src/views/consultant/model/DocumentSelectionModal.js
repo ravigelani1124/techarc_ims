@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react'
 import {
   CModal,
   CModalHeader,
@@ -9,22 +9,25 @@ import {
   CListGroup,
   CListGroupItem,
   CFormCheck,
-  CButtonGroup
-} from '@coreui/react';
+  CButtonGroup,
+  CModalContent,
+} from '@coreui/react'
 import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
-import UserContext from 'src/utils/UserContext';
+import UserContext from 'src/utils/UserContext'
 
 const DocumentSelectionModal = ({ isOpen, onClose, subItem }) => {
-  const [documents, setDocuments] = useState([]);
-  const [selectedDocs, setSelectedDocs] = useState([]);
+  const [documents, setDocuments] = useState([])
+  const [selectedDocs, setSelectedDocs] = useState([])
   const { user } = useContext(UserContext)
 
   useEffect(() => {
-    fetchDocuments()
+    console.log(subItem.documents)
+    setDocuments(subItem.documents)
+    //fetchDocuments()
   }, [user])
 
-  const fetchDocuments = async () => {    
+  const fetchDocuments = async () => {
     try {
       const token = user?.jwtToken
       const response = await axios.get(`${DEFAULT_URL}document/getdocuments`, {
@@ -33,16 +36,16 @@ const DocumentSelectionModal = ({ isOpen, onClose, subItem }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-      setDocuments(response.data.data)    
-      callSelectedDoc(subItem)         
+      setDocuments(response.data.data)
+      callSelectedDoc(subItem)
     } catch (error) {
-     console.log(error)
+      console.log(error)
     }
   }
   const callSelectedDoc = async (subItem) => {
     try {
-      const token = user?.jwtToken;
-      console.log(subItem);
+      const token = user?.jwtToken
+      console.log(subItem)
       const response = await axios.post(
         `${DEFAULT_URL}document/getSelectedServicesDoc`,
         {
@@ -54,79 +57,88 @@ const DocumentSelectionModal = ({ isOpen, onClose, subItem }) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      console.log("response", response.data.data.documents);
-      setSelectedDocs(response.data.data.documents);
+        },
+      )
+      console.log('response', response.data.data.documents)
+      setSelectedDocs(response.data.data.documents)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
-  
+  }
+
   const toggleDocument = (id) => {
     setSelectedDocs((prevSelectedDocs) => {
       if (prevSelectedDocs.includes(id)) {
         // If the document is already selected, remove it from the selected list
-        return prevSelectedDocs.filter((docId) => docId !== id);
+        return prevSelectedDocs.filter((docId) => docId !== id)
       } else {
         // If the document is not selected, add it to the selected list
-        return [...prevSelectedDocs, id];
+        return [...prevSelectedDocs, id]
       }
-    });
-  };
+    })
+  }
 
   const handleSelectAll = () => {
-    const allDocumentIds = documents.map((doc) => doc._id);
-    setSelectedDocs(allDocumentIds);
-  };
+    const allDocumentIds = documents.map((doc) => doc._id)
+    setSelectedDocs(allDocumentIds)
+  }
 
   const handleDeselectAll = () => {
-    setSelectedDocs([]);
-  };
+    setSelectedDocs([])
+  }
 
   const handleSave = () => {
-    callSetDocumentsApi() 
+    callSetDocumentsApi()
     // You can handle saving the selected documents here
-  };
+  }
 
   const callSetDocumentsApi = async () => {
     console.log(selectedDocs)
     try {
       const token = user?.jwtToken
-      const response = await axios.post(`${DEFAULT_URL}document/selectedServicesDoc`, {
-        sub_application_id: subItem._id,
-        consultant_id: user._id,
-        documents: selectedDocs
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        `${DEFAULT_URL}document/selectedServicesDoc`,
+        {
+          sub_application_id: subItem._id,
+          consultant_id: user._id,
+          documents: selectedDocs,
         },
-      })
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       console.log(response.data)
-      onClose();
+      onClose()
     } catch (error) {
       console.log(error)
     }
   }
 
   const DocumentListItem = ({ document }) => (
-    <CListGroupItem>
-      <CFormCheck
-        label={document.document_name}
-        checked={selectedDocs.includes(document._id)}
-        onChange={() => toggleDocument(document._id)}
-      />
+    <CListGroupItem className="d-flex justify-content-between align-items-center">
+      <div className="label-container">
+        <label htmlFor="application_code" className="form-label">
+          {document.document_name}
+        </label>
+      </div>
+      <div className="badge-container">
+        <span className={`badge ${document.is_optional ? 'bg-success' : 'bg-danger'}`}>
+          {document.is_optional ? 'Optional' : 'Required'}
+        </span>
+      </div>
     </CListGroupItem>
-  );
+  )
 
   return (
     <CModal alignment="center" visible={isOpen} onClose={onClose}>
       <CModalHeader closeButton>
-        <CModalTitle>Select Documents</CModalTitle>        
+        <CModalTitle>Documents</CModalTitle>
       </CModalHeader>
-      <CModalBody>      
-        <div style={{ marginBottom: '10px', marginTopa: '10px', marginBlockEnd: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+      <CModalBody>
+        {/* <div style={{ marginBottom: '10px', marginTopa: '10px', marginBlockEnd: '10px', display: 'flex', justifyContent: 'flex-end' }}>
             <CButtonGroup role="group" aria-label="Basic outlined example">
               <CButton color="primary" onClick={handleSelectAll} variant="outline">
                 Select All
@@ -135,7 +147,7 @@ const DocumentSelectionModal = ({ isOpen, onClose, subItem }) => {
                 Deselect All
               </CButton>              
             </CButtonGroup>
-          </div>
+          </div> */}
         <CListGroup>
           {documents.map((document, index) => (
             <DocumentListItem key={index} document={document} />
@@ -143,15 +155,15 @@ const DocumentSelectionModal = ({ isOpen, onClose, subItem }) => {
         </CListGroup>
       </CModalBody>
       <CModalFooter>
-        <CButton color="primary" onClick={handleSave}>
+        {/* <CButton color="primary" onClick={handleSave}>
           Save
-        </CButton>
+        </CButton> */}
         <CButton color="secondary" onClick={onClose}>
           Close
         </CButton>
       </CModalFooter>
     </CModal>
-  );
-};
+  )
+}
 
-export default DocumentSelectionModal;
+export default DocumentSelectionModal
