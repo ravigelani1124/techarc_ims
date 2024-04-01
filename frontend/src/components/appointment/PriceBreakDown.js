@@ -31,13 +31,13 @@ const PriceBreakDown = ({ data, onNext, onBack }) => {
         <span className="text-gray-700">Total:</span>
         <span className="font-bold">$650</span>
       </div>
-      <button type="submit" onClick={handleNext} className="btn btn-primary px-4">
+      {/* <button type="submit" onClick={handleNext} className="btn btn-primary px-4">
         Next
       </button>
 
       <button type="submit" onClick={handleBack} className="btn btn-primary px-4">
         Back
-      </button>
+      </button> */}
     </div>
   )
 }

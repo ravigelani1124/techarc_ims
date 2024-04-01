@@ -17,7 +17,6 @@ const AppointmentDetail = ({ onNext }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-
   const [service, setService] = useState('')
 
   //set From selection data
@@ -36,6 +35,9 @@ const AppointmentDetail = ({ onNext }) => {
 
   //document upload
   const [uploadedDocuments, setUploadedDocuments] = useState([])
+
+  //price breakup
+  const [consultantPrice, setConsultantPrice] = useState()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,16 +63,70 @@ const AppointmentDetail = ({ onNext }) => {
 
   const handleNext = (e) => {
     e.preventDefault()
-    const data = {
-      booking_details: {
-        consultant_data: selectedConsultant,
-        application_type: selectedApplicationType,
-        service_data: selectedService,
-        timeslot_data: selectedTimeSlot,
-      },
+    callAppointmentBookingApi()
+  }
+
+  const callAppointmentBookingApi = async () => {
+
+    const booking_details ={
+      consultant_data: selectedConsultant,
+      application_type: selectedApplicationType,
+      service_data: selectedService,
+      timeslot_data: selectedTimeSlot,
+      pricebreakup: consultantPrice,
     }
+
+    console.log('temp---', booking_details)
+
+    const data = {
+      application_code : selectedApplicationType.application_code,
+      application_type : selectedApplicationType.application_description,
+      application_id : selectedApplicationType._id,
+      
+      appsub_code : selectedService.sub_application_code,
+      appsub_type : selectedService.sub_application_description,
+      appsub_id : selectedService._id,
+      documents : selectedService.documents,
+      
+      consultant_code : selectedConsultant.consultant_code,
+      consultant_name : selectedConsultant.consultant_name_en,
+      consultant_id : selectedConsultant._id,
+      timeslot_id : selectedTimeSlot._id,
+      timeslot_date : selectedTimeSlot.day,
+      timeslot_start_time : selectedTimeSlot.start_time,
+      timeslot_end_time : selectedTimeSlot.end_time,
+      user_id : user._id,
+      user_name : user.user_name_en,  
+      consultant_fee : consultantPrice.consultant_fees,      
+      created_by : user._id   
+    }
+
     console.log('booking_details---', data)
-    onNext(data)
+    setIsLoading(true)
+    try {
+      const response = await axios.post(`${DEFAULT_URL}appointments/addappointment`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.jwtToken}`,
+        },
+      })      
+      setErrorMessage(response.data.data.message)
+      setAlertVisible(true)
+      console.log('response', response)
+      onNext(data)
+    } catch (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else if (error.request) {
+        setErrorMessage(error.request);
+      } else {
+        setErrorMessage(error.message);
+      }
+      setAlertVisible(true)        
+      console.log(error)
+    }finally{
+      setIsLoading(false)
+    }
   }
 
   const handleServiceChange = (e) => {
@@ -247,20 +303,38 @@ const AppointmentDetail = ({ onNext }) => {
   }
 
   const handleDocumentUploadDetails = () => {
-    setIsPriceVisible(true)
+    callConsultantPriceApi(selectedConsultant._id)
   }
 
+  const callConsultantPriceApi = async (consultantId) => {
+    try {
+      setIsLoading(true)
+      const response = await axios.get(`${DEFAULT_URL}auth/consultantFees/${consultantId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.jwtToken}`,
+        },
+      })
+      setConsultantPrice(response.data.data)
+      setIsPriceVisible(true)
+    } catch (error) {
+      console.error('Error fetching price:', error)
+      setErrorMessage(error.message || 'An error occurred')
+      setAlertVisible(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   return (
     <div style={{ marginBottom: '20px' }}>
       <div
-        style={{        
-          textAlign: 'center',       
+        style={{
+          textAlign: 'center',
         }}
       >
         <h4 style={{ padding: '10px' }}>Book Appointment</h4>
         {/* <ProgressBar step={1} /> */}
       </div>
-    
 
       <div className="body flex-grow-1 px-3">
         {isLoading && (
@@ -459,13 +533,22 @@ const AppointmentDetail = ({ onNext }) => {
                 <strong>Price Breakdown</strong>
               </CFormLabel>
               <CForm>
-                <CFormLabel htmlFor="formFile">Consultant Fee: $500</CFormLabel>
+                <CFormLabel htmlFor="formFile">
+                  <strong>Consultant Fee: ${consultantPrice.consultant_fees}</strong>
+                </CFormLabel>
               </CForm>
+
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary px-4"
+                  style={{ padding: '10px 20px' }}
+                >
+                  Book Appointment
+                </button>
+              </div>
             </div>
           )}
-          {/* <button type="submit" className="btn btn-primary px-4">
-            Book Appointment
-          </button> */}
         </form>
       </div>
     </div>

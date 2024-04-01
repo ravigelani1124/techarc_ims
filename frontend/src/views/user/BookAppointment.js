@@ -47,11 +47,11 @@ const BookAppointment = () => {
       case 1:
         return <AppointmentDetail onNext={handleNext} />
       case 2:
-        return <UploadDocument data={formData} onNext={handleNext} onBack={handleBack}/>      
+        return <PriceBreakDown data={formData} onNext={handleNext} onBack={handleBack} />
       case 3:
         return <PriceBreakDown data={formData} onNext={handleNext} onBack={handleBack} />
       case 4:
-        return <PriceBreakDown data={formData} onSubmit={handleSubmit}/>
+        return <UploadDocument data={formData} onNext={handleNext} onBack={handleBack}/>      
       default:
         return null
     }

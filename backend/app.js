@@ -20,6 +20,7 @@ const bookAppointmentRoute = require('./api/routes/bookAppointmentRoute');
 const appicationRoute = require('./api/routes/applicationRoute');
 const documentRoute = require('./api/routes/documentRoute');
 const fileRoute = require('./api/routes/FileRoute');
+const appointmentRoute = require('./api/routes/appointmentRoute');
 
 app.set('view engine', 'ejs'); 
 
@@ -39,7 +40,7 @@ app.use('/api/bookappointment', bookAppointmentRoute);
 app.use('/api/application', appicationRoute);
 app.use('/api/document', documentRoute);
 app.use('/api/file', fileRoute);
-
+app.use('/api/appointments', appointmentRoute);
 
 cron.schedule("* * * * *", async () => {
   try {
