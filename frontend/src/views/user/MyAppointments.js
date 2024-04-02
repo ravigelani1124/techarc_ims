@@ -96,7 +96,7 @@ const MyAppointments = () => {
                     itemKey={index}
                   >
                     <CAccordionHeader>
-                      {item.appointment.application_type} : {item.appointment.appsub_type}
+                    <strong>{item.appointment.application_type}: </strong>{' '}{item.appointment.appsub_type}
                     </CAccordionHeader>
                     <CAccordionBody>
                       <div
@@ -108,7 +108,7 @@ const MyAppointments = () => {
                         }}
                       >
                         <CFormLabel
-                          htmlFor="consultant"
+                          htmlFor="consultant"                          
                           style={{ marginBottom: '10px', display: 'block' }}
                         >
                           <strong>Application Details</strong>
