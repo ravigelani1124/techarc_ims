@@ -96,6 +96,7 @@ const appointmentSchema = new mongoose.Schema(
     },
     consultant_fee : { type: Number, required: true },
     is_active : { type: Boolean, default: true },
+    consultant: {default: {}},
   },
   { timestamps: true }
 );

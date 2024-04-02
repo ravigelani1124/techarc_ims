@@ -20,44 +20,34 @@ const _nav_user = [
     to: '/user/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
-      color: 'info',
-      // text: 'NEW',
-    },
-  },
-  {
-    component: CNavItem,
-    name: 'Book Appointment',
-    to: '/user/bookappointment',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    badge: {
       color: 'info',      
     },
+  },  
+  {
+    component: CNavGroup,
+    name: 'Appointment',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Book Appointment',
+        to: '/user/bookappointment',
+        icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'My Appointments',
+        to: '/user/appointments',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
   },
-  // {
-  //   component: CNavGroup,
-  //   name: 'Application',
-  //   icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'Add Application',
-  //       to: '/user/addapplication',
-  //       icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
-  //       badge: {
-  //         color: 'info',
-  //       },
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Applications',
-  //       to: '/user/applications',
-  //       icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
-  //       badge: {
-  //         color: 'info',
-  //       },
-  //     },
-  //   ],
-  // },
 ];
 
 export default _nav_user;

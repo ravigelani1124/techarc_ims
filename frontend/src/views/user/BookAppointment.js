@@ -4,7 +4,7 @@ import UserContext from 'src/utils/UserContext'
 import { useNavigate } from 'react-router-dom'
 import AppointmentDetail from 'src/components/appointment/AppointmentDetail'
 import ProgressBar from 'src/components/ProgressBar'
-import PriceBreakDown from 'src/components/appointment/PriceBreakDown'
+import PDFGenerator from 'src/components/appointment/PDFGenerator'
 import UploadDocument from 'src/components/appointment/UploadDocument'
 
 const BookAppointment = () => {
@@ -47,9 +47,9 @@ const BookAppointment = () => {
       case 1:
         return <AppointmentDetail onNext={handleNext} />
       case 2:
-        return <PriceBreakDown data={formData} onNext={handleNext} onBack={handleBack} />
+        return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
       case 3:
-        return <PriceBreakDown data={formData} onNext={handleNext} onBack={handleBack} />
+        return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
       case 4:
         return <UploadDocument data={formData} onNext={handleNext} onBack={handleBack}/>      
       default:

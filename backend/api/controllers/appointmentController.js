@@ -91,7 +91,9 @@ async function bookAppointment(req, res) {
   async function getAppointmentByConsultantId(req, res) {
     try {
       const { id } = req.params;
+      console.log("consultant id--------",id);
       const appointments = await Appointment.find({ consultant_id: id });
+      
       if (!appointments) {
         return res.status(404).json({
           status: "failed",
@@ -99,7 +101,9 @@ async function bookAppointment(req, res) {
           message: "Appointments not found",
         });
       }
-      console.log(appointments);
+      
+
+      console.log("test--------",appointments);
       return res.status(200).json({
         status: "success",
         data: appointments,
@@ -126,9 +130,19 @@ async function bookAppointment(req, res) {
         });
       }
   
+      const data = []
+      for (const appointment of appointments) {      
+        const consultant = await UserConsultant.findOne({ _id: appointment.consultant_id });
+        const appointmentData ={
+          appointment:appointment,
+          consultant:consultant
+        }        
+        data.push(appointmentData);
+      }
+
       return res.status(200).json({
         status: "success",
-        data: appointments,
+        data: data,
         message: "Appointments fetched successfully",
       });  
     }catch (err) {

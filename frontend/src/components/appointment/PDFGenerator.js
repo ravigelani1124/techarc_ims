@@ -1,4 +1,4 @@
-const PriceBreakDown = ({ data, onNext, onBack }) => {
+const PDFGenerator = ({ data, onNext, onBack }) => {
   const handleNext = () => {
     // Validate other data if needed
     const otherData = {}
@@ -30,16 +30,9 @@ const PriceBreakDown = ({ data, onNext, onBack }) => {
       <div className="flex justify-between">
         <span className="text-gray-700">Total:</span>
         <span className="font-bold">$650</span>
-      </div>
-      {/* <button type="submit" onClick={handleNext} className="btn btn-primary px-4">
-        Next
-      </button>
-
-      <button type="submit" onClick={handleBack} className="btn btn-primary px-4">
-        Back
-      </button> */}
+      </div>     
     </div>
   )
 }
 
-export default PriceBreakDown
+export default PDFGenerator

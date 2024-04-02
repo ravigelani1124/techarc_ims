@@ -38,7 +38,7 @@ const ApplicationTypeList = React.lazy(() => import('./views/admin/applicationty
 const AllServices = React.lazy(() => import('./views/admin/applicationtype/AllServices'));
 const ConsultantUtils = React.lazy(() => import('./views/consultant/ConsultantUtils'));
 const News = React.lazy(()=> import('./components/News'))
-
+const MyAppointments = React.lazy(()=> import('./views/user/MyAppointments'))
 const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -90,8 +90,10 @@ const App = () => {
             {/* User Route */}
             <Route exact path="/user/dashboard" name="Dashboard" element={<DashboardUser />} />
             <Route exact path="/user/bookappointment" name="Book Appointment" element={<BookAppointment />} />
+            <Route exact path="/user/appointments" name="My Appointments" element={<MyAppointments />} />
             <Route exact path="/user/addapplication" name="Add Application" element={<AddApplicationUser />} />
             <Route exact path="/user/applications" name="Applications" element={<NumberOfApplicationsUser />} />
+            
            
         </Route>
 
