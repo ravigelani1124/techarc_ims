@@ -102,11 +102,20 @@ async function bookAppointment(req, res) {
         });
       }
       
+      const data = []
+      for (const appointment of appointments) {      
+        const user = await User.findOne({ _id: appointment.user_id });
 
-      console.log("test--------",appointments);
+        const appointmentData ={
+          appointment:appointment,
+          user:user
+        }        
+        data.push(appointmentData);
+      }
+      
       return res.status(200).json({
         status: "success",
-        data: appointments,
+        data: data,
         message: "Appointments fetched successfully",
       });  
     }catch (err) {

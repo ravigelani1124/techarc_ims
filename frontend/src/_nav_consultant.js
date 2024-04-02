@@ -30,6 +30,16 @@ const _nav_consultant = [
   },
 
   {
+    component: CNavItem,
+    name: 'My Appointments',
+    to: '/consultant/myappointments',
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',      
+    },
+  },
+
+  {
     component: CNavGroup,
     name: 'Client',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,

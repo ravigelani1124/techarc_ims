@@ -28,9 +28,8 @@ const UserList = () => {
   const [alertVisible, setAlertVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const { user } = useContext(UserContext)
-  const [searchQuery, setSearchQuery] = useState('')
   const [users, setUsers] = useState([])
-
+  const [searchQuery, setSearchQuery] = useState('')
   const [expandedRows, setExpandedRows] = useState([])
 
   const toggleRow = (index) => {
