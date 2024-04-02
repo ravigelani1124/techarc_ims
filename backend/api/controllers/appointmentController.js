@@ -89,7 +89,6 @@ async function bookAppointment(req, res) {
 
 
   async function getAppointmentByConsultantId(req, res) {
-
     try {
       const { id } = req.params;
       const appointments = await Appointment.find({ consultant_id: id });
@@ -100,7 +99,7 @@ async function bookAppointment(req, res) {
           message: "Appointments not found",
         });
       }
-  
+      console.log(appointments);
       return res.status(200).json({
         status: "success",
         data: appointments,

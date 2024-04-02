@@ -1,47 +1,47 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { DEFAULT_URL } from 'src/utils/Constant';
-import UserContext from 'src/utils/UserContext';
-import axios from 'axios';
-import { AppFooter, AppHeader, AppSidebar } from 'src/components';
-import { CSpinner } from '@coreui/react';
+import React, { useContext, useEffect, useState } from 'react'
+import { DEFAULT_URL } from 'src/utils/Constant'
+import UserContext from 'src/utils/UserContext'
+import axios from 'axios'
+import { AppFooter, AppHeader, AppSidebar } from 'src/components'
+import { CSpinner } from '@coreui/react'
 
 const ConsultantUtils = () => {
-  const [consultantFees, setConsultantFees] = useState([]);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { user } = useContext(UserContext);
+  const [consultantFees, setConsultantFees] = useState([])
+  const [alertVisible, setAlertVisible] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const { user } = useContext(UserContext)
 
   // fetch consultant fees
   const fetchConsultantFees = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      const jwtToken = user.jwtToken;
+      const jwtToken = user.jwtToken
       const response = await axios.get(`${DEFAULT_URL}auth/consultantFees/${user._id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
         },
-      });
-      setConsultantFees(response.data.data);
-      setIsLoading(false);
+      })
+      setConsultantFees(response.data.data)
+      setIsLoading(false)
     } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+      console.log(error)
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    document.title = 'Utilities';
-    fetchConsultantFees();
-  }, []);
+    document.title = 'Utilities'
+    fetchConsultantFees()
+  }, [])
 
   // update fees
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
     try {
-      const jwtToken = user.jwtToken;
+      const jwtToken = user.jwtToken
       await axios.post(
         `${DEFAULT_URL}auth/consultantFees`,
         {
@@ -53,17 +53,16 @@ const ConsultantUtils = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${jwtToken}`,
           },
-        }
-      );
+        },
+      )
 
-      await fetchConsultantFees();
-      setIsLoading(false);
-      
+      await fetchConsultantFees()
+      setIsLoading(false)
     } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+      console.log(error)
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -77,8 +76,7 @@ const ConsultantUtils = () => {
             </div>
           )}
           {alertVisible && ( // Show alert if alert is visible
-            <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
-            </div>
+            <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}></div>
           )}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -98,8 +96,8 @@ const ConsultantUtils = () => {
                 onChange={(e) => setConsultantFees(e.target.value)}
               />
             </div>
-            <div className="mb-3 d-flex justify-content-end">
-              <button type="submit" className="btn btn-primary px-4">
+            <div className="d-flex justify-content-end">
+              <button type="submit" className="btn btn-primary">
                 Submit
               </button>
             </div>
@@ -108,7 +106,7 @@ const ConsultantUtils = () => {
         <AppFooter />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ConsultantUtils;
+export default ConsultantUtils

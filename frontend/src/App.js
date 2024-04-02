@@ -37,8 +37,7 @@ const AddDocument = React.lazy(() => import('./views/admin/document/AddDocument'
 const ApplicationTypeList = React.lazy(() => import('./views/admin/applicationtype/ApplicationTypeList'));
 const AllServices = React.lazy(() => import('./views/admin/applicationtype/AllServices'));
 const ConsultantUtils = React.lazy(() => import('./views/consultant/ConsultantUtils'));
-
-const News = React.lazy(() => import('./components/News'));
+const News = React.lazy(()=> import('./components/News'))
 
 const App = () => {
 

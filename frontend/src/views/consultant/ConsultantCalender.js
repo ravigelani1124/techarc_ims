@@ -1,90 +1,70 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { DEFAULT_URL } from 'src/utils/Constant'
-import UserContext from 'src/utils/UserContext'
-import axios from 'axios'
-import { AppSidebar, AppFooter, AppHeader } from 'src/components'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-
-const localizer = momentLocalizer(moment)
+import React, { useContext, useEffect, useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import axios from 'axios';
+import { AppSidebar, AppFooter, AppHeader } from 'src/components';
+import { DEFAULT_URL } from 'src/utils/Constant';
+import UserContext from 'src/utils/UserContext';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const ConsultantCalender = () => {
-  const { user } = useContext(UserContext)
-  const [appointments, setAppointments] = useState([])
+  const localizer = momentLocalizer(moment);
+  const { user } = useContext(UserContext);
+  const [appointments, setAppointments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    callTimeSlotApi()
-  }, [user])
+    getAppointments();
+  }, [user]);
 
-  const callTimeSlotApi = async () => {
+  const getAppointments = async () => {
     try {
-      const jwtToken = user.jwtToken
-      const consultantId = user._id
-      if (!consultantId) {
-        setIsLoading(false)
-        setErrorMessage('Login Required')
-        setAlertVisible(true)
-        return
-      }
-      const response = await axios.get(
-        `${DEFAULT_URL}bookappointment/gettimeslot/${consultantId}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwtToken}`,
-          },
+      setIsLoading(true);
+      const jwtToken = user.jwtToken;
+      const response = await axios.get(`${DEFAULT_URL}appointments/getappointmentByConsultant/${user._id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
         },
-      )
-
-      console.log(response.data.data)
-      const filter = response.data.data.filter((item) => item.is_available)
-
-      const convertedEvents = convertArrayToEvents(filter)
-      console.log(convertedEvents)
-      setAppointments(convertedEvents)
+      });
+      const filteredAppointments = response.data.data.filter((item) => item.is_active === true);
+      const convertedEvents = convertArrayToEvents(filteredAppointments);
+      setAppointments(convertedEvents);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      setErrorMessage('Error fetching appointments');
+      setAlertVisible(true);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   function convertArrayToEvents(arr) {
-    return arr.map((item) => {
-      // Extract day, start_time, and end_time from the item
-      const { day, start_time, end_time } = item
-
-      // Split start_time and end_time to hours and minutes
-      const [startHour, startMinute] = start_time.split(':').map(Number)
-      const [endHour, endMinute] = end_time.split(':').map(Number)
-
-      // Convert day string to a Date object
-      const selectedDate = new Date(day)
-
-      // Create new Date objects for start and end times
-      const startDate = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        startHour,
-        startMinute,
-      )
-
-      const endDate = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        endHour,
-        endMinute,
-      )
-
-      // Return an object with title, start, and end properties
+    return arr.map(({ user_name, application_type, appsub_type, timeslot_date, timeslot_end_time, timeslot_start_time }) => {
+      const [startHour, startMinute] = timeslot_start_time.split(':').map(Number);
+      const [endHour, endMinute] = timeslot_end_time.split(':').map(Number);
+  
+      // Extract day, month, and year from timeslot_date in DD/MM/YYYY format
+      const [day, month, year] = timeslot_date.split('/').map(Number);
+  
+      // Create start and end dates
+      const startDate = new Date(year, month - 1, day, startHour, startMinute);
+      const endDate = new Date(year, month - 1, day, endHour, endMinute);
+  
+      // Format dates as ISO string in UTC
+      const formattedStartDate = startDate.toISOString();
+      const formattedEndDate = endDate.toISOString();
+  
       return {
-        title: "Test Appointment",
-        start: startDate,
-        end: endDate,
-      }
-    })
+        title: `${user_name} - ${application_type} : (${appsub_type})`,
+        start: formattedStartDate,
+        end: formattedEndDate,
+      };
+    });
   }
+  
 
   return (
     <>
@@ -94,9 +74,7 @@ const ConsultantCalender = () => {
 
         <div className="body flex-grow-1 px-3">
           <div className="mb-4">
-            <h4>
-              <center>Calendar</center>
-            </h4>
+            <h4 className="text-center">Calendar</h4>
             <div style={{ height: '500px' }}>
               <Calendar
                 localizer={localizer}
@@ -108,11 +86,10 @@ const ConsultantCalender = () => {
             </div>
           </div>
         </div>
-
         <AppFooter />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ConsultantCalender
+export default ConsultantCalender;
