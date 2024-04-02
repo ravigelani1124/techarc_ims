@@ -45,6 +45,7 @@ const BookAppointment = () => {
   const renderStepComponent = () => {
     switch (step) {
       case 1:
+        //return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
         return <AppointmentDetail onNext={handleNext} />
       case 2:
         return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />

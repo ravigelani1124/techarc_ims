@@ -58,8 +58,7 @@ const MyAppointments = () => {
   }
 
   const handleDownload = (item) => {
-      console.log(item)
-   
+    console.log(item)
   }
 
   return (
@@ -91,13 +90,22 @@ const MyAppointments = () => {
             <div style={{ padding: '0 20px' }}>
               <CAccordion alwaysOpen>
                 {appointments.map((item, index) => (
-                  <CAccordionItem style={{ backgroundColor: '#f9f9f9' }} key={index} itemKey={index}>
+                  <CAccordionItem
+                    style={{ backgroundColor: '#f9f9f9' }}
+                    key={index}
+                    itemKey={index}
+                  >
                     <CAccordionHeader>
-                      {item.appointment.application_type} : {item.appointment.appsub_type}                      
+                      {item.appointment.application_type} : {item.appointment.appsub_type}
                     </CAccordionHeader>
                     <CAccordionBody>
                       <div
-                        style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px', backgroundColor: '#ffffff'   }}
+                        style={{
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          backgroundColor: '#ffffff',
+                        }}
                       >
                         <CFormLabel
                           htmlFor="consultant"
@@ -115,7 +123,12 @@ const MyAppointments = () => {
                       </div>
 
                       <div
-                        style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px', backgroundColor: '#ffffff' }}
+                        style={{
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          backgroundColor: '#ffffff',
+                        }}
                       >
                         <CFormLabel
                           htmlFor="consultant"
@@ -134,7 +147,7 @@ const MyAppointments = () => {
                           htmlFor="consultant"
                           style={{ marginBottom: '5px', display: 'block' }}
                         >
-                          {item.consultant.consultant_email}
+                          {item.consultant.consultant_email} | {item.consultant.consultant_phone}
                         </CFormLabel>
                         <CFormLabel
                           htmlFor="consultant"
@@ -147,7 +160,12 @@ const MyAppointments = () => {
                       </div>
 
                       <div
-                        style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px', backgroundColor: '#ffffff' }}
+                        style={{
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          backgroundColor: '#ffffff',
+                        }}
                       >
                         <CFormLabel
                           htmlFor="consultant"
@@ -166,7 +184,12 @@ const MyAppointments = () => {
                       </div>
 
                       <div
-                        style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '20px', backgroundColor: '#ffffff' }}
+                        style={{
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          backgroundColor: '#ffffff',
+                        }}
                       >
                         <CFormLabel
                           htmlFor="consultant"
@@ -195,8 +218,31 @@ const MyAppointments = () => {
                           ))}
                         </CListGroup>
                       </div>
-                      <div>
-                        <CButton color="light" onClick={() => handleDownload(item)}>
+                      <div
+                        style={{
+                          border: '1px solid #ccc',
+                          padding: '10px',
+                          marginBottom: '20px',
+                          backgroundColor: '#ffffff',
+                        }}
+                      >
+                        <CFormLabel
+                          htmlFor="consultant"
+                          style={{ marginBottom: '10px', display: 'block' }}
+                        >
+                          <strong>Price Breakdown</strong>
+                        </CFormLabel>
+
+                        <CFormLabel
+                          htmlFor="consultant"
+                          style={{ marginBottom: '5px', display: 'block' }}
+                        >
+                          {'Consultant Fees'} : ${item.appointment.consultant_fee}
+                        </CFormLabel>
+                      </div>
+
+                      <div style={{ textAlign: 'right' }}>
+                        <CButton color="primary" onClick={() => handleDownload(item)}>
                           Download PDF
                         </CButton>
                       </div>

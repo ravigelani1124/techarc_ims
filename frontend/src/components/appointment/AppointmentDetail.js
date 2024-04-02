@@ -67,64 +67,57 @@ const AppointmentDetail = ({ onNext }) => {
   }
 
   const callAppointmentBookingApi = async () => {
-
-    const booking_details ={
-      consultant_data: selectedConsultant,
-      application_type: selectedApplicationType,
-      service_data: selectedService,
-      timeslot_data: selectedTimeSlot,
-      pricebreakup: consultantPrice,
-    }
-
-    console.log('temp---', booking_details)
-
+    setIsLoading(true)
+    setErrorMessage('We are processing your request. Please wait...')
+    setAlertVisible(true)
     const data = {
-      application_code : selectedApplicationType.application_code,
-      application_type : selectedApplicationType.application_description,
-      application_id : selectedApplicationType._id,
-      
-      appsub_code : selectedService.sub_application_code,
-      appsub_type : selectedService.sub_application_description,
-      appsub_id : selectedService._id,
-      documents : selectedService.documents,
-      
-      consultant_code : selectedConsultant.consultant_code,
-      consultant_name : selectedConsultant.consultant_name_en,
-      consultant_id : selectedConsultant._id,
-      timeslot_id : selectedTimeSlot._id,
-      timeslot_date : selectedTimeSlot.day,
-      timeslot_start_time : selectedTimeSlot.start_time,
-      timeslot_end_time : selectedTimeSlot.end_time,
-      user_id : user._id,
-      user_name : user.user_name_en,  
-      consultant_fee : consultantPrice.consultant_fees,      
-      created_by : user._id   
+      application_code: selectedApplicationType.application_code,
+      application_type: selectedApplicationType.application_description,
+      application_id: selectedApplicationType._id,
+
+      appsub_code: selectedService.sub_application_code,
+      appsub_type: selectedService.sub_application_description,
+      appsub_id: selectedService._id,
+      documents: selectedService.documents,
+
+      consultant_code: selectedConsultant.consultant_code,
+      consultant_name: selectedConsultant.consultant_name_en,
+      consultant_id: selectedConsultant._id,
+      timeslot_id: selectedTimeSlot._id,
+      timeslot_date: selectedTimeSlot.day,
+      timeslot_start_time: selectedTimeSlot.start_time,
+      timeslot_end_time: selectedTimeSlot.end_time,
+      user_id: user._id,
+      user_name: user.user_name_en,
+      consultant_fee: consultantPrice.consultant_fees,
+      created_by: user._id,
     }
 
     console.log('booking_details---', data)
-    setIsLoading(true)
+
     try {
       const response = await axios.post(`${DEFAULT_URL}appointments/addappointment`, data, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${user.jwtToken}`,
         },
-      })      
+      })
+      setIsLoading(false)
       setErrorMessage(response.data.data.message)
       setAlertVisible(true)
       console.log('response', response)
       onNext(data)
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data.message)
       } else if (error.request) {
-        setErrorMessage(error.request);
+        setErrorMessage(error.request)
       } else {
-        setErrorMessage(error.message);
+        setErrorMessage(error.message)
       }
-      setAlertVisible(true)        
+      setAlertVisible(true)
       console.log(error)
-    }finally{
+    } finally {
       setIsLoading(false)
     }
   }
@@ -327,15 +320,6 @@ const AppointmentDetail = ({ onNext }) => {
   }
   return (
     <div style={{ marginBottom: '20px' }}>
-      <div
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        <h4 style={{ padding: '10px' }}>Book Appointment</h4>
-        {/* <ProgressBar step={1} /> */}
-      </div>
-
       <div className="body flex-grow-1 px-3">
         {isLoading && (
           <div
@@ -345,6 +329,14 @@ const AppointmentDetail = ({ onNext }) => {
             <CSpinner />
           </div>
         )}
+        <div
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          <h4 style={{ padding: '10px' }}>Book Appointment</h4>
+          {/* <ProgressBar step={1} /> */}
+        </div>
         {alertVisible && (
           <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: '9999' }}>
             <CToast

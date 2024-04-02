@@ -1,37 +1,34 @@
+import React,{useContext} from 'react'
+import {
+  CCol,
+  CContainer,
+  CRow,
+} from '@coreui/react'
+import UserContext from 'src/utils/UserContext'
+
+
+
 const PDFGenerator = ({ data, onNext, onBack }) => {
-  const handleNext = () => {
-    // Validate other data if needed
-    const otherData = {}
-    onNext({ ...data, otherData })
-  }
 
-  const handleBack = () => {
-    // Validate other data if needed
-    const otherData = {}
-    onBack({ ...data, otherData })
-  }
-
+  const { user } = useContext(UserContext)
+  
   return (
-    <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Price Summary</h2>
-      <div className="flex justify-between mb-2">
-        <span className="text-gray-700">Consultant Fee:</span>
-        <span className="font-bold">$500</span>
-      </div>
-      <div className="flex justify-between mb-2">
-        <span className="text-gray-700">Service Fee:</span>
-        <span className="font-bold">$100</span>
-      </div>
-      <div className="flex justify-between mb-2">
-        <span className="text-gray-700">Federal Government Tax:</span>
-        <span className="font-bold">$50</span>
-      </div>
-      <hr className="my-4" />
-      <div className="flex justify-between">
-        <span className="text-gray-700">Total:</span>
-        <span className="font-bold">$650</span>
-      </div>     
-    </div>
+    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <CContainer>
+      <CRow className="justify-content-center">
+        <CCol md={6}>
+          <span className="clearfix">
+            <h1 className="float-start display-3 me-4">Yahhoo!</h1>
+            <h4 className="pt-3">Thank you! <b>{user?.user_name_en}</b></h4>
+            <h4 className="pt">we are done!</h4>
+            <p className="text-medium-emphasis float-start">
+              Your appointment has been successfully booked. you can check appointment details on My Appointments.
+            </p>
+          </span>        
+        </CCol>
+      </CRow>
+    </CContainer>
+  </div>
   )
 }
 
