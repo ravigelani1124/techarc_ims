@@ -29,7 +29,7 @@ const ConsultantCalender = () => {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      const filteredAppointments = response.data.data.filter((item) => item.is_active === true);
+      const filteredAppointments = response.data.data.filter((item) => item.appointment.is_active === true);
       const convertedEvents = convertArrayToEvents(filteredAppointments);
       setAppointments(convertedEvents);
     } catch (error) {
@@ -42,25 +42,18 @@ const ConsultantCalender = () => {
   };
 
   function convertArrayToEvents(arr) {
-    return arr.map(({ user_name, application_type, appsub_type, timeslot_date, timeslot_end_time, timeslot_start_time }) => {
+    return arr.map(({ appointment }) => {
+      const { user_name, application_type, appsub_type, timeslot_date, timeslot_end_time, timeslot_start_time } = appointment;
       const [startHour, startMinute] = timeslot_start_time.split(':').map(Number);
-      const [endHour, endMinute] = timeslot_end_time.split(':').map(Number);
-  
-      // Extract day, month, and year from timeslot_date in DD/MM/YYYY format
-      const [day, month, year] = timeslot_date.split('/').map(Number);
-  
-      // Create start and end dates
+      const [endHour, endMinute] = timeslot_end_time.split(':').map(Number);      
+      const [day, month, year] = timeslot_date.split('/').map(Number);      
       const startDate = new Date(year, month - 1, day, startHour, startMinute);
       const endDate = new Date(year, month - 1, day, endHour, endMinute);
-  
-      // Format dates as ISO string in UTC
-      const formattedStartDate = startDate.toISOString();
-      const formattedEndDate = endDate.toISOString();
-  
+        
       return {
         title: `${user_name} - ${application_type} : (${appsub_type})`,
-        start: formattedStartDate,
-        end: formattedEndDate,
+        start: startDate,
+        end: endDate,
       };
     });
   }
