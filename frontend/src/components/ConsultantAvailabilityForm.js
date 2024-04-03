@@ -28,10 +28,10 @@ const ConsultantAvailabilityForm = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { user } = useContext(UserContext)
-
+  const [removeSlot, setRemoveSlot] = useState(false)
   useEffect(() => {
     callTimeSlotApi()
-  }, [])
+  }, [removeSlot])
 
   const callTimeSlotApi = async () => {
     try {
@@ -106,6 +106,44 @@ const ConsultantAvailabilityForm = () => {
     }
 
     callAddTimeSlotApi()
+  }
+
+  const handleUpdateStatus = async (item) => {
+    setIsLoading(true)
+
+    try {
+      const id = item._id
+          
+      const response = await axios.post(DEFAULT_URL + 'bookappointment/changeTimeSlotStatus', {
+        id: id      
+      },{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.jwtToken}`,
+        },
+      },)
+
+      if (response.status === 200) {
+        setIsLoading(false)
+        setErrorMessage(response.data.message)
+        setAlertVisible(true)
+        setRemoveSlot(!removeSlot)
+      }
+    } catch (error) {
+      setIsLoading(false)
+      setAlertVisible(true)
+      if (error.response) {
+        setErrorMessage(error.response.data.message)
+      } else if (error.request) {
+        console.log('No response received:', error.request)
+        setErrorMessage(error.request)
+      } else {
+        console.log('Error during request setup:', error.message)
+        setErrorMessage(error.request)
+      }
+    }finally{
+      setIsLoading(false)        
+    }
   }
 
   const callAddTimeSlotApi = async () => {
@@ -302,7 +340,7 @@ const ConsultantAvailabilityForm = () => {
                 <CTableDataCell>
                   <div>
                     {
-                      <CButton style={{ width: '100px' }} color="danger">
+                      <CButton style={{ width: '100px' }} color="danger" onClick={() => handleUpdateStatus(item)}>
                         Remove
                       </CButton>
                     }

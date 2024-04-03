@@ -53,15 +53,15 @@ cron.schedule("* * * * *", async () => {
 
     // Update record_status of outdated time slots
     for (const timeSlot of outdatedTimeSlots) {
-      const endDate = moment(`${timeSlot.date} ${timeSlot.end_time}`, "DD/MM/YYYY HH:mm");
+      const endDate = moment(`${timeSlot.day} ${timeSlot.end_time}`, "DD/MM/YYYY HH:mm");
       console.log("End date:", endDate);
       if (currentTime.isAfter(endDate)) {
-        timeSlot.record_status = false;
-        console.log("Time slot updated:", timeSlot);
+        if(timeSlot.is_available === true) {
+        timeSlot.record_status = false;        
         await timeSlot.save();
+        }
       }
     }
-
     console.log("Record statuses updated successfully.");
   } catch (error) {
     console.error("Error updating record statuses:", error);
