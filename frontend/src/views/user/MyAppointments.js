@@ -18,13 +18,19 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { DEFAULT_URL } from 'src/utils/Constant'
+import PDFGenerator from 'src/components/appointment/PDFGenerator'
+import { PDFViewer } from '@react-pdf/renderer'
+import PDFViewerUserModel from './PDFViewerUserModel'
+
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [alertVisible, setAlertVisible] = useState(false)
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [appointmentDetails, setAppointmentDetails] = useState({});
+  
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 
@@ -57,9 +63,11 @@ const MyAppointments = () => {
     }
   }
 
+  
   const handleDownload = (item) => {
-    console.log(item)
-  }
+    setAppointmentDetails(item);
+    setIsModalOpen(true);
+  };
 
   return (
     <div>
@@ -96,7 +104,8 @@ const MyAppointments = () => {
                     itemKey={index}
                   >
                     <CAccordionHeader>
-                    <strong>{item.appointment.application_type}: </strong>{' '}{item.appointment.appsub_type}
+                      <strong>{item.appointment.application_type}: </strong>{' '}
+                      {item.appointment.appsub_type}
                     </CAccordionHeader>
                     <CAccordionBody>
                       <div
@@ -108,7 +117,7 @@ const MyAppointments = () => {
                         }}
                       >
                         <CFormLabel
-                          htmlFor="consultant"                          
+                          htmlFor="consultant"
                           style={{ marginBottom: '10px', display: 'block' }}
                         >
                           <strong>Application Details</strong>
@@ -242,6 +251,7 @@ const MyAppointments = () => {
                       </div>
 
                       <div style={{ textAlign: 'right' }}>
+                        
                         <CButton color="primary" onClick={() => handleDownload(item)}>
                           Download PDF
                         </CButton>
@@ -253,7 +263,9 @@ const MyAppointments = () => {
             </div>
           </div>
         )}
-
+        {isModalOpen && (
+          <PDFViewerUserModel isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} item={appointmentDetails} />
+        )}
         <AppFooter />
       </div>
     </div>

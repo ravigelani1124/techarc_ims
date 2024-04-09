@@ -21,6 +21,7 @@ import {
 } from '@coreui/react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react'
 const AppointmentDetailsModel = ({ isOpen, onClose, item }) => {
+
   return (
     <>
       <CModal size="xl" visible={isOpen} onClose={onClose} aria-labelledby="OptionalSizesExample1" fullscreen>
@@ -140,7 +141,10 @@ const AppointmentDetailsModel = ({ isOpen, onClose, item }) => {
             </div>
           </div>
         </CModalBody>
-        <CModalFooter>
+        <CModalFooter>        
+        {/* <CButton color="primary" onClick={()=>handleDownloadPDF()}>
+            Download PDF
+          </CButton> */}
           <CButton color="secondary" onClick={onClose}>
             Close
           </CButton>

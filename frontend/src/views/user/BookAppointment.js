@@ -6,6 +6,7 @@ import AppointmentDetail from 'src/components/appointment/AppointmentDetail'
 import ProgressBar from 'src/components/ProgressBar'
 import PDFGenerator from 'src/components/appointment/PDFGenerator'
 import UploadDocument from 'src/components/appointment/UploadDocument'
+import SuccessApointment from 'src/components/appointment/SuccessApointment'
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1)
@@ -48,11 +49,11 @@ const BookAppointment = () => {
         //return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
         return <AppointmentDetail onNext={handleNext} />
       case 2:
-        return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
-      case 3:
-        return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
-      case 4:
-        return <UploadDocument data={formData} onNext={handleNext} onBack={handleBack}/>      
+        return <SuccessApointment data={formData} onNext={handleNext} onBack={handleBack} />
+      // case 3:
+      //   return <PDFGenerator data={formData} onNext={handleNext} onBack={handleBack} />
+      // case 4:
+      //   return <UploadDocument data={formData} onNext={handleNext} onBack={handleBack}/>      
       default:
         return null
     }

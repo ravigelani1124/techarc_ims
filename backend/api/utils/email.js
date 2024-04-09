@@ -173,6 +173,11 @@ const sendUserAppointmentEmail = async (appointmentData, consultant, user) => {
                             <p><strong>Address:</strong> ${consultant.street_no}, ${consultant.street_name},
                              ${consultant.city}, ${consultant.state}, ${consultant.zip}, ${consultant.country}</p>                            
                         </div>
+
+                        <div>
+                        <h3>Price Details:</h3>
+                        <p><strong>Consultant Fees:</strong> ${appointmentData.consultant_fee}</p>                                                
+                        </div>
                                                 
                         <p>If you have any questions or need to make changes, please contact us.</p>
                         <p>Best Regards,<br/>TechArc</p>
@@ -273,7 +278,10 @@ const sendConsultantAppointmentEmail = async (
                             <p><strong>Address:</strong> ${user.street_no}, ${user.street_name},
                              ${user.city}, ${user.state}, ${user.zip}, ${user.country}</p>                                                        
                         </div>
-                                                
+                                     
+                        <h3>Price Details:</h3>
+                        <p><strong>Consultant Fees:</strong> ${appointmentData.consultant_fee}</p>                                                
+                        </div>
 
                         <p>If you have any questions or need to make changes, please contact us.</p>
                         <p>Best Regards,<br/>TechArc</p>

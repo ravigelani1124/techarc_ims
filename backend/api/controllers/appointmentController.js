@@ -163,7 +163,28 @@ async function bookAppointment(req, res) {
     }
   }
 
+  async function changeAppointmentStatus(req, res) {
+    const { id } = req.params;
+    const { isActive } = req.body;
+    const appointment = await Appointment.findOne({ _id: id });
+    if (!appointment) {
+      return res.status(404).json({
+        status: "failed",
+        data: {},
+        message: "Appointment not found",
+      });
+    }
+    appointment.is_active = isActive;
+    await appointment.save();
+    return res.status(200).json({
+      status: "success",
+      data: appointment,
+      message: "Appointment status updated successfully",
+    });
+  }
+
+
 
   
 
-module.exports = { bookAppointment, getAppointmentByConsultantId, getAppointmentByUserId };
+module.exports = { bookAppointment, getAppointmentByConsultantId, getAppointmentByUserId, changeAppointmentStatus };  
