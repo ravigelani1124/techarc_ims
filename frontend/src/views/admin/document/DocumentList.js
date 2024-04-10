@@ -45,8 +45,6 @@ const DocumentList = () => {
         },
       })
       setDocuments(response.data.data)
-      setErrorMessage(response.data.message)
-      setAlertVisible(true)
       
     } catch (error) {
       setErrorMessage(error.response.data)

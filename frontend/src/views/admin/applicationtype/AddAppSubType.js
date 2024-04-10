@@ -211,9 +211,9 @@ const AddAppSubType = () => {
                   id="application_type"
                   className="form-select form-select-md"
                   aria-label=".form-select-sm example"
-                  required
-                  value={applicationType}
+                  required                  
                   onChange={handleApplicationTypeChange}
+                  value={applicationType}
                 >
                   <option value="" disabled selected>
                     Select..

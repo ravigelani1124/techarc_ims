@@ -31,7 +31,7 @@ const _nav_consultant = [
 
   {
     component: CNavItem,
-    name: 'My Appointments',
+    name: 'Appointments',
     to: '/consultant/myappointments',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
@@ -39,31 +39,18 @@ const _nav_consultant = [
     },
   },
 
+
   {
-    component: CNavGroup,
-    name: 'Client',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Add Client',
-        to: '/consultant/adduser',
-        icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
-      {
-        component: CNavItem,
-        name: 'Clients',
-        to: '/consultant/users',
-        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
-        badge: {
-          color: 'info',
-        },
-      },
-    ],
+    component: CNavItem,
+    name: 'Services',
+    to: '/myservices',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+      // text: 'NEW',
+    },
   },
+
   {
     component: CNavGroup,
     name: 'Schedule',
@@ -91,15 +78,31 @@ const _nav_consultant = [
     ],
   },
 
+
   {
-    component: CNavItem,
-    name: 'My Services',
-    to: '/myservices',
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      // text: 'NEW',
-    },
+    component: CNavGroup,
+    name: 'Client',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Add Client',
+        to: '/consultant/adduser',
+        icon: <CIcon icon={cilNoteAdd} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'Clients',
+        to: '/consultant/users',
+        icon: <CIcon icon={cilTablet} customClassName="nav-icon" />,
+        badge: {
+          color: 'info',
+        },
+      },
+    ],
   },
 
   {
